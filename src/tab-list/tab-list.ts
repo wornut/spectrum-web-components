@@ -18,17 +18,17 @@ import {
     TemplateResult,
 } from 'lit-element';
 
-import radioGroupStyles from './radio-group.css';
+import tabListStyles from './tab-list.css';
 
-export class RadioGroup extends LitElement {
-    public static readonly is = 'sp-radio-group';
+export class TabList extends LitElement {
+    public static readonly is = 'sp-tab-list';
 
     public static get styles(): CSSResultArray {
-        return [radioGroupStyles];
+        return [tabListStyles];
     }
 
     @property({ reflect: true })
-    public name = '';
+    public direction: 'column' | 'row' = 'column';
 
     @property({ reflect: true })
     public get selected(): string {
@@ -49,9 +49,34 @@ export class RadioGroup extends LitElement {
 
     private _selected = '';
 
+    public onClick(ev: Event): void {
+        const target = ev.target as Element;
+        if (target) {
+            const value = target.getAttribute('value');
+            if (value) {
+                const applyDefault = this.dispatchEvent(
+                    new CustomEvent<{ selected: string }>('change', {
+                        bubbles: true,
+                        composed: true,
+                        detail: {
+                            selected: value,
+                        },
+                    })
+                );
+                if (applyDefault) {
+                    this.selected = value;
+                }
+            }
+        }
+    }
+
+    @property()
     protected render(): TemplateResult {
         return html`
-            <slot @slotchange=${this.onSlotChange}></slot>
+            <slot
+                @click="${this.onClick}"
+                @slotchange=${this.onSlotChange}
+            ></slot>
         `;
     }
 
@@ -60,17 +85,17 @@ export class RadioGroup extends LitElement {
     }
 
     private updateCheckedState(value: string): void {
-        const previousChecked = this.querySelectorAll('[checked]');
+        const previousChecked = this.querySelectorAll('[selected]');
 
         previousChecked.forEach((element) => {
-            element.removeAttribute('checked');
+            element.removeAttribute('selected');
         });
 
         if (value.length) {
-            const currentChecked = this.querySelector(`[value=${value}]`);
+            const currentChecked = this.querySelector(`[value="${value}"]`);
 
             if (currentChecked) {
-                currentChecked.setAttribute('checked', 'true');
+                currentChecked.setAttribute('selected', '');
             }
         }
     }
