@@ -10,21 +10,26 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { html, LitElement, CSSResultArray, TemplateResult } from 'lit-element';
-
+import { CSSResultArray, property } from 'lit-element';
+import { ButtonBase } from './button-base';
 import buttonStyles from './button.css';
 
-export class Button extends LitElement {
-    public static is = 'sp-button';
+export class Button extends ButtonBase {
+    @property({ reflect: true })
+    public variant:
+        | 'cta'
+        | 'overBackground'
+        | 'primary'
+        | 'secondary'
+        | 'negative' = 'cta';
+
+    @property({ type: Boolean, reflect: true })
+    public warning: boolean = false;
+
+    @property({ type: Boolean, reflect: true })
+    public quiet: boolean = false;
 
     public static get styles(): CSSResultArray {
         return [buttonStyles];
-    }
-
-    protected render(): TemplateResult {
-        return html`
-            <div id="icon"><slot name="icon"></slot></div>
-            <div id="label"><slot></slot></div>
-        `;
     }
 }
