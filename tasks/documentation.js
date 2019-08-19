@@ -12,14 +12,19 @@ governing permissions and limitations under the License.
 
 const gulp = require('gulp');
 const path = require('path');
+const fs = require('fs-extra');
 const { exec } = require('child_process');
 const PluginError = require('plugin-error');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server/lib/Server');
 const webpackConfig = require('../documentation/webpack.config');
+const merge = require('webpack-merge');
 
 const projectDir = path.dirname(__dirname);
 const srcPath = path.join(projectDir, 'src');
+const storybookOut = path.join(projectDir, 'documentation/dist/storybook');
+
+const BASE_URL = 'https://opensource.adobe.com/spectrum-web-components/';
 
 const extractComponentDocumentation = () => {
     return exec(
@@ -29,6 +34,24 @@ const extractComponentDocumentation = () => {
         )}"`
     );
 };
+
+const buildStorybookWebpack = () => {
+    const storybookDir = path.join(projectDir, '.storybook');
+    return exec(
+        `npx build-storybook --config-dir "${storybookDir}" --output-dir "${storybookOut}"`
+    );
+};
+
+const copyStorybookStyles = () => {
+    return gulp
+        .src(path.join(projectDir, 'styles/all-medium-light.css'))
+        .pipe(gulp.dest(path.join(storybookOut)));
+};
+
+const buildStorybook = gulp.series([
+    buildStorybookWebpack,
+    copyStorybookStyles,
+]);
 
 const watchComponentDocumentation = () => {
     gulp.watch(
@@ -52,9 +75,15 @@ const webpackDevServer = () => {
     );
 };
 
-const webpackBuild = () => {
-    const config = Object.assign({ mode: 'production' }, webpackConfig);
-    return new Promise((resolve, reject) => {
+const webpackBuild = async () => {
+    const config = merge(webpackConfig, {
+        mode: 'production',
+        output: {
+            filename: '[name].[hash].bundle.js',
+            chunkFilename: '[name].[hash].js',
+        },
+    });
+    await new Promise((resolve, reject) => {
         webpack(config, (errors, stats) => {
             if (errors) {
                 console.log('Webpack', errors);
@@ -62,12 +91,30 @@ const webpackBuild = () => {
             resolve();
         });
     });
+    const indexPath = path.join(projectDir, 'documentation/dist/index.html');
+    let indexHtml = await fs.readFile(indexPath, {
+        encoding: 'utf8',
+    });
+    indexHtml = indexHtml.replace(
+        '<base href="/">',
+        `<base href="${BASE_URL}">`
+    );
+    return fs.writeFile(indexPath, indexHtml, {
+        encoding: 'utf8',
+    });
 };
 
 module.exports = {
-    docsCompile: gulp.series(extractComponentDocumentation, webpackBuild),
+    docsCompile: gulp.parallel([
+        buildStorybook,
+        gulp.series(extractComponentDocumentation, webpackBuild),
+    ]),
     docsWatchCompile: gulp.parallel(
         watchComponentDocumentation,
         webpackDevServer
     ),
+    extractComponentDocumentation,
+    buildStorybookWebpack,
+    buildStorybook,
+    webpackBuild,
 };
