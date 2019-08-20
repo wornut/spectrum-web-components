@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Adobe. All rights reserved.
+Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -12,8 +12,12 @@ governing permissions and limitations under the License.
 import { storiesOf } from '@storybook/polymer';
 import { radios, withKnobs } from '@storybook/addon-knobs';
 import { html } from 'lit-html';
+import * as MediumIcons from '../src/icons/icons-medium';
+import { defineCustomElements, Icon } from '../src';
 import '../src/tab-list';
 import '../src/tab';
+
+defineCustomElements(Icon, ...Object.values(MediumIcons));
 
 storiesOf('Tabs', module)
     .addDecorator(withKnobs)
