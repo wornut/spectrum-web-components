@@ -3,7 +3,7 @@
     "publishConfig": {
         "registry": "https://artifactory.corp.adobe.com/artifactory/api/npm/npm-lrweb-release-local/"
     },
-    "version": "0.0.7-21",
+    "version": "0.0.7-22",
     "description": "",
     "files": [
         "lib",
