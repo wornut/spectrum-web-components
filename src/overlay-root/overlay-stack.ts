@@ -27,6 +27,7 @@ export class OverlayStack {
     private preventMouseRootClose: boolean = false;
     private root: HTMLElement = document.body;
     private onChange: (overlays: ActiveOverlay[]) => void;
+    private handlingResize: boolean = false;
 
     public constructor(
         root: HTMLElement,
@@ -76,7 +77,7 @@ export class OverlayStack {
     }
 
     private isClickOverlayActiveForTrigger(trigger: HTMLElement): boolean {
-        return !!this.overlays.find(
+        return this.overlays.some(
             (item) => item.trigger === trigger && item.interaction === 'click'
         );
     }
@@ -150,9 +151,7 @@ export class OverlayStack {
         }
     }
 
-    private async hideAndCloseOverlay(
-        overlay?: ActiveOverlay
-    ): Promise<undefined> {
+    private async hideAndCloseOverlay(overlay?: ActiveOverlay): Promise<void> {
         if (overlay) {
             await overlay.hide();
             const index = this.overlays.indexOf(overlay);
@@ -162,10 +161,9 @@ export class OverlayStack {
             }
             this.onChange(this.overlays);
         }
-        return undefined;
     }
 
-    private async closeTopOverlay(): Promise<undefined> {
+    private closeTopOverlay(): Promise<void> {
         return this.hideAndCloseOverlay(this.topOverlay);
     }
 
@@ -182,8 +180,14 @@ export class OverlayStack {
     };
 
     private handleResize = (): void => {
-        this.overlays.forEach((overlay) => {
-            overlay.updateOverlayPosition();
+        if (this.handlingResize) return;
+
+        this.handlingResize = true;
+        requestAnimationFrame(() => {
+            this.overlays.forEach((overlay) => {
+                overlay.updateOverlayPosition();
+            });
+            this.handlingResize = false;
         });
     };
 }
