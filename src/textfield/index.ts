@@ -9,24 +9,17 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { IconsLarge } from './icons-large';
-import { IconsMedium } from './icons-medium';
-export * from './icons-large';
-export * from './icons-medium';
+export * from './textfield';
+
+import { Textfield } from './textfield';
 
 /* istanbul ignore else */
-if (!customElements.get('sp-icons-large')) {
-    customElements.define('sp-icons-large', IconsLarge);
-}
-
-/* istanbul ignore else */
-if (!customElements.get('sp-icons-medium')) {
-    customElements.define('sp-icons-medium', IconsMedium);
+if (!customElements.get('sp-textfield')) {
+    customElements.define('sp-textfield', Textfield);
 }
 
 declare global {
     interface HTMLElementTagNameMap {
-        'sp-icons-large': IconsLarge;
-        'sp-icons-medium': IconsMedium;
+        'sp-textfield': Textfield;
     }
 }
