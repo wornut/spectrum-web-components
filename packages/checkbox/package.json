@@ -1,7 +1,7 @@
 {
     "name": "@spectrum-web-components/checkbox",
     "publishConfig": {
-        "access": "public"
+        "registry": "https://artifactory.corp.adobe.com/artifactory/api/npm/npm-lrweb-release-local/"
     },
     "repository": {
         "type": "git",
