@@ -5,7 +5,7 @@
         "packages/*"
     ],
     "publishConfig": {
-        "registry": "https://artifactory.corp.adobe.com/artifactory/api/npm/npm-crisp-release-local/"
+        "registry": "https://artifactory.corp.adobe.com/artifactory/api/npm/npm-lrweb-release-local/"
     },
     "version": "0.0.9",
     "description": "",
