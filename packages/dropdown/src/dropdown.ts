@@ -24,6 +24,8 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import dropdownStyles from './dropdown.css.js';
 import actionButtonStyles from '@spectrum-web-components/button/lib/action-button.css.js';
 import fieldButtonStyles from '@spectrum-web-components/button/lib/field-button.css.js';
+import alertSmallStyles from '@spectrum-web-components/icon/lib/spectrum-icon-alert-small.css.js';
+import chevronDownMediumStyles from '@spectrum-web-components/icon/lib/spectrum-icon-chevron-down-medium.css.js';
 
 import { Focusable } from '@spectrum-web-components/shared/lib/focusable.js';
 import '@spectrum-web-components/icon';
@@ -42,7 +44,13 @@ import '@spectrum-web-components/popover';
  */
 export class Dropdown extends Focusable {
     public static get styles(): CSSResultArray {
-        return [actionButtonStyles, fieldButtonStyles, dropdownStyles];
+        return [
+            actionButtonStyles,
+            fieldButtonStyles,
+            dropdownStyles,
+            alertSmallStyles,
+            chevronDownMediumStyles,
+        ];
     }
 
     @query('#button')
@@ -64,6 +72,9 @@ export class Dropdown extends Focusable {
 
     @property({ type: String })
     public value = '';
+
+    @property({ type: String })
+    public selectedItemText = '';
 
     protected listRole = 'listbox';
     protected itemRole = 'option';
@@ -100,6 +111,9 @@ export class Dropdown extends Focusable {
 
     public onOptionsChange(): void {
         this.optionsMenu = this.querySelector('sp-menu');
+        if (this.value) {
+            this.requestUpdate('value');
+        }
     }
 
     public onButtonBlur(): void {
@@ -150,16 +164,18 @@ export class Dropdown extends Focusable {
         }
         this.open = true;
     }
-
     public setValueFromItem(item: MenuItem): void {
+        const oldSelectedItemText = this.selectedItemText;
         const oldValue = this.value;
-        this.value = (item.textContent || /* istanbul ignore next */ '').trim();
+        this.selectedItemText = item.itemText;
+        this.value = item.value;
         const applyDefault = this.dispatchEvent(
             new Event('change', {
                 cancelable: true,
             })
         );
         if (!applyDefault) {
+            this.selectedItemText = oldSelectedItemText;
             this.value = oldValue;
             return;
         }
@@ -184,7 +200,7 @@ export class Dropdown extends Focusable {
                     class=${ifDefined(this.value ? undefined : 'placeholder')}
                 >
                     ${this.value
-                        ? this.value
+                        ? this.selectedItemText
                         : html`
                               <slot></slot>
                           `}
@@ -192,14 +208,14 @@ export class Dropdown extends Focusable {
                 ${this.invalid
                     ? html`
                           <sp-icon
-                              class="icon"
+                              class="icon alert-small"
                               name="ui:AlertSmall"
                               size="s"
                           ></sp-icon>
                       `
                     : nothing}
                 <sp-icon
-                    class="icon dropdown"
+                    class="icon dropdown chevron-down-medium"
                     name="ui:ChevronDownMedium"
                     size="s"
                 ></sp-icon>
@@ -232,6 +248,23 @@ export class Dropdown extends Focusable {
 
     protected updated(changedProperties: PropertyValues): void {
         super.updated(changedProperties);
+        if (changedProperties.has('value') && this.optionsMenu) {
+            const items = [
+                ...this.optionsMenu.querySelectorAll(
+                    `[role=${this.optionsMenu.childRole}]`
+                ),
+            ] as MenuItem[];
+            const selectedItem = items.find(
+                (item) => this.value === item.value
+            ) as MenuItem;
+            if (selectedItem) {
+                selectedItem.selected = true;
+                this.selectedItemText = selectedItem.itemText;
+            } else {
+                this.value = '';
+                this.selectedItemText = '';
+            }
+        }
         if (changedProperties.has('disabled') && this.disabled) {
             this.open = false;
         }

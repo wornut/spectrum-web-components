@@ -8,7 +8,7 @@ Select a Country with a very long label, too long in fact
     <sp-menu-item role="option" tabindex="0">
         Deselect
     </sp-menu-item>
-    <sp-menu-item role="option" tabindex="-1">
+    <sp-menu-item role="option" tabindex="-1" value="option-2">
         Select Inverse
     </sp-menu-item>
     <sp-menu-item role="option" tabindex="-1">
@@ -34,7 +34,7 @@ Select a Country with a very long label, too long in fact
         <slot></slot>
     </div>
     <sp-icon
-        class="dropdown icon"
+        class="chevron-down-medium dropdown icon"
         name="ui:ChevronDownMedium"
         size="s"
     ></sp-icon>
@@ -61,7 +61,7 @@ Select a Country with a very long label, too long in fact
     <sp-menu-item role="option" tabindex="0">
         Deselect
     </sp-menu-item>
-    <sp-menu-item role="option" tabindex="-1">
+    <sp-menu-item role="option" tabindex="-1" value="option-2">
         Select Inverse
     </sp-menu-item>
     <sp-menu-item role="option" tabindex="-1">
@@ -86,9 +86,9 @@ Select a Country with a very long label, too long in fact
     <div class="placeholder" id="label">
         <slot></slot>
     </div>
-    <sp-icon class="icon" name="ui:AlertSmall" size="s"></sp-icon>
+    <sp-icon class="alert-small icon" name="ui:AlertSmall" size="s"></sp-icon>
     <sp-icon
-        class="dropdown icon"
+        class="chevron-down-medium dropdown icon"
         name="ui:ChevronDownMedium"
         size="s"
     ></sp-icon>

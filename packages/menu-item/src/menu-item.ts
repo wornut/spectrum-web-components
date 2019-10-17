@@ -12,11 +12,13 @@ governing permissions and limitations under the License.
 
 import { html, property, CSSResultArray, TemplateResult } from 'lit-element';
 
-import menuItemStyles from './menu-item.css.js';
-import focusableStyles from '@spectrum-web-components/shared/lib/focusable.css.js';
 import '@spectrum-web-components/icon';
 import '@spectrum-web-components/icons';
 import { ActionButton } from '@spectrum-web-components/button';
+
+import menuItemStyles from './menu-item.css.js';
+import focusableStyles from '@spectrum-web-components/shared/lib/focusable.css.js';
+import checkmarkMediumStyles from '@spectrum-web-components/icon/lib/spectrum-icon-checkmark-medium.css.js';
 
 export interface MenuItemQueryRoleEventDetail {
     role: string;
@@ -28,11 +30,33 @@ export interface MenuItemQueryRoleEventDetail {
  */
 export class MenuItem extends ActionButton {
     public static get styles(): CSSResultArray {
-        return [focusableStyles, menuItemStyles];
+        return [focusableStyles, menuItemStyles, checkmarkMediumStyles];
     }
 
     @property({ type: Number, reflect: true })
     public tabIndex = -1;
+
+    private _value = '';
+
+    @property({ type: String })
+    public get value(): string {
+        return this._value || this.itemText;
+    }
+    public set value(value) {
+        if (value === this.value) {
+            return;
+        }
+        this._value = value || '';
+        if (this.value) {
+            this.setAttribute('value', this.value);
+        } else {
+            this.removeAttribute('value');
+        }
+    }
+
+    public get itemText(): string {
+        return (this.textContent || /* istanbul ignore next */ '').trim();
+    }
 
     protected get buttonContent(): TemplateResult[] {
         const content = super.buttonContent;
@@ -44,6 +68,7 @@ export class MenuItem extends ActionButton {
                     name="ui:CheckmarkMedium"
                     size="s"
                     slot="icon"
+                    class="checkmark-medium"
                 ></sp-icon>
             `);
         }

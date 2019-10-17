@@ -16,6 +16,7 @@ import {
     CSSResultArray,
     TemplateResult,
     query,
+    PropertyValues,
 } from 'lit-element';
 
 import spectrumSliderStyles from './spectrum-slider.css.js';
@@ -23,6 +24,8 @@ import sliderStyles from './slider.css.js';
 import { Focusable } from '@spectrum-web-components/shared/lib/focusable.js';
 
 export type SliderEventDetail = number;
+
+export const variants = ['color', 'filled', 'ramp', 'range', 'tick'];
 
 export class Slider extends Focusable {
     public static get styles(): CSSResultArray {
@@ -44,14 +47,34 @@ export class Slider extends Focusable {
             return;
         }
 
-        this._value = this.clampValue(value);
+        this._value = value;
         this.requestUpdate('value', oldValue);
     }
 
     private _value = 10;
 
-    @property({ reflect: true })
-    public variant = '';
+    @property({ type: String })
+    public set variant(variant: string) {
+        const oldVariant = this.variant;
+        if (variant === this.variant) {
+            return;
+        }
+        if (variants.includes(variant)) {
+            this.setAttribute('variant', variant);
+            this._variant = variant;
+        } else {
+            this.removeAttribute('variant');
+            this._variant = '';
+        }
+        this.requestUpdate('variant', oldVariant);
+    }
+
+    public get variant(): string {
+        return this._variant;
+    }
+
+    /* Ensure that a '' value for `variant` removes the attribute instead of a blank value */
+    private _variant = '';
 
     @property()
     public label = '';
@@ -68,6 +91,12 @@ export class Slider extends Focusable {
     @property({ type: Number })
     public step = 1;
 
+    @property({ type: Number, attribute: 'tick-step' })
+    public tickStep = 0;
+
+    @property({ type: Boolean, attribute: 'tick-labels' })
+    public tickLabels = false;
+
     @property({ type: Boolean, reflect: true })
     public disabled = false;
 
@@ -83,6 +112,9 @@ export class Slider extends Focusable {
     @query('#input')
     private input!: HTMLInputElement;
 
+    private supportsPointerEvent = 'setPointerCapture' in this;
+    private currentMouseEvent?: MouseEvent;
+
     public get focusElement(): HTMLElement {
         return this.input ? this.input : this;
     }
@@ -94,6 +126,12 @@ export class Slider extends Focusable {
                 ? this.renderColorTrack()
                 : this.renderTrack()}
         `;
+    }
+
+    protected updated(changedProperties: PropertyValues): void {
+        if (changedProperties.has('value')) {
+            this.value = this.clampValue(this.value);
+        }
     }
 
     private renderLabel(): TemplateResult {
@@ -112,6 +150,81 @@ export class Slider extends Focusable {
         `;
     }
 
+    private renderTrackLeft(): TemplateResult {
+        if (this.variant === 'ramp') {
+            return html``;
+        }
+        return html`
+            <div
+                class="track"
+                id="track-left"
+                style=${this.trackLeftStyle}
+                role="presentation"
+            ></div>
+        `;
+    }
+
+    private renderTrackRight(): TemplateResult {
+        if (this.variant === 'ramp') {
+            return html``;
+        }
+        return html`
+            <div
+                class="track"
+                id="track-right"
+                style=${this.trackRightStyle}
+                role="presentation"
+            ></div>
+        `;
+    }
+
+    private renderRamp(): TemplateResult {
+        if (this.variant !== 'ramp') {
+            return html``;
+        }
+        return html`
+            <div id="ramp">
+                <svg
+                    viewBox="0 0 240 16"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                    focusable="false"
+                >
+                    <path
+                        d="M240,4v8c0,2.3-1.9,4.1-4.2,4L1,9C0.4,9,0,8.5,0,8c0-0.5,0.4-1,1-1l234.8-7C238.1-0.1,240,1.7,240,4z"
+                    ></path>
+                </svg>
+            </div>
+        `;
+    }
+
+    private renderTicks(): TemplateResult {
+        if (this.variant !== 'tick') {
+            return html``;
+        }
+        const tickStep = this.tickStep || this.step;
+        const tickCount = (this.max - this.min) / tickStep;
+        const ticks = new Array(tickCount + 1);
+        ticks.fill(0, 0, tickCount + 1);
+        return html`
+            <div class="ticks">
+                ${ticks.map(
+                    (tick, i) => html`
+                        <div class="tick">
+                            ${this.tickLabels
+                                ? html`
+                                      <div class="tickLabel">
+                                          ${i * tickStep}
+                                      </div>
+                                  `
+                                : html``}
+                        </div>
+                    `
+                )}
+            </div>
+        `;
+    }
+
     private renderHandle(): TemplateResult {
         return html`
             <div
@@ -119,6 +232,7 @@ export class Slider extends Focusable {
                 style=${this.handleStyle}
                 @pointermove=${this.onPointerMove}
                 @pointerdown=${this.onPointerDown}
+                @mousedown=${this.onMouseDown}
                 @pointerup=${this.onPointerUp}
                 @pointercancel=${this.onPointerCancel}
                 role="presentation"
@@ -145,19 +259,15 @@ export class Slider extends Focusable {
 
     private renderTrack(): TemplateResult {
         return html`
-            <div id="controls" @pointerdown=${this.onTrackPointerDown}>
-                <div class="track" id="track-left"
-                    style=${this.trackLeftStyle} 
-                    role="presentation"
-                >
-                </div>
+            <div id="controls"
+                @pointerdown=${this.onTrackPointerDown}
+                @mousedown=${this.onTrackMouseDown}
+            >
+                ${this.renderTrackLeft()}
+                ${this.renderRamp()}
+                ${this.renderTicks()}
                 ${this.renderHandle()}
-                <div class="track"
-                    id="track-right"
-                    style=${this.trackRightStyle}
-                    role="presentation"
-                >
-                </div>
+                ${this.renderTrackRight()}
                 </div>
             </div>
         `;
@@ -181,6 +291,30 @@ export class Slider extends Focusable {
         this.handle.setPointerCapture(ev.pointerId);
     }
 
+    private onMouseDown(ev: MouseEvent): void {
+        if (this.supportsPointerEvent) {
+            return;
+        }
+        if (this.disabled) {
+            return;
+        }
+        document.addEventListener('mousemove', this.onMouseMove);
+        document.addEventListener('mouseup', this.onMouseUp);
+        this.input.focus();
+        this.dragging = true;
+        this.currentMouseEvent = ev;
+        this._trackMouseEvent();
+    }
+
+    private _trackMouseEvent(): void {
+        if (!this.currentMouseEvent || !this.dragging) {
+            return;
+        }
+        this.value = this.calculateHandlePosition(this.currentMouseEvent);
+        this.dispatchInputEvent();
+        requestAnimationFrame(() => this._trackMouseEvent());
+    }
+
     private onPointerUp(ev: PointerEvent): void {
         // Retain focus on input element after mouse up to enable keyboard interactions
         this.input.focus();
@@ -190,13 +324,30 @@ export class Slider extends Focusable {
         this.dispatchChangeEvent();
     }
 
+    private onMouseUp = (ev: MouseEvent): void => {
+        // Retain focus on input element after mouse up to enable keyboard interactions
+        this.input.focus();
+        this.currentMouseEvent = ev;
+        document.removeEventListener('mousemove', this.onMouseMove);
+        document.removeEventListener('mouseup', this.onMouseUp);
+        requestAnimationFrame(() => {
+            this.handleHighlight = false;
+            this.dragging = false;
+            this.dispatchChangeEvent();
+        });
+    };
+
     private onPointerMove(ev: PointerEvent): void {
         if (!this.dragging) {
             return;
         }
         this.value = this.calculateHandlePosition(ev);
-        this.dispatchInputEvent();
     }
+
+    private onMouseMove = (ev: MouseEvent): void => {
+        this.currentMouseEvent = ev;
+        this.dispatchInputEvent();
+    };
 
     private onPointerCancel(ev: PointerEvent): void {
         this.dragging = false;
@@ -216,6 +367,20 @@ export class Slider extends Focusable {
 
         this.value = this.calculateHandlePosition(ev);
         this.dispatchInputEvent();
+    }
+
+    private onTrackMouseDown(ev: MouseEvent): void {
+        if (this.supportsPointerEvent) {
+            return;
+        }
+        if (ev.target === this.handle || this.disabled) {
+            return;
+        }
+        document.addEventListener('mousemove', this.onMouseMove);
+        document.addEventListener('mouseup', this.onMouseUp);
+        this.dragging = true;
+        this.currentMouseEvent = ev;
+        this._trackMouseEvent();
     }
 
     /**
@@ -243,7 +408,7 @@ export class Slider extends Focusable {
      * @param: PointerEvent on slider
      * @return: Slider value that correlates to the position under the pointer
      */
-    private calculateHandlePosition(ev: PointerEvent): number {
+    private calculateHandlePosition(ev: PointerEvent | MouseEvent): number {
         const rect = this.getBoundingClientRect();
         const minOffset = rect.left;
         const offset = ev.clientX;

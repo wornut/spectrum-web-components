@@ -12,7 +12,17 @@ governing permissions and limitations under the License.
 
 import '../';
 import { Slider } from '../';
-import { fixture, elementUpdated, html, expect } from '@open-wc/testing';
+import {
+    fixture,
+    elementUpdated,
+    html,
+    expect,
+    nextFrame,
+} from '@open-wc/testing';
+
+type TestableSliderType = {
+    supportsPointerEvent: boolean;
+};
 
 describe('Slider', () => {
     it('loads', async () => {
@@ -30,6 +40,23 @@ describe('Slider', () => {
         const el = await fixture<Slider>(
             html`
                 <sp-slider variant="color"></sp-slider>
+            `
+        );
+
+        await elementUpdated(el);
+
+        expect(el).shadowDom.to.equalSnapshot();
+    });
+    it('loads - [variant="tick"]', async () => {
+        const el = await fixture<Slider>(
+            html`
+                <sp-slider
+                    min="-100"
+                    max="100"
+                    value="0"
+                    tick-labels
+                    variant="tick"
+                ></sp-slider>
             `
         );
 
@@ -83,6 +110,7 @@ describe('Slider', () => {
                 pointerId: 1,
             })
         );
+        handle.dispatchEvent(new MouseEvent('mousedown'));
         await elementUpdated(el);
 
         expect(el.dragging).to.be.true;
@@ -94,6 +122,13 @@ describe('Slider', () => {
                 pointerId: 2,
             })
         );
+        handle.dispatchEvent(
+            new MouseEvent('mouseup', {
+                bubbles: true,
+                composed: true,
+            })
+        );
+        document.dispatchEvent(new MouseEvent('mouseup'));
         await elementUpdated(el);
 
         expect(el.dragging).to.be.false;
@@ -105,6 +140,7 @@ describe('Slider', () => {
                 pointerId: 1,
             })
         );
+        handle.dispatchEvent(new MouseEvent('mousedown'));
         await elementUpdated(el);
 
         expect(el.dragging).to.be.true;
@@ -119,6 +155,61 @@ describe('Slider', () => {
 
         expect(el.dragging).to.be.false;
         expect(pointerId).to.equal(3);
+    });
+    it('will fallback to mouse events', async () => {
+        const el = await fixture<Slider>(
+            html`
+                <sp-slider style="width: 500px; float: left;"></sp-slider>
+            `
+        );
+        const supportsPointerEvent = ((el as unknown) as TestableSliderType)
+            .supportsPointerEvent;
+        ((el as unknown) as TestableSliderType).supportsPointerEvent = false;
+
+        await elementUpdated(el);
+
+        expect(el.value).to.equal(10);
+
+        const handle = el.shadowRoot
+            ? (el.shadowRoot.querySelector('#handle') as HTMLDivElement)
+            : (el as Slider);
+
+        handle.dispatchEvent(
+            new MouseEvent('mousedown', {
+                clientX: 131,
+            })
+        );
+        await elementUpdated(el);
+        await nextFrame();
+        await nextFrame();
+
+        expect(el.value).to.equal(5);
+
+        await elementUpdated(el);
+
+        document.dispatchEvent(
+            new MouseEvent('mousemove', {
+                clientX: 200,
+            })
+        );
+        await elementUpdated(el);
+        await nextFrame();
+        await nextFrame();
+
+        expect(el.value).to.equal(8);
+
+        document.dispatchEvent(
+            new MouseEvent('mouseup', {
+                clientX: 131,
+            })
+        );
+        await elementUpdated(el);
+        await nextFrame();
+        await nextFrame();
+
+        expect(el.value).to.equal(5);
+
+        ((el as unknown) as TestableSliderType).supportsPointerEvent = supportsPointerEvent;
     });
     it('will `trackPointerDown` on `#controls`', async () => {
         let pointerId = -1;
@@ -146,10 +237,43 @@ describe('Slider', () => {
                 pointerId: 4,
             })
         );
+        controls.dispatchEvent(
+            new MouseEvent('mousedown', {
+                clientX: 50,
+            })
+        );
         await elementUpdated(el);
 
         expect(pointerId).to.equal(4);
         expect(el.value).to.equal(1);
+    });
+    it('will fallback to `trackMouseDown` on `#controls`', async () => {
+        const el = await fixture<Slider>(
+            html`
+                <sp-slider></sp-slider>
+            `
+        );
+        const supportsPointerEvent = ((el as unknown) as TestableSliderType)
+            .supportsPointerEvent;
+        ((el as unknown) as TestableSliderType).supportsPointerEvent = false;
+
+        await elementUpdated(el);
+
+        expect(el.value).to.equal(10);
+
+        const controls = el.shadowRoot
+            ? (el.shadowRoot.querySelector('#controls') as HTMLDivElement)
+            : (el as Slider);
+
+        controls.dispatchEvent(
+            new MouseEvent('mousedown', {
+                clientX: 50,
+            })
+        );
+        await elementUpdated(el);
+
+        expect(el.value).to.equal(1);
+        ((el as unknown) as TestableSliderType).supportsPointerEvent = supportsPointerEvent;
     });
     it('can be disabled', async () => {
         let pointerId = -1;
@@ -194,6 +318,49 @@ describe('Slider', () => {
 
         expect(pointerId).to.equal(-1);
         expect(el.value).to.equal(10);
+    });
+    it('can be disabled w/ mouse event', async () => {
+        let pointerId = -1;
+        const el = await fixture<Slider>(
+            html`
+                <sp-slider disabled></sp-slider>
+            `
+        );
+        const supportsPointerEvent = ((el as unknown) as TestableSliderType)
+            .supportsPointerEvent;
+        ((el as unknown) as TestableSliderType).supportsPointerEvent = false;
+
+        await elementUpdated(el);
+
+        expect(el.dragging).to.be.false;
+        expect(pointerId).to.equal(-1);
+        expect(el.value).to.equal(10);
+
+        const handle = el.shadowRoot
+            ? (el.shadowRoot.querySelector('#handle') as HTMLDivElement)
+            : (el as Slider);
+        handle.setPointerCapture = (id: number) => (pointerId = id);
+
+        handle.dispatchEvent(new MouseEvent('mousedown'));
+        await elementUpdated(el);
+
+        expect(el.dragging).to.be.false;
+        expect(pointerId).to.equal(-1);
+
+        const controls = el.shadowRoot
+            ? (el.shadowRoot.querySelector('#controls') as HTMLDivElement)
+            : (el as Slider);
+
+        controls.dispatchEvent(
+            new MouseEvent('mousedown', {
+                clientX: 50,
+            })
+        );
+        await elementUpdated(el);
+
+        expect(pointerId).to.equal(-1);
+        expect(el.value).to.equal(10);
+        ((el as unknown) as TestableSliderType).supportsPointerEvent = supportsPointerEvent;
     });
     it('accepts pointermove events', async () => {
         let pointerId = -1;
@@ -315,5 +482,77 @@ describe('Slider', () => {
         input.dispatchEvent(new Event('change'));
 
         expect(el.value).to.equal(0);
+    });
+    it('accepts variants', async () => {
+        const el = await fixture<Slider>(
+            html`
+                <sp-slider variant="tick"></sp-slider>
+            `
+        );
+
+        await elementUpdated(el);
+
+        expect(el.variant).to.equal('tick');
+        expect(el.getAttribute('variant')).to.equal('tick');
+
+        el.variant = 'ramp';
+
+        await elementUpdated(el);
+
+        expect(el.variant).to.equal('ramp');
+        expect(el.getAttribute('variant')).to.equal('ramp');
+
+        el.setAttribute('variant', 'filled');
+
+        await elementUpdated(el);
+
+        expect(el.variant).to.equal('filled');
+        expect(el.getAttribute('variant')).to.equal('filled');
+
+        el.removeAttribute('variant');
+
+        await elementUpdated(el);
+
+        expect(el.variant).to.equal('');
+        expect(el.hasAttribute('variant')).to.be.false;
+    });
+    it('validates variants', async () => {
+        const el = await fixture<Slider>(
+            html`
+                <sp-slider variant="other"></sp-slider>
+            `
+        );
+
+        await elementUpdated(el);
+
+        expect(el.variant).to.equal('');
+        expect(el.hasAttribute('variant')).to.be.false;
+
+        el.variant = 'tick';
+
+        await elementUpdated(el);
+
+        expect(el.variant).to.equal('tick');
+        expect(el.getAttribute('variant')).to.equal('tick');
+
+        el.variant = 'tick';
+
+        await elementUpdated(el);
+
+        expect(el.variant).to.equal('tick');
+        expect(el.getAttribute('variant')).to.equal('tick');
+    });
+    it('has a `focusElement`', async () => {
+        const el = await fixture<Slider>(
+            html`
+                <sp-slider></sp-slider>
+            `
+        );
+
+        await elementUpdated(el);
+
+        const input = el.focusElement as HTMLInputElement;
+        expect(input).to.not.be.undefined;
+        expect(input.type).to.equal('range');
     });
 });

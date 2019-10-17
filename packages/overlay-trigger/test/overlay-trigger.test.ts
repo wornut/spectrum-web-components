@@ -16,10 +16,9 @@ import { OverlayRoot } from '../../overlay-root';
 import '../../button';
 import '../../popover';
 import { Popover } from '../../popover';
-import { ActiveOverlay } from '../../overlay-root/lib/active-overlay';
 
 import { waitForPredicate, isVisible } from '../../../test/testing-helpers';
-import { fixture, aTimeout, html, expect } from '@open-wc/testing';
+import { fixture, aTimeout, html, expect, nextFrame } from '@open-wc/testing';
 
 function pressEscape(): void {
     const up = new KeyboardEvent('keyup', {
@@ -193,20 +192,16 @@ describe('Overlays', () => {
         outerButton.click();
 
         // Wait for the DOM node to be stolen and reparented into the overlay
-        await waitForPredicate(() => {
-            const parent = outerPopover.parentElement as ActiveOverlay;
-            const state = parent.state || '';
-            return state === 'visible';
-        });
+        await waitForPredicate(
+            () => !(outerPopover.parentElement instanceof OverlayTrigger)
+        );
 
         innerButton.click();
 
         // Wait for the DOM node to be stolen and reparented into the overlay
-        await waitForPredicate(() => {
-            const parent = innerPopover.parentElement as ActiveOverlay;
-            const state = parent.state || '';
-            return state === 'visible';
-        });
+        await waitForPredicate(
+            () => !(innerPopover.parentElement instanceof OverlayTrigger)
+        );
 
         expect(isVisible(outerPopover)).to.be.true;
         expect(isVisible(innerPopover)).to.be.true;
@@ -327,6 +322,39 @@ describe('Overlays', () => {
         await waitForPredicate(
             () => hoverContent.parentElement instanceof OverlayTrigger
         );
+
+        expect(isVisible(hoverContent)).to.be.false;
+    });
+
+    it('closes a hover popover', async () => {
+        const outerButton = testDiv.querySelector(
+            '#outer-button'
+        ) as HTMLElement;
+        const hoverContent = testDiv.querySelector(
+            '#hover-content'
+        ) as HTMLElement;
+        const outerTrigger = testDiv.querySelector('#trigger') as HTMLElement;
+
+        let triggerShadowDiv: HTMLElement | null = null;
+        if (outerTrigger.shadowRoot) {
+            triggerShadowDiv = outerTrigger.shadowRoot.querySelector('div');
+        }
+
+        expect(triggerShadowDiv).to.exist;
+        if (!triggerShadowDiv) return;
+
+        expect(outerButton).to.exist;
+        expect(hoverContent).to.exist;
+
+        expect(isVisible(hoverContent)).to.be.false;
+
+        const mouseEnter = new MouseEvent('mouseenter');
+        const mouseLeave = new MouseEvent('mouseleave');
+        triggerShadowDiv.dispatchEvent(mouseEnter);
+        triggerShadowDiv.dispatchEvent(mouseLeave);
+
+        await nextFrame();
+        await nextFrame();
 
         expect(isVisible(hoverContent)).to.be.false;
     });
