@@ -23,8 +23,6 @@ import spectrumSliderStyles from './spectrum-slider.css.js';
 import sliderStyles from './slider.css.js';
 import { Focusable } from '@spectrum-web-components/shared/lib/focusable.js';
 
-export type SliderEventDetail = number;
-
 export const variants = ['color', 'filled', 'ramp', 'range', 'tick'];
 
 export class Slider extends Focusable {
@@ -131,6 +129,9 @@ export class Slider extends Focusable {
     protected updated(changedProperties: PropertyValues): void {
         if (changedProperties.has('value')) {
             this.value = this.clampValue(this.value);
+            if (this.dragging) {
+                this.dispatchInputEvent();
+            }
         }
     }
 
@@ -311,7 +312,6 @@ export class Slider extends Focusable {
             return;
         }
         this.value = this.calculateHandlePosition(this.currentMouseEvent);
-        this.dispatchInputEvent();
         requestAnimationFrame(() => this._trackMouseEvent());
     }
 
@@ -346,7 +346,6 @@ export class Slider extends Focusable {
 
     private onMouseMove = (ev: MouseEvent): void => {
         this.currentMouseEvent = ev;
-        this.dispatchInputEvent();
     };
 
     private onPointerCancel(ev: PointerEvent): void {
@@ -366,7 +365,6 @@ export class Slider extends Focusable {
         this.handle.setPointerCapture(ev.pointerId);
 
         this.value = this.calculateHandlePosition(ev);
-        this.dispatchInputEvent();
     }
 
     private onTrackMouseDown(ev: MouseEvent): void {
@@ -391,7 +389,6 @@ export class Slider extends Focusable {
         this.value = this.clampValue(inputValue);
         this.input.value = this.value.toString();
 
-        this.dispatchInputEvent();
         this.dispatchChangeEvent();
     }
 
@@ -436,10 +433,9 @@ export class Slider extends Focusable {
     }
 
     private dispatchInputEvent(): void {
-        const inputEvent = new CustomEvent('sp-slider:input', {
+        const inputEvent = new Event('input', {
             bubbles: true,
             composed: true,
-            detail: this.value,
         });
 
         this.dispatchEvent(inputEvent);
@@ -448,10 +444,9 @@ export class Slider extends Focusable {
     private dispatchChangeEvent(): void {
         this.input.value = this.value.toString();
 
-        const changeEvent = new CustomEvent('sp-slider:change', {
+        const changeEvent = new Event('change', {
             bubbles: true,
             composed: true,
-            detail: this.value,
         });
 
         this.dispatchEvent(changeEvent);
@@ -472,20 +467,15 @@ export class Slider extends Focusable {
     }
 
     private get trackRightStyle(): string {
-        const width = `width: ${(1 - this.trackProgress) * 100}%; `;
-        const offset = `left: calc(${this.trackProgress * 100}% + 8px)`;
+        const width = `width: ${(1 - this.trackProgress) * 100}%;`;
+        const halfHandleWidth = `var(--spectrum-slider-handle-width, var(--spectrum-global-dimension-size-200)) / 2`;
+        const offset = `left: calc(${this.trackProgress *
+            100}% + ${halfHandleWidth})`;
 
         return width + offset;
     }
 
     private get handleStyle(): string {
         return `left: ${this.trackProgress * 100}%`;
-    }
-}
-
-declare global {
-    interface GlobalEventHandlersEventMap {
-        'sp-slider:input': CustomEvent<SliderEventDetail>;
-        'sp-slider:change': CustomEvent<SliderEventDetail>;
     }
 }

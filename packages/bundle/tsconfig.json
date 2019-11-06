@@ -9,6 +9,7 @@
     "references": [
         { "path": "../action-menu" },
         { "path": "../actionbar" },
+        { "path": "../avatar" },
         { "path": "../banner" },
         { "path": "../button" },
         { "path": "../card" },
@@ -31,6 +32,7 @@
         { "path": "../search" },
         { "path": "../sidenav" },
         { "path": "../slider" },
+        { "path": "../status-light" },
         { "path": "../switch" },
         { "path": "../tab" },
         { "path": "../tab-list" },

@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 export * from '@spectrum-web-components/action-menu';
 export * from '@spectrum-web-components/actionbar';
+export * from '@spectrum-web-components/avatar';
 export * from '@spectrum-web-components/banner';
 export * from '@spectrum-web-components/button';
 export * from '@spectrum-web-components/card';
@@ -32,6 +33,7 @@ export * from '@spectrum-web-components/radio-group';
 export * from '@spectrum-web-components/search';
 export * from '@spectrum-web-components/sidenav';
 export * from '@spectrum-web-components/slider';
+export * from '@spectrum-web-components/status-light';
 export * from '@spectrum-web-components/switch';
 export * from '@spectrum-web-components/tab';
 export * from '@spectrum-web-components/tab-list';
