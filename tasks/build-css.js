@@ -53,7 +53,12 @@ const buildCSS = () => {
         .pipe(cached('css'))
         .pipe(debug({ title: 'css' }))
         // process with postcss
-        .pipe(postcss(postCSSPlugins()))
+        .pipe(
+            postcss([
+                ...postCSSPlugins(),
+                require('../scripts/postcss-extract-used-css-vars-plugin')(),
+            ])
+        )
         // now wrap the css files in ES-modules for easy import in typescript
         .pipe(
             wrap((data) => wrapCSSResult(data.contents), {}, { parse: false })
