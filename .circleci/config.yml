@@ -50,7 +50,10 @@ jobs:
             # test & get code coverage
             - run:
                   name: Run tests
-                  command: yarn test:ci
+                  command: |
+                      ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10
+                      for i in {1..30}; do ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10; sleep 10; done &
+                      yarn test:ci
 
             - store_artifacts:
                   path: coverage
