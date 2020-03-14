@@ -29,6 +29,7 @@ module.exports = {
             'packages/shared/src/focus-visible.*',
             'packages/styles/**',
             'test/**',
+            'projects/**',
         ],
         threshold: {
             statements: 98,
