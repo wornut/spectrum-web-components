@@ -157,7 +157,9 @@ export class Textfield extends Focusable {
             <!-- @ts-ignore -->
             <textarea
                 aria-label=${this.label || this.placeholder}
-                id="input"
+                class="input"
+                maxlength=${ifDefined(this.maxlength)}
+                minlength=${ifDefined(this.minlength)}
                 pattern=${ifDefined(this.pattern)}
                 placeholder=${this.placeholder}
                 .value=${this.value}
@@ -177,7 +179,9 @@ export class Textfield extends Focusable {
             <!-- @ts-ignore -->
             <input
                 aria-label=${this.label || this.placeholder}
-                id="input"
+                class="input"
+                maxlength=${ifDefined(this.maxlength)}
+                minlength=${ifDefined(this.minlength)}
                 pattern=${ifDefined(this.pattern)}
                 placeholder=${this.placeholder}
                 .value=${this.value}

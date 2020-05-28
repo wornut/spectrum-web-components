@@ -9,8 +9,18 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-export * from './Button.js';
-export * from './ActionButton.js';
-export * from './ClearButton.js';
-export * from './ButtonBase.js';
-export * from './FieldButton.js';
+
+import { html, TemplateResult } from 'lit-html';
+
+import '../sp-stepper.js';
+
+export default {
+    title: 'Stepper',
+    component: 'sp-stepper',
+};
+
+export const Default = (): TemplateResult => {
+    return html`
+        <sp-stepper></sp-stepper>
+    `;
+};
