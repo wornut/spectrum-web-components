@@ -3604,6 +3604,11 @@
   resolved "https://registry.yarnpkg.com/@spectrum-css/statuslight/-/statuslight-3.0.0-beta.5.tgz#b1ec3144db6531a353caa5872f6b5d4d46d42035"
   integrity sha512-xVp4KBp+WKGohAinSwthZT1cE7QDcqEWLReYrHI6B0ZKZyGBD9Aio++yzpzCtOUHJUogPkj00Huux9iXsNhcug==
 
+"@spectrum-css/stepper@^3.0.0-beta.7":
+  version "3.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@spectrum-css/stepper/-/stepper-3.0.0-beta.7.tgz#fc78435ce878c5e233af13e43ed2c3e8671a2bbc"
+  integrity sha512-TQL2OBcdEgbHBwehMGgqMuWdKZZQPGcBRV5FlF0TUdOT58lEqFAO43Gajqvyte1P23lNmnX8KuMwkRfQdn0RzA==
+
 "@spectrum-css/switch@^1.0.0-beta.3":
   version "1.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/@spectrum-css/switch/-/switch-1.0.0-beta.3.tgz#7a2c73740924e7c6bba194bc25f56199fdd6cafa"

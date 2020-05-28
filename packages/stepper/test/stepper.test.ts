@@ -9,7 +9,23 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-export * from './Button.js';
-export * from './ClearButton.js';
-export * from './ButtonBase.js';
-export * from './FieldButton.js';
+
+import { html } from 'lit-element';
+import { fixture, elementUpdated, expect } from '@open-wc/testing';
+
+import '../sp-stepper.js';
+import { Stepper } from '..';
+
+describe('Stepper', () => {
+    it('loads default stepper accessibly', async () => {
+        const el = await fixture<Stepper>(
+            html`
+                <sp-stepper></sp-stepper>
+            `
+        );
+
+        await elementUpdated(el);
+
+        expect(el).to.be.accessible();
+    });
+});
