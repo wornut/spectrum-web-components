@@ -83,6 +83,9 @@
         "common-tags": "^1.8.0",
         "prismjs": "^1.15.0"
     },
+    "alias": {
+        "react": "./packages/switch/src/haunted-wrapper"
+    },
     "devDependencies": {
         "@adobe/es-modules-middleware": "~1.1.0",
         "@babel/core": "^7.9.0",
