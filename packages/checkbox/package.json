@@ -50,11 +50,19 @@
         "@spectrum-css/checkbox": "^2.1.0"
     },
     "dependencies": {
+        "@open-wc/lit-helpers": "^0.3.10",
+        "@react-aria/checkbox": "^3.0.2",
+        "@react-aria/toggle": "^3.0.2",
+        "@react-stately/toggle": "^3.0.2",
+        "@react-types/checkbox": "^3.0.2",
         "@spectrum-web-components/icon": "^0.5.0",
         "@spectrum-web-components/icons-ui": "^0.2.0",
         "@spectrum-web-components/shared": "^0.5.0",
+        "es-dev-commonjs-transformer": "^0.1.1",
+        "haunted": "^4.7.0",
         "lit-element": "^2.1.0",
         "lit-html": "^1.0.0",
+        "react": "npm:haunted",
         "tslib": "^2.0.0"
     }
 }

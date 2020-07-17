@@ -10,30 +10,23 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import {
-    CSSResultArray,
-    TemplateResult,
-    html,
-    property,
-    PropertyValues,
-} from 'lit-element';
+import { CSSResultArray, TemplateResult, html } from 'lit-element';
+
+import { useToggleState } from '@react-stately/toggle';
+import { useCheckbox } from '@react-aria/checkbox';
+
 import { CheckboxBase } from './CheckboxBase.js';
 import '@spectrum-web-components/icon/sp-icon.js';
 import {
     CheckmarkSmallIcon,
     DashSmallIcon,
 } from '@spectrum-web-components/icons-ui';
+
 import checkboxStyles from './checkbox.css.js';
 import checkmarkSmallStyles from '@spectrum-web-components/icon/src/spectrum-icon-checkmark-small.css.js';
 import dashSmallStyles from '@spectrum-web-components/icon/src/spectrum-icon-dash-small.css.js';
 
 export class Checkbox extends CheckboxBase {
-    @property({ type: Boolean, reflect: true })
-    public indeterminate = false;
-
-    @property({ type: Boolean, reflect: true })
-    public invalid = false;
-
     public static get styles(): CSSResultArray {
         return [
             ...super.styles,
@@ -44,9 +37,16 @@ export class Checkbox extends CheckboxBase {
     }
 
     protected render(): TemplateResult {
+        // use the state from react-stately, this manages isSelected state
+        const state = useToggleState(this);
+        // use the hook from react-aria, this gives us event bindings and aria
+        // attributes to use in our DOM rendering
+        const { inputProps } = useCheckbox(this, state, this);
+        // we have to hack the spread naming to be compatible with lit-html
+        // can now just spread the events and aria attributes onto the input box
         return html`
             <label id="root">
-                ${super.render()}
+                ${this.renderInput(inputProps)}
                 <span id="box">
                     <sp-icon id="checkmark" size="s" class="checkmark-small">
                         ${CheckmarkSmallIcon({ hidden: true })}
@@ -58,23 +58,5 @@ export class Checkbox extends CheckboxBase {
                 <span id="label"><slot></slot></span>
             </label>
         `;
-    }
-
-    protected updated(changes: PropertyValues): void {
-        super.updated(changes);
-        if (changes.has('invalid')) {
-            if (this.invalid) {
-                this.inputElement.setAttribute('aria-invalid', 'true');
-            } else {
-                this.inputElement.removeAttribute('aria-invalid');
-            }
-        }
-        if (changes.has('indeterminate')) {
-            if (this.indeterminate) {
-                this.inputElement.setAttribute('aria-checked', 'mixed');
-            } else {
-                this.inputElement.removeAttribute('aria-checked');
-            }
-        }
     }
 }

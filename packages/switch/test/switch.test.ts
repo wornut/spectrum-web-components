@@ -14,7 +14,7 @@ import '../sp-switch.js';
 import { Switch } from '../';
 import { fixture, elementUpdated, html, expect } from '@open-wc/testing';
 
-describe('Switch', () => {
+describe.only('Switch', () => {
     it('loads default switch accessibly', async () => {
         const el = await fixture<Switch>(
             html`

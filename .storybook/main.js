@@ -1,6 +1,9 @@
 module.exports = {
     // Globs of all the stories in your project
-    stories: ['../packages/switch/stories/*.stories.js'],
+    stories: [
+        '../packages/switch/stories/*.stories.js',
+        '../packages/checkbox/stories/*.stories.js',
+    ],
     // Configuration for es-dev-server (start-storybook only)
     esDevServer: {
         nodeResolve: true,

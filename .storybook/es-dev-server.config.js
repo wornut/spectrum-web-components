@@ -13,7 +13,7 @@ module.exports = {
     middlewares: [
         function rewriteIndex(context, next) {
             if (context.url === '/node_modules/react/lib/haunted.js') {
-                context.url = '/packages/switch/lib/haunted-wrapper.js';
+                context.url = '/packages/switch/src/haunted-wrapper.js';
             }
             return next();
         },

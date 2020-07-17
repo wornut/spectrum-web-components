@@ -9,5 +9,19 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-export * from './CheckboxBase.js';
-export * from './Checkbox.js';
+
+import * as Haunted from 'haunted';
+
+// wrap default haunted interface to make it correctly match react
+export default {
+    useState: Haunted.useState,
+    useContext: Haunted.useContext,
+    createContext: Haunted.createContext,
+    // eslint-disable-next-line
+    forwardRef: (_ref: any, ref: any) => {
+        // @TODO: investigate if this is the 'right' thing here?
+        return ref;
+    },
+};
+
+export * from 'haunted';
