@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import '@spectrum-web-components/button/sp-button.js';
 import { Button } from '@spectrum-web-components/button';
 import { html } from 'lit-element';
-import { fixture, elementUpdated, expect } from '@open-wc/testing';
+import { fixture, elementUpdated, expect, waitUntil } from '@open-wc/testing';
 
 const keyboardEvent = (code: string, shiftKey: boolean): KeyboardEvent =>
     new KeyboardEvent('keydown', {
@@ -96,19 +96,19 @@ describe('Button', () => {
 
         const labelTestableEl = (el as unknown) as TestableButtonType;
 
-        expect(labelTestableEl.hasLabel).to.be.true;
+        expect(labelTestableEl.hasLabel, 'starts with label').to.be.true;
 
         testNode.textContent = '';
 
         await elementUpdated(el);
 
-        expect(labelTestableEl.hasLabel).to.be.false;
+        await waitUntil(() => labelTestableEl.hasLabel, 'label is removed');
 
         testNode.textContent = 'Button';
 
         await elementUpdated(el);
 
-        expect(labelTestableEl.hasLabel).to.be.true;
+        expect(labelTestableEl.hasLabel, 'label is returned').to.be.true;
     });
     it('loads default w/ an icon on the right', async () => {
         const el = await fixture<Button>(
