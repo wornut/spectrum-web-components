@@ -10,16 +10,15 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const config = {
-    spectrum: '{{ name }}',
-    components: [
-        {
-            name: '{{ name }}',
-            host: {
-                selector: '.spectrum-{{className name}}',
-            },
-        },
-    ],
+import { html, TemplateResult } from '@spectrum-web-components/base';
+
+import '../sp-color-area.js';
+
+export default {
+    title: 'Color Area',
+    component: 'sp-color-area',
 };
 
-export default config;
+export const Default = (): TemplateResult => {
+    return html`<sp-color-area></sp-color-area>`;
+};

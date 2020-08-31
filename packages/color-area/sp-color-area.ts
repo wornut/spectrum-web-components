@@ -1,3 +1,4 @@
+
 /*
 Copyright 2020 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,16 +11,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const config = {
-    spectrum: '{{ name }}',
-    components: [
-        {
-            name: '{{ name }}',
-            host: {
-                selector: '.spectrum-{{className name}}',
-            },
-        },
-    ],
-};
+import { ColorArea } from './src/ColorArea.js';
 
-export default config;
+customElements.define('sp-color-area', ColorArea);
+
+declare global {
+    interface HTMLElementTagNameMap {
+        'sp-color-area': ColorArea;
+    }
+}

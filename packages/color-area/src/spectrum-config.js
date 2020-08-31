@@ -11,12 +11,12 @@ governing permissions and limitations under the License.
 */
 
 const config = {
-    spectrum: '{{ name }}',
+    spectrum: 'colorarea',
     components: [
         {
-            name: '{{ name }}',
+            name: 'color-area',
             host: {
-                selector: '.spectrum-{{className name}}',
+                selector: '.spectrum-ColorArea',
             },
         },
     ],

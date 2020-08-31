@@ -10,16 +10,10 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const config = {
-    spectrum: '{{ name }}',
-    components: [
-        {
-            name: '{{ name }}',
-            host: {
-                selector: '.spectrum-{{className name}}',
-            },
-        },
-    ],
-};
+import '@spectrum-web-components/color-area/sp-color-area.js';
+import { html } from '@spectrum-web-components/base';
+import { measureFixtureCreation } from '../../../../test/benchmark/helpers';
 
-export default config;
+measureFixtureCreation(html`
+    <sp-color-area open></sp-color-area>
+`);

@@ -3506,6 +3506,11 @@
   resolved "https://registry.yarnpkg.com/@spectrum-css/coachmark/-/coachmark-3.0.0-beta.3.tgz#4909ae08032dd911c59bb42de0f27aebc6e259e3"
   integrity sha512-SAm5VgjHtPI1vRN4nNPAJxWTIfAuh2ZnkUrHF4UTdqZUXMStzPmOwtOg5ylDIrd2OhXlB3qiu+8SAE0EsvbAzg==
 
+"@spectrum-css/colorarea@^1.0.0-beta.1":
+  version "1.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@spectrum-css/colorarea/-/colorarea-1.0.0-beta.1.tgz#d75f2b53bbedb87df4d61e3ccd21214181a66ce7"
+  integrity sha512-DcCHSPODNNdjVWeQByD8etqhUK9os+OXHpIpryXRJ/tUvx+r0NkYMrl8Qwl7i8MwpfYJWJKIBVwYx8qvEOU8rA==
+
 "@spectrum-css/commons@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@spectrum-css/commons/-/commons-2.1.0.tgz#d50726a31631e10fad0d697ac7c0a918b005ec6f"

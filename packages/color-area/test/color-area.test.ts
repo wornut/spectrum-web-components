@@ -10,16 +10,22 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const config = {
-    spectrum: '{{ name }}',
-    components: [
-        {
-            name: '{{ name }}',
-            host: {
-                selector: '.spectrum-{{className name}}',
-            },
-        },
-    ],
-};
+import { html } from 'lit-element';
+import { fixture, elementUpdated, expect } from '@open-wc/testing';
 
-export default config;
+import '../sp-color-area.js';
+import { ColorArea } from '..';
+
+describe('ColorArea', () => {
+    it('loads default color-area accessibly', async () => {
+        const el = await fixture<ColorArea>(
+            html`
+                <sp-color-area></sp-color-area>
+                `
+            );
+        
+        await elementUpdated(el);
+
+        await expect(el).to.be.accessible();
+    });
+});
