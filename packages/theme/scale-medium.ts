@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+import { CSSResult } from '@spectrum-web-components/base';
 import mediumStyles from './src/scale-medium.css.js';
 import { Theme } from './src/Theme.js';
 
-Theme.registerThemeFragment('medium', 'scale', mediumStyles);
+Theme.registerThemeFragment('medium', 'scale', mediumStyles as CSSResult);

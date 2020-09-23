@@ -311,8 +311,8 @@ export class Tabs extends Focusable {
         return;
     };
 
-    protected async _getUpdateComplete(): Promise<void> {
-        await super._getUpdateComplete();
+    protected async getUpdateComplete(): Promise<void> {
+        await super.getUpdateComplete();
         await this.tabChangePromise;
     }
 

@@ -132,8 +132,8 @@ export class Icon extends SpectrumElement {
         return { iconset: iconsetName, icon: iconName };
     }
 
-    protected async _getUpdateComplete(): Promise<void> {
-        await super._getUpdateComplete();
+    protected async getUpdateComplete(): Promise<void> {
+        await super.getUpdateComplete();
         await this.updateIconPromise;
     }
 }

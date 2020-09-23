@@ -416,8 +416,8 @@ export class DropdownBase extends Focusable {
     private menuStatePromise = Promise.resolve();
     private menuStateResolver!: () => void;
 
-    protected async _getUpdateComplete(): Promise<void> {
-        await super._getUpdateComplete();
+    protected async getUpdateComplete(): Promise<void> {
+        await super.getUpdateComplete();
         await this.menuStatePromise;
     }
 

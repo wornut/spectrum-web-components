@@ -19,7 +19,7 @@ import {
     property,
     css,
     query,
-} from 'lit-element';
+} from '@spectrum-web-components/base';
 import { toHtmlTemplateString } from '../utils/templates.js';
 import DarkThemeStyles from 'prismjs/themes/prism-okaidia.css';
 import LightThemeStyles from 'prismjs/themes/prism.css';

@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { LitElement, property, UpdatingElement } from 'lit-element';
+import { LitElement, UpdatingElement } from 'lit-element';
+import { property } from 'lit-element/lib/decorators.js';
 import { Theme } from '@spectrum-web-components/theme';
 
 type Constructor<T = Record<string, unknown>> = {

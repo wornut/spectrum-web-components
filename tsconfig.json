@@ -2,6 +2,7 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./packages",
+        "allowJs": true,
         "declaration": true,
         "experimentalDecorators": true,
         "importHelpers": true,

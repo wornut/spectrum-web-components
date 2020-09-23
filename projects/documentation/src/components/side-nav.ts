@@ -17,7 +17,7 @@ import {
     PropertyValues,
     TemplateResult,
     customElement,
-} from 'lit-element';
+} from '@spectrum-web-components/base';
 import './side-nav-search.js';
 import sideNavStyles from './side-nav.css';
 import '@spectrum-web-components/sidenav/sp-sidenav.js';

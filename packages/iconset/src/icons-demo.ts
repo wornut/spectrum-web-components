@@ -15,7 +15,7 @@ import {
     css,
     html,
     TemplateResult,
-    CSSResult,
+    CSSResultGroup,
     property,
     customElement,
 } from '@spectrum-web-components/base';
@@ -45,7 +45,7 @@ export class IconsDemo extends SpectrumElement {
         this.iconset = iconset.getIconList();
         this.requestUpdate();
     }
-    public static get styles(): CSSResult[] {
+    public static get styles(): CSSResultGroup {
         return [
             css`
                 :host {

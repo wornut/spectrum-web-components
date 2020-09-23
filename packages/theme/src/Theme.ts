@@ -344,4 +344,4 @@ export class Theme extends HTMLElement implements ThemeKindProvider {
     }
 }
 
-Theme.registerThemeFragment('core', 'core', coreStyles);
+Theme.registerThemeFragment('core', 'core', coreStyles as CSSResult);

@@ -17,7 +17,7 @@ import {
     LitElement,
     PropertyValues,
     TemplateResult,
-} from 'lit-element';
+} from '@spectrum-web-components/base';
 import '@spectrum-web-components/theme/sp-theme.js';
 import { Color, Scale } from '@spectrum-web-components/theme';
 import '@spectrum-web-components/dropdown/sp-dropdown.js';
