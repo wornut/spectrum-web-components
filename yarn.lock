@@ -2995,6 +2995,31 @@
   resolved "https://registry.yarnpkg.com/@spectrum-css/coachmark/-/coachmark-3.0.0-beta.6.tgz#607b7f8403689780d54487041ab7bbdcfe448979"
   integrity sha512-KpqBYgQ2AiZRvQWQAZkznwprdv1yEeAhSPORtneVZoo5Sb5mA3wzJiwimPesOM37kDHx6l4swRrAA8IqWSEWHA==
 
+"@spectrum-css/colorarea@^1.0.0-beta.3":
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@spectrum-css/colorarea/-/colorarea-1.0.0-beta.3.tgz#fe504408e68173c333023e18d0cd1bbe81f4eb3d"
+  integrity sha512-dxMxSkztwqTSz8/TiSQvE8838BkH9hMqZxhmstYj/mEh9GhDLKETSn3NfJUUIkukV1vHaT/fjypMkZvFBejxkA==
+
+"@spectrum-css/colorhandle@^1.0.0-beta.3":
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@spectrum-css/colorhandle/-/colorhandle-1.0.0-beta.3.tgz#5911b610285b1925512245c0e331e7d5955588ca"
+  integrity sha512-MGQ50rqfRvjc3LUoMfTEY/XwcIArfLLRU16wTb8e1G4WQANaRsGawGIBBfE7bWjEWkSPQHK+tgYXrHx/K9WXaA==
+
+"@spectrum-css/colorloupe@^1.0.0-beta.3":
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@spectrum-css/colorloupe/-/colorloupe-1.0.0-beta.3.tgz#0e2a0a6d07df3e756998a9b7ba4f80eaeb588aef"
+  integrity sha512-a5Cl5FYr9bHVcNvxONf1aye33nEeOue73ptpANGpK344O2rO+vtlZQWRqTtUexEAKzWRHsW0fCp9CVEqmfwwAw==
+
+"@spectrum-css/colorslider@^1.0.0-beta.4":
+  version "1.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@spectrum-css/colorslider/-/colorslider-1.0.0-beta.4.tgz#e307a5afe62ba10946e4b8d68a91508b38442e0c"
+  integrity sha512-vq1d0A/UnrUz8frDqZRl4fgad4AVa6E9esmtZZiQFWbN1wcwt29IH4eegQoNRiU/qXd0pGTprmZZImX/z2T/6w==
+
+"@spectrum-css/colorwheel@^1.0.0-beta.3":
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@spectrum-css/colorwheel/-/colorwheel-1.0.0-beta.3.tgz#424db11f73e12d12c3844250a5b6235618571c00"
+  integrity sha512-6BzHV4yZ/l8lYdx7OG9e/cQG63pf84yhnIpZu9X+mjXi+reH1qTU40BaT2tmcxATSnsfywrXte2ADI5SAR9QLg==
+
 "@spectrum-css/commons@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@spectrum-css/commons/-/commons-3.0.0.tgz#61b01fde7ee14f3c61220568339a4b7c07e7d194"
