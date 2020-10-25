@@ -96,7 +96,36 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
         margin-left var(--spectrum-global-animation-duration-100, 0.13s)
             ease-in-out,
         margin-top var(--spectrum-global-animation-duration-100, 0.13s)
-            ease-in-out; /* .spectrum-ColorHandle */
+            ease-in-out;
+}
+:host,
+:host:after {
+    /* .spectrum-ColorHandle,
+   * .spectrum-ColorHandle:after */
+    border-radius: 100%;
+}
+:host:after {
+    /* .spectrum-ColorHandle:after */
+    content: '';
+    left: calc(50% - var(--spectrum-global-dimension-size-300) / 2);
+    top: calc(50% - var(--spectrum-global-dimension-size-300) / 2);
+    position: absolute;
+    display: block;
+    width: var(--spectrum-global-dimension-size-300);
+    height: var(--spectrum-global-dimension-size-300);
+}
+:host([disabled]) {
+    /* .spectrum-ColorHandle.is-disabled */
+    pointer-events: none;
+}
+.color {
+    /* .spectrum-ColorHandle-color */
+    border-radius: 100%;
+    width: 100%;
+    height: 100%;
+}
+:host {
+    /* .spectrum-ColorHandle */
     border-color: var(
         --spectrum-colorhandle-inner-border-color,
         var(--spectrum-global-color-static-white)
@@ -129,25 +158,8 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
             transparent 0
         );
 }
-:host,
-:host:after {
-    /* .spectrum-ColorHandle,
-   * .spectrum-ColorHandle:after */
-    border-radius: 100%;
-}
-:host:after {
-    /* .spectrum-ColorHandle:after */
-    content: '';
-    left: calc(50% - var(--spectrum-global-dimension-size-300) / 2);
-    top: calc(50% - var(--spectrum-global-dimension-size-300) / 2);
-    position: absolute;
-    display: block;
-    width: var(--spectrum-global-dimension-size-300);
-    height: var(--spectrum-global-dimension-size-300);
-}
 :host([disabled]) {
     /* .spectrum-ColorHandle.is-disabled */
-    pointer-events: none; /* .spectrum-ColorHandle.is-disabled */
     border-color: var(
         --spectrum-colorhandle-inner-border-color-disabled,
         var(--spectrum-global-color-gray-400)
@@ -158,19 +170,16 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
     );
     box-shadow: none;
 }
+:host([disabled]) .color {
+    /* .spectrum-ColorHandle.is-disabled .spectrum-ColorHandle-color */
+    display: none;
+}
 .color {
     /* .spectrum-ColorHandle-color */
-    border-radius: 100%;
-    width: 100%;
-    height: 100%; /* .spectrum-ColorHandle-color */
     box-shadow: inset 0 0 0
         var(
             --spectrum-colorhandle-outer-border-size,
             var(--spectrum-global-dimension-static-size-10)
         )
         rgba(0, 0, 0, 0.42);
-}
-:host([disabled]) .color {
-    /* .spectrum-ColorHandle.is-disabled .spectrum-ColorHandle-color */
-    display: none;
 }
