@@ -79,8 +79,7 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
         --spectrum-colorwheel-border-size,
         var(--spectrum-alias-border-size-thin)
     );
-    border-style: solid; /* .spectrum-ColorWheel-gradient */
-    border-color: var(--spectrum-colorarea-border-color);
+    border-style: solid;
 }
 .wheel {
     /* .spectrum-ColorWheel-wheel */
@@ -121,6 +120,10 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
 :host([disabled]) .segment {
     /* .spectrum-ColorWheel.is-disabled .spectrum-ColorWheel-segment */
     display: none;
+}
+::slotted([slot='gradient']) {
+    /* .spectrum-ColorWheel-gradient */
+    border-color: var(--spectrum-colorarea-border-color);
 }
 .innerCircle,
 .outerCircle {
