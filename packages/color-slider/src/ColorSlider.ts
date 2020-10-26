@@ -12,19 +12,20 @@ governing permissions and limitations under the License.
 
 import {
     html,
-    SpectrumElement,
     CSSResultArray,
     TemplateResult,
     property,
+    query,
 } from '@spectrum-web-components/base';
 
+import { Focusable } from '@spectrum-web-components/shared/src/focusable.js';
 import '@spectrum-web-components/color-handle/sp-color-handle.js';
 import styles from './color-slider.css.js';
 
 /**
  * @element sp-color-slider
  */
-export class ColorSlider extends SpectrumElement {
+export class ColorSlider extends Focusable {
     public static get styles(): CSSResultArray {
         return [styles];
     }
@@ -33,10 +34,91 @@ export class ColorSlider extends SpectrumElement {
     public disabled = false;
 
     @property({ type: Boolean, reflect: true })
+    public focused = false;
+
+    @property({ type: Boolean, reflect: true })
     public vertical = false;
+
+    @property({ type: Number })
+    public value = 0;
 
     @property({ type: String })
     public color = 'rgb(255, 0, 0)';
+
+    @property({ type: Number })
+    public step = 1;
+
+    private get altered(): number {
+        return this._altered;
+    }
+
+    private set altered(altered: number) {
+        this._altered = altered;
+        this.step = Math.max(1, this.altered * 10);
+    }
+
+    private _altered = 0;
+
+    private altKeys = new Set();
+
+    @query('input')
+    public input!: HTMLInputElement;
+
+    public get focusElement(): HTMLInputElement {
+        return this.input;
+    }
+
+    private handleKeydown(event: KeyboardEvent): void {
+        event.preventDefault();
+        const { key } = event;
+        if (
+            key === 'Shift' ||
+            key === 'Meta' ||
+            key === 'Control' ||
+            key === 'Alt'
+        ) {
+            this.altKeys.add(key);
+            this.altered = this.altKeys.size;
+        }
+        let delta = 0;
+        switch (key) {
+            case 'ArrowUp':
+                delta = this.step;
+                break;
+            case 'ArrowDown':
+                delta = -this.step;
+                break;
+            case 'ArrowLeft':
+                delta = this.step * (this.isLTR ? -1 : 1);
+                break;
+            case 'ArrowRight':
+                delta = this.step * (this.isLTR ? 1 : -1);
+                break;
+        }
+        this.value = Math.min(100, Math.max(0, this.value + delta));
+    }
+
+    private handleKeyup(event: KeyboardEvent): void {
+        event.preventDefault();
+        const { key } = event;
+        if (
+            key === 'Shift' ||
+            key === 'Meta' ||
+            key === 'Control' ||
+            key === 'Alt'
+        ) {
+            this.altKeys.delete(key);
+            this.altered = this.altKeys.size;
+        }
+    }
+
+    private handleFocus(): void {
+        this.focused = true;
+    }
+
+    private handleBlur(): void {
+        this.focused = false;
+    }
 
     protected render(): TemplateResult {
         return html`
@@ -56,6 +138,7 @@ export class ColorSlider extends SpectrumElement {
                 class="handle"
                 color=${this.color}
                 ?disabled=${this.disabled}
+                style="left: ${this.value}%"
             ></sp-color-handle>
 
             <input
@@ -63,8 +146,13 @@ export class ColorSlider extends SpectrumElement {
                 class="slider"
                 min="0"
                 max="100"
-                step="1"
+                step=${this.step}
                 aria-label="color"
+                .value=${String(this.value)}
+                @keydown=${this.handleKeydown}
+                @keyup=${this.handleKeyup}
+                @focus=${this.handleFocus}
+                @blur=${this.handleBlur}
             />
         `;
     }

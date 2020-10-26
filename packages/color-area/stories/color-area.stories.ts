@@ -25,7 +25,7 @@ export const area = (): TemplateResult => {
     `;
 };
 
-export const areaDisable = (): TemplateResult => {
+export const areaDisabled = (): TemplateResult => {
     return html`
         <sp-color-area disabled></sp-color-area>
     `;
