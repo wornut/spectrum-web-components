@@ -445,6 +445,81 @@ export class ColorSlider extends Focusable {
         this.handlePointermove(event);
     }
 
+    @property({ type: Number })
+    public step = 1;
+
+    private get altered(): number {
+        return this._altered;
+    }
+
+    private set altered(altered: number) {
+        this._altered = altered;
+        this.step = Math.max(1, this.altered * 10);
+    }
+
+    private _altered = 0;
+
+    private altKeys = new Set();
+
+    @query('input')
+    public input!: HTMLInputElement;
+
+    public get focusElement(): HTMLInputElement {
+        return this.input;
+    }
+
+    private handleKeydown(event: KeyboardEvent): void {
+        event.preventDefault();
+        const { key } = event;
+        if (
+            key === 'Shift' ||
+            key === 'Meta' ||
+            key === 'Control' ||
+            key === 'Alt'
+        ) {
+            this.altKeys.add(key);
+            this.altered = this.altKeys.size;
+        }
+        let delta = 0;
+        switch (key) {
+            case 'ArrowUp':
+                delta = this.step;
+                break;
+            case 'ArrowDown':
+                delta = -this.step;
+                break;
+            case 'ArrowLeft':
+                delta = this.step * (this.isLTR ? -1 : 1);
+                break;
+            case 'ArrowRight':
+                delta = this.step * (this.isLTR ? 1 : -1);
+                break;
+        }
+        this.value = Math.min(100, Math.max(0, this.value + delta));
+    }
+
+    private handleKeyup(event: KeyboardEvent): void {
+        event.preventDefault();
+        const { key } = event;
+        if (
+            key === 'Shift' ||
+            key === 'Meta' ||
+            key === 'Control' ||
+            key === 'Alt'
+        ) {
+            this.altKeys.delete(key);
+            this.altered = this.altKeys.size;
+        }
+    }
+
+    private handleFocus(): void {
+        this.focused = true;
+    }
+
+    private handleBlur(): void {
+        this.focused = false;
+    }
+
     protected render(): TemplateResult {
         return html`
             <div
