@@ -12,11 +12,12 @@ governing permissions and limitations under the License.
 
 import {
     html,
-    SpectrumElement,
     CSSResultArray,
     TemplateResult,
     property,
+    query,
 } from '@spectrum-web-components/base';
+import { Focusable } from '@spectrum-web-components/shared/src/focusable.js';
 
 import styles from './color-wheel.css.js';
 import { wheel } from './wheel-svg.js';
@@ -24,7 +25,7 @@ import { wheel } from './wheel-svg.js';
 /**
  * @element sp-color-wheel
  */
-export class ColorWheel extends SpectrumElement {
+export class ColorWheel extends Focusable {
     public static get styles(): CSSResultArray {
         return [styles];
     }
@@ -32,8 +33,98 @@ export class ColorWheel extends SpectrumElement {
     @property({ type: Boolean, reflect: true })
     public disabled = false;
 
+    @property({ type: Boolean, reflect: true })
+    public focused = false;
+
     @property({ type: String })
-    public color = 'rgb(255, 0, 0)';
+    public color = 'hsl(0, 100%, 50%)';
+
+    @property({ type: Number })
+    public step = 1;
+
+    @property({ type: Number })
+    public get value(): number {
+        return this._value;
+    }
+
+    public set value(value: number) {
+        this._value = value;
+        this.color = `hsl(${this.value}, 100%, 50%)`;
+    }
+
+    private _value = 0;
+
+    private get altered(): number {
+        return this._altered;
+    }
+
+    private set altered(altered: number) {
+        this._altered = altered;
+        this.step = Math.max(1, this.altered * 10);
+    }
+
+    private _altered = 0;
+
+    private altKeys = new Set();
+
+    @query('input')
+    public input!: HTMLInputElement;
+
+    public get focusElement(): HTMLInputElement {
+        return this.input;
+    }
+
+    private handleKeydown(event: KeyboardEvent): void {
+        event.preventDefault();
+        const { key } = event;
+        if (
+            key === 'Shift' ||
+            key === 'Meta' ||
+            key === 'Control' ||
+            key === 'Alt'
+        ) {
+            this.altKeys.add(key);
+            this.altered = this.altKeys.size;
+        }
+        let delta = 0;
+        switch (key) {
+            case 'ArrowUp':
+                delta = this.step;
+                break;
+            case 'ArrowDown':
+                delta = -this.step;
+                break;
+            case 'ArrowLeft':
+                delta = this.step * (this.isLTR ? -1 : 1);
+                break;
+            case 'ArrowRight':
+                delta = this.step * (this.isLTR ? 1 : -1);
+                break;
+        }
+        this.value = (360 + this.value + delta) % 360;
+    }
+
+    private handleKeyup(event: KeyboardEvent): void {
+        event.preventDefault();
+        const { key } = event;
+        if (
+            key === 'Shift' ||
+            key === 'Meta' ||
+            key === 'Control' ||
+            key === 'Alt'
+        ) {
+            this.altKeys.delete(key);
+            this.altered = this.altKeys.size;
+        }
+    }
+
+    private handleFocus(): void {
+        this.focused = true;
+    }
+
+    private handleBlur(): void {
+        this.focused = false;
+    }
 
     protected render(): TemplateResult {
         return html`
@@ -45,7 +136,9 @@ export class ColorWheel extends SpectrumElement {
                 class="handle"
                 color=${this.color}
                 ?disabled=${this.disabled}
-                style="transform: translate(67.5px, 0);"
+                style="transform: translate(${67.5 *
+                Math.cos((this.value * Math.PI) / 180)}px, ${67.5 *
+                Math.sin((this.value * Math.PI) / 180)}px);"
             ></sp-color-handle>
 
             <input
@@ -54,7 +147,12 @@ export class ColorWheel extends SpectrumElement {
                 aria-label="hue"
                 min="0"
                 max="360"
-                step="1"
+                step=${this.step}
+                .value=${String(this.value)}
+                @keydown=${this.handleKeydown}
+                @keyup=${this.handleKeyup}
+                @focus=${this.handleFocus}
+                @blur=${this.handleBlur}
             />
         `;
     }
