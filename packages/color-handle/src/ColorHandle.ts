@@ -16,6 +16,7 @@ import {
     CSSResultArray,
     TemplateResult,
     property,
+    PropertyValues,
 } from '@spectrum-web-components/base';
 
 import '@spectrum-web-components/color-loupe/sp-color-loupe.js';
@@ -38,6 +39,16 @@ export class ColorHandle extends SpectrumElement {
     @property({ type: String })
     public color = 'rgba(255, 0, 0, 0.5)';
 
+    private handlePointerdown(event: PointerEvent): void {
+        this.open = true;
+        this.setPointerCapture(event.pointerId);
+    }
+
+    private handlePointerup(event: PointerEvent): void {
+        this.open = false;
+        this.releasePointerCapture(event.pointerId);
+    }
+
     protected render(): TemplateResult {
         return html`
             <div class="color" style="background-color: ${this.color}"></div>
@@ -46,5 +57,12 @@ export class ColorHandle extends SpectrumElement {
                 ?open=${this.open && !this.disabled}
             ></sp-color-loupe>
         `;
+    }
+
+    protected firstUpdated(changed: PropertyValues): void {
+        super.firstUpdated(changed);
+        this.addEventListener('pointerdown', this.handlePointerdown);
+        this.addEventListener('pointerup', this.handlePointerup);
+        this.addEventListener('pointercancel', this.handlePointerup);
     }
 }
