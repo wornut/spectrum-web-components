@@ -21,33 +21,45 @@ export default {
 
 export const Default = (): TemplateResult => {
     return html`
-        <sp-textfield placeholder="Enter your name"></sp-textfield>
-        <sp-textfield placeholder="Enter your name" disabled></sp-textfield>
+        <sp-textfield placeholder="Enter your name">
+            <input />
+        </sp-textfield>
+        <sp-textfield placeholder="Enter your name" disabled>
+            <input />
+        </sp-textfield>
         <sp-textfield
             placeholder="Enter your name"
             pattern="[\\w\\s]*"
             required
             value="A valid input"
-        ></sp-textfield>
+        >
+            <input />
+        </sp-textfield>
         <sp-textfield
             placeholder="Enter your name"
             pattern="[\\w\\s]*"
             required
             value="A valid input"
             disabled
-        ></sp-textfield>
+        >
+            <input />
+        </sp-textfield>
         <sp-textfield
             placeholder="Enter your name"
             pattern="[\\d]*"
             value="Not a valid input"
-        ></sp-textfield>
+        >
+            <input />
+        </sp-textfield>
         <sp-textfield
             placeholder="Enter your name"
             pattern="^[\\d]$"
             required
             value="Not a valid input"
             disabled
-        ></sp-textfield>
+        >
+            <input />
+        </sp-textfield>
     `;
 };
 

@@ -23,17 +23,18 @@ export default {
 export const standard = (): TemplateResult => {
     return html`
         <sp-field-label for="lifestory-1">Life Story</sp-field-label>
-        <sp-textfield
-            placeholder="Enter your life story"
-            id="lifestory-1"
-        ></sp-textfield>
+        <sp-textfield placeholder="Enter your life story" id="lifestory-1">
+            <input />
+        </sp-textfield>
         <sp-field-label for="lifestory-2" disabled>
             Life Story
             <sp-textfield
                 placeholder="Enter your life story"
                 disabled
                 id="lifestory-2"
-            ></sp-textfield>
+            >
+                <input />
+            </sp-textfield>
         </sp-field-label>
     `;
 };
@@ -47,10 +48,9 @@ export const sideAlignStart = (): TemplateResult => {
         >
             Life Story
         </sp-field-label>
-        <sp-textfield
-            placeholder="Enter your life story"
-            id="lifestory"
-        ></sp-textfield>
+        <sp-textfield placeholder="Enter your life story" id="lifestory">
+            <input />
+        </sp-textfield>
     `;
 };
 
@@ -59,25 +59,22 @@ export const sideAlignEnd = (): TemplateResult => {
         <sp-field-label for="lifestory" side-aligned="end" style="width: 72px;">
             Life Story
         </sp-field-label>
-        <sp-textfield
-            placeholder="Enter your life story"
-            id="lifestory"
-        ></sp-textfield>
+        <sp-textfield placeholder="Enter your life story" id="lifestory">
+            <input />
+        </sp-textfield>
     `;
 };
 
 export const required = (): TemplateResult => {
     return html`
         <sp-field-label for="lifestory-1" required>Life Story</sp-field-label>
-        <sp-textfield
-            placeholder="Enter your life story"
-            id="lifestory-1"
-        ></sp-textfield>
+        <sp-textfield placeholder="Enter your life story" id="lifestory-1">
+            <input />
+        </sp-textfield>
         <sp-field-label for="lifestory-2">Life Story (Required)</sp-field-label>
-        <sp-textfield
-            placeholder="Enter your life story"
-            id="lifestory-2"
-        ></sp-textfield>
+        <sp-textfield placeholder="Enter your life story" id="lifestory-2">
+            <input />
+        </sp-textfield>
         <br />
         <br />
         <sp-field-label
@@ -88,10 +85,9 @@ export const required = (): TemplateResult => {
         >
             Life Story
         </sp-field-label>
-        <sp-textfield
-            placeholder="Enter your life story"
-            id="lifestory-3"
-        ></sp-textfield>
+        <sp-textfield placeholder="Enter your life story" id="lifestory-3">
+            <input />
+        </sp-textfield>
         <br />
         <br />
         <sp-field-label
@@ -102,10 +98,9 @@ export const required = (): TemplateResult => {
         >
             Life Story
         </sp-field-label>
-        <sp-textfield
-            placeholder="Enter your life story"
-            id="lifestory-4"
-        ></sp-textfield>
+        <sp-textfield placeholder="Enter your life story" id="lifestory-4">
+            <input />
+        </sp-textfield>
         <sp-field-label for="lifestory-5" required disabled>
             Life Story
         </sp-field-label>
@@ -113,7 +108,9 @@ export const required = (): TemplateResult => {
             placeholder="Enter your life story"
             disabled
             id="lifestory-5"
-        ></sp-textfield>
+        >
+            <input />
+        </sp-textfield>
     `;
 };
 

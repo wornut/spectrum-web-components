@@ -105,7 +105,9 @@ describe('FieldLabel', () => {
             html`
                 <div>
                     <sp-field-label required for="test"></sp-field-label>
-                    <sp-textfield id="test"></sp-textfield>
+                    <sp-textfield id="test">
+                        <input />
+                    </sp-textfield>
                 </div>
             `
         );
@@ -125,7 +127,9 @@ describe('FieldLabel', () => {
             html`
                 <div>
                     <sp-field-label required for="test"></sp-field-label>
-                    <sp-textfield id="test"></sp-textfield>
+                    <sp-textfield id="test">
+                        <input />
+                    </sp-textfield>
                 </div>
             `
         );

@@ -14,11 +14,9 @@ import {
     html,
     property,
     CSSResultArray,
-    query,
     TemplateResult,
     PropertyValues,
     nothing,
-    ifDefined,
 } from '@spectrum-web-components/base';
 
 import { Focusable } from '@spectrum-web-components/shared/src/focusable.js';
@@ -40,8 +38,10 @@ export class Textfield extends Focusable {
     @property({ type: Boolean, reflect: true })
     public focused = false;
 
-    @query('#input')
-    private inputElement!: HTMLInputElement | HTMLTextAreaElement;
+    // @query('#input')
+    private get inputElement(): HTMLInputElement | HTMLTextAreaElement {
+        return this.querySelector('input, textarea') as HTMLInputElement;
+    }
 
     @property({ type: Boolean, reflect: true })
     public invalid = false;
@@ -156,42 +156,53 @@ export class Textfield extends Focusable {
                   `
                 : nothing}
             <!-- @ts-ignore -->
-            <textarea
-                aria-label=${this.label || this.placeholder}
-                id="input"
-                pattern=${ifDefined(this.pattern)}
-                placeholder=${this.placeholder}
-                .value=${this.value}
-                @change=${this.onChange}
-                @input=${this.onInput}
-                @focus=${this.onFocus}
-                @blur=${this.onBlur}
-                ?disabled=${this.disabled}
-                ?required=${this.required}
-                autocomplete=${ifDefined(this.autocomplete)}
-            ></textarea>
+            <slot></slot>
         `;
     }
+
+    //         <textarea
+    //             aria-label=${this.label || this.placeholder}
+    //             id="input"
+    //             pattern=${ifDefined(this.pattern)}
+    //             placeholder=${this.placeholder}
+    //             .value=${this.value}
+    //             @change=${this.onChange}
+    //             @input=${this.onInput}
+    //             @focus=${this.onFocus}
+    //             @blur=${this.onBlur}
+    //             ?disabled=${this.disabled}
+    //             ?required=${this.required}
+    //             autocomplete=${ifDefined(this.autocomplete)}
+    //         ></textarea>
+    //     `;
+    // }
 
     private get renderInput(): TemplateResult {
         return html`
             <!-- @ts-ignore -->
-            <input
-                aria-label=${this.label || this.placeholder}
-                id="input"
-                pattern=${ifDefined(this.pattern)}
-                placeholder=${this.placeholder}
-                .value=${this.value}
-                @change=${this.onChange}
-                @input=${this.onInput}
-                @focus=${this.onFocus}
-                @blur=${this.onBlur}
-                ?disabled=${this.disabled}
-                ?required=${this.required}
-                autocomplete=${ifDefined(this.autocomplete)}
-            />
+            <slot></slot>
         `;
     }
+
+    // private get renderInput(): TemplateResult {
+    //     return html`
+    //         <!-- @ts-ignore -->
+    //         <input
+    //             aria-label=${this.label || this.placeholder}
+    //             id="input"
+    //             pattern=${ifDefined(this.pattern)}
+    //             placeholder=${this.placeholder}
+    //             .value=${this.value}
+    //             @change=${this.onChange}
+    //             @input=${this.onInput}
+    //             @focus=${this.onFocus}
+    //             @blur=${this.onBlur}
+    //             ?disabled=${this.disabled}
+    //             ?required=${this.required}
+    //             autocomplete=${ifDefined(this.autocomplete)}
+    //         />
+    //     `;
+    // }
 
     protected render(): TemplateResult {
         return html`
@@ -200,7 +211,28 @@ export class Textfield extends Focusable {
         `;
     }
 
+    protected firstUpdated(changes: PropertyValues): void {
+        super.firstUpdated(changes);
+        if (!this.inputElement) return;
+        this.inputElement.addEventListener('change', this.onChange.bind(this));
+        this.inputElement.addEventListener('input', this.onInput.bind(this));
+        this.inputElement.addEventListener('focus', this.onFocus.bind(this));
+        this.inputElement.addEventListener('blur', this.onBlur.bind(this));
+    }
+
     protected updated(changedProperties: PropertyValues): void {
+        if (!this.inputElement) return;
+        this.inputElement.setAttribute(
+            'aria-label',
+            this.label || this.placeholder
+        );
+        this.pattern && this.inputElement.setAttribute('pattern', this.pattern);
+        this.inputElement.setAttribute('placeholder', this.placeholder);
+        this.inputElement.value = this.value;
+        this.inputElement.disabled = this.disabled;
+        this.inputElement.required = this.required;
+        this.autocomplete &&
+            this.inputElement.setAttribute('autocomplete', this.autocomplete);
         if (
             changedProperties.has('value') ||
             (changedProperties.has('required') && this.required)
