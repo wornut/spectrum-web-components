@@ -16,7 +16,7 @@ governing permissions and limitations under the License.
     pointer-events: none;
 }
 
-:host([grows]) #input {
+:host([grows]) ::slotted(*) {
     position: absolute;
     top: 0;
     left: 0;
