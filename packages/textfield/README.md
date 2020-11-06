@@ -26,7 +26,7 @@ import { Textfield } from '@spectrum-web-components/textfield';
 ## Example
 
 ```html
-<sp-textfield placeholder="Enter your name"></sp-textfield>
+<sp-textfield placeholder="Enter your name"><input /></sp-textfield>
 ```
 
 ## Variants
@@ -36,7 +36,7 @@ import { Textfield } from '@spectrum-web-components/textfield';
 Dictate the validity state of the text entry with the `valid` attribute.
 
 ```html
-<sp-textfield placeholder="Enter your name" valid></sp-textfield>
+<sp-textfield placeholder="Enter your name" valid><input /></sp-textfield>
 ```
 
 ### Invalid
@@ -44,7 +44,7 @@ Dictate the validity state of the text entry with the `valid` attribute.
 Dictate the invalidity state of the text entry with the `invalid` attribute.
 
 ```html
-<sp-textfield placeholder="Enter your name" invalid></sp-textfield>
+<sp-textfield placeholder="Enter your name" invalid><input /></sp-textfield>
 ```
 
 ### Quiet
@@ -52,5 +52,5 @@ Dictate the invalidity state of the text entry with the `invalid` attribute.
 The quiet style works best when a clear layout (vertical stack, table, grid) assists in a user's ability to parse the element. Too many quiet components in a small space can be hard to read.
 
 ```html
-<sp-textfield placeholder="Enter your name" quiet></sp-textfield>
+<sp-textfield placeholder="Enter your name" quiet><input /></sp-textfield>
 ```

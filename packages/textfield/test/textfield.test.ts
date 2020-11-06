@@ -17,7 +17,9 @@ describe('Textfield', () => {
     it('loads default textfield accessibly', async () => {
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield placeholder="Enter Your Name"></sp-textfield>
+                <sp-textfield placeholder="Enter Your Name">
+                    <input />
+                </sp-textfield>
             `
         );
 
@@ -28,10 +30,9 @@ describe('Textfield', () => {
     it('loads multiline textfield accessibly', async () => {
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield
-                    placeholder="Enter your name"
-                    multiline
-                ></sp-textfield>
+                <sp-textfield placeholder="Enter your name" multiline>
+                    <textarea></textarea>
+                </sp-textfield>
             `
         );
 
@@ -43,13 +44,13 @@ describe('Textfield', () => {
         const testPlaceholder = 'Enter your name';
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield placeholder=${testPlaceholder}></sp-textfield>
+                <sp-textfield placeholder=${testPlaceholder}>
+                    <input />
+                </sp-textfield>
             `
         );
         expect(el).to.not.equal(undefined);
-        const input = el.shadowRoot
-            ? el.shadowRoot.querySelector('input')
-            : null;
+        const input = el.focusElement;
         expect(input).to.not.be.null;
         const placeholder = input ? input.placeholder : null;
         expect(placeholder).to.equal(testPlaceholder);
@@ -57,26 +58,21 @@ describe('Textfield', () => {
     it('multiline', async () => {
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield
-                    placeholder="Enter your name"
-                    multiline
-                ></sp-textfield>
+                <sp-textfield placeholder="Enter your name" multiline>
+                    <textarea></textarea>
+                </sp-textfield>
             `
         );
         expect(el).to.not.equal(undefined);
-        const input = el.shadowRoot
-            ? el.shadowRoot.querySelector('textarea')
-            : null;
+        const input = el.focusElement;
         expect(input).to.not.be.null;
     });
     it('grows', async () => {
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield
-                    placeholder="Enter your name"
-                    multiline
-                    grows
-                ></sp-textfield>
+                <sp-textfield placeholder="Enter your name" multiline grows>
+                    <textarea></textarea>
+                </sp-textfield>
             `
         );
         expect(el).to.not.equal(undefined);
@@ -92,7 +88,9 @@ describe('Textfield', () => {
                     placeholder="Enter your name"
                     value="Your name"
                     required
-                ></sp-textfield>
+                >
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
@@ -113,7 +111,9 @@ describe('Textfield', () => {
                     value="123"
                     required
                     multiline
-                ></sp-textfield>
+                >
+                    <textarea></textarea>
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
@@ -132,7 +132,9 @@ describe('Textfield', () => {
                     pattern="[\\d]+"
                     required
                     value="Not a valid input"
-                ></sp-textfield>
+                >
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
@@ -152,7 +154,9 @@ describe('Textfield', () => {
         document.addEventListener('focusin', onFocusIn);
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield placeholder="Enter your name"></sp-textfield>
+                <sp-textfield placeholder="Enter your name">
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
@@ -172,10 +176,9 @@ describe('Textfield', () => {
         document.addEventListener('focusin', onFocusIn);
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield
-                    disabled
-                    placeholder="Enter your name"
-                ></sp-textfield>
+                <sp-textfield disabled placeholder="Enter your name">
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
@@ -191,7 +194,9 @@ describe('Textfield', () => {
         const testValue = 'Test Name';
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield placeholder="Enter your name"></sp-textfield>
+                <sp-textfield placeholder="Enter your name">
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
@@ -209,10 +214,9 @@ describe('Textfield', () => {
         };
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield
-                    placeholder="Enter your name"
-                    @change=${onChange}
-                ></sp-textfield>
+                <sp-textfield placeholder="Enter your name" @change=${onChange}>
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
@@ -228,11 +232,13 @@ describe('Textfield', () => {
     it('passes through `autocomplete` attribute', async () => {
         let el = await litFixture<Textfield>(
             html`
-                <sp-textfield autocomplete="off"></sp-textfield>
+                <sp-textfield autocomplete="off">
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
-        let input = el.shadowRoot ? el.shadowRoot.querySelector('input') : null;
+        let input = el.focusElement;
         expect(input).to.exist;
         if (input) {
             expect(input.getAttribute('autocomplete')).to.equal('off');
@@ -240,11 +246,13 @@ describe('Textfield', () => {
 
         el = await litFixture<Textfield>(
             html`
-                <sp-textfield></sp-textfield>
+                <sp-textfield>
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
-        input = el.shadowRoot ? el.shadowRoot.querySelector('input') : null;
+        input = el.focusElement;
         expect(input).to.exist;
         if (input) {
             expect(input.getAttribute('autocomplete')).to.not.exist;
@@ -253,7 +261,9 @@ describe('Textfield', () => {
     it('tests on `required` changes', async () => {
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield value=""></sp-textfield>
+                <sp-textfield value="">
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
@@ -266,15 +276,15 @@ describe('Textfield', () => {
     it('manages `allowed-keys`', async () => {
         const el = await litFixture<Textfield>(
             html`
-                <sp-textfield allowed-keys="asdf"></sp-textfield>
+                <sp-textfield allowed-keys="asdf">
+                    <input />
+                </sp-textfield>
             `
         );
         await elementUpdated(el);
         expect(el.value).to.equal('');
 
-        const inputElement = (el.shadowRoot
-            ? el.shadowRoot.querySelector('#input')
-            : el.querySelector('#input')) as HTMLInputElement;
+        const inputElement = el.focusElement;
 
         inputElement.value = 'asdf';
         inputElement.dispatchEvent(new InputEvent('input'));
