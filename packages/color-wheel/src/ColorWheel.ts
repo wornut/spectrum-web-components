@@ -42,6 +42,9 @@ export class ColorWheel extends Focusable {
     @query('.handle')
     private handle!: ColorHandle;
 
+    @query('.handle')
+    private handle!: ColorHandle;
+
     @property({ type: Number })
     public step = 1;
 
