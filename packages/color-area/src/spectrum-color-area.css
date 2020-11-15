@@ -61,7 +61,6 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
     );
     cursor: default;
     -webkit-user-select: none;
-    -moz-user-select: none;
     user-select: none;
 }
 :host([focused]) {
