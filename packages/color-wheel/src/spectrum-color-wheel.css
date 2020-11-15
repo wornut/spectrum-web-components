@@ -51,7 +51,6 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
     height: calc(var(--spectrum-global-dimension-size-125) * 16);
     border-radius: 100%;
     -webkit-user-select: none;
-    -moz-user-select: none;
     user-select: none;
     cursor: default;
 }

@@ -16,11 +16,13 @@ import {
     TemplateResult,
     property,
     query,
+    streamingListener,
 } from '@spectrum-web-components/base';
 
 import { Focusable } from '@spectrum-web-components/shared/src/focusable.js';
 import '@spectrum-web-components/color-handle/sp-color-handle.js';
 import styles from './color-slider.css.js';
+import { ColorHandle } from '@spectrum-web-components/color-handle/src/ColorHandle';
 
 /**
  * @element sp-color-slider
@@ -35,6 +37,9 @@ export class ColorSlider extends Focusable {
 
     @property({ type: Boolean, reflect: true })
     public focused = false;
+
+    @query('.handle')
+    private handle!: ColorHandle;
 
     @property({ type: Boolean, reflect: true })
     public vertical = false;
@@ -120,15 +125,77 @@ export class ColorSlider extends Focusable {
         this.focused = false;
     }
 
+    private boundingClientRect!: DOMRect;
+
+    private handlePointerdown(event: PointerEvent): void {
+        this.boundingClientRect = this.getBoundingClientRect();
+        (event.target as HTMLElement).setPointerCapture(event.pointerId);
+    }
+
+    private handlePointermove(event: PointerEvent): void {
+        this.value = this.calculateHandlePosition(event);
+        this.color = `hsl(${360 * (this.value / 100)}, 100%, 50%)`;
+        this.dispatchEvent(
+            new Event('input', {
+                bubbles: true,
+                composed: true,
+            })
+        );
+    }
+
+    private handlePointerup(event: PointerEvent): void {
+        // Retain focus on input element after mouse up to enable keyboard interactions
+        (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+        this.dispatchEvent(
+            new Event('change', {
+                bubbles: true,
+                composed: true,
+            })
+        );
+    }
+
+    /**
+     * Returns the value under the cursor
+     * @param: PointerEvent on slider
+     * @return: Slider value that correlates to the position under the pointer
+     */
+    private calculateHandlePosition(event: PointerEvent): number {
+        /* c8 ignore next 3 */
+        if (!this.boundingClientRect) {
+            return this.value;
+        }
+        const rect = this.boundingClientRect;
+        const minOffset = this.vertical ? rect.top : rect.left;
+        const offset = this.vertical ? event.clientY : event.clientX;
+        const size = this.vertical ? rect.height : rect.width;
+
+        const percent = Math.max(0, Math.min(1, (offset - minOffset) / size));
+        // const value = this.min + (this.max - this.min) * percent;
+        const value = 100 * percent;
+
+        return this.isLTR ? value : 100 - value;
+    }
+
+    private handleGradientPointerdown(event: PointerEvent): void {
+        event.stopPropagation();
+        event.preventDefault();
+        this.handle.dispatchEvent(new PointerEvent('pointerdown', event));
+        this.handlePointermove(event);
+    }
+
     protected render(): TemplateResult {
         return html`
-            <div class="checkerboard" role="presentation">
+            <div
+                class="checkerboard"
+                role="presentation"
+                @pointerdown=${this.handleGradientPointerdown}
+            >
                 <div
                     class="gradient"
                     role="presentation"
                     style="background: linear-gradient(to ${this.vertical
                         ? 'bottom'
-                        : 'right'}, var(--sp-color-slider-gradient));"
+                        : 'right'}, var(--sp-color-slider-gradient, var(--sp-color-slider-gradient-fallback)));"
                 >
                     <slot name="gradient"></slot>
                 </div>
@@ -138,7 +205,12 @@ export class ColorSlider extends Focusable {
                 class="handle"
                 color=${this.color}
                 ?disabled=${this.disabled}
-                style="left: ${this.value}%"
+                style="${this.vertical ? 'top' : 'left'}: ${this.value}%"
+                @manage=${streamingListener(
+                    { type: 'pointerdown', fn: this.handlePointerdown },
+                    { type: 'pointermove', fn: this.handlePointermove },
+                    { type: 'pointerup', fn: this.handlePointerup }
+                )}
             ></sp-color-handle>
 
             <input

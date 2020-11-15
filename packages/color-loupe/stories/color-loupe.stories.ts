@@ -21,6 +21,6 @@ export default {
 
 export const loupe = (): TemplateResult => {
     return html`
-        <sp-color-loupe></sp-color-loupe>
+        <sp-color-loupe open></sp-color-loupe>
     `;
 };
