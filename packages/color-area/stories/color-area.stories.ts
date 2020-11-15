@@ -12,7 +12,10 @@ governing permissions and limitations under the License.
 
 import { html, TemplateResult } from '@spectrum-web-components/base';
 
+import '@spectrum-web-components/color-slider/sp-color-slider.js';
+import { ColorSlider } from '@spectrum-web-components/color-slider/src/ColorSlider';
 import '../sp-color-area.js';
+import { ColorArea } from '../src/ColorArea.js';
 
 export default {
     title: 'Color',
@@ -22,6 +25,28 @@ export default {
 export const area = (): TemplateResult => {
     return html`
         <sp-color-area></sp-color-area>
+    `;
+};
+
+export const joint = (): TemplateResult => {
+    return html`
+        <div>
+            <sp-color-area></sp-color-area>
+            <sp-color-slider
+                style="--sp-color-slider-gradient: rgb(255, 0, 0) 0%, rgb(255, 255, 0) 17%, rgb(0, 255, 0) 33%, rgb(0, 255, 255) 50%, rgb(0, 0, 255) 67%, rgb(255, 0, 255) 83%, rgb(255, 0, 0) 100%;"
+                @input=${(
+                    event: Event & {
+                        target: ColorSlider & {
+                            value: number;
+                            previousElementSibling: ColorArea;
+                        };
+                    }
+                ): void => {
+                    const { value, previousElementSibling } = event.target;
+                    previousElementSibling.hue = (value / 100) * 360;
+                }}
+            ></sp-color-slider>
+        </div>
     `;
 };
 

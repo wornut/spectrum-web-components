@@ -21,9 +21,7 @@ export default {
 
 export const slider = (): TemplateResult => {
     return html`
-        <sp-color-slider
-            style="--sp-color-slider-gradient: rgb(255, 0, 0) 0%, rgb(255, 255, 0) 17%, rgb(0, 255, 0) 33%, rgb(0, 255, 255) 50%, rgb(0, 0, 255) 67%, rgb(255, 0, 255) 83%, rgb(255, 0, 0) 100%;"
-        ></sp-color-slider>
+        <sp-color-slider></sp-color-slider>
     `;
 };
 

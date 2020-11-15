@@ -70,11 +70,7 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
 }
 :host([disabled]) {
     /* .spectrum-ColorArea.is-disabled */
-    pointer-events: none; /* .spectrum-ColorArea.is-disabled */
-    background: var(
-        --spectrum-colorarea-fill-color-disabled,
-        var(--spectrum-global-color-gray-300)
-    );
+    pointer-events: none;
 }
 :host:before {
     /* .spectrum-ColorArea:before */
@@ -88,13 +84,7 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
     border-radius: var(
         --spectrum-colorarea-border-radius,
         var(--spectrum-alias-border-radius-regular)
-    ); /* .spectrum-ColorArea:before */
-    box-shadow: inset 0 0 0
-        var(
-            --spectrum-colorarea-border-size,
-            var(--spectrum-alias-border-size-thin)
-        )
-        var(--spectrum-colorarea-border-color);
+    );
 }
 .handle {
     /* .spectrum-ColorArea-handle */
@@ -108,6 +98,22 @@ THIS FILE IS MACHINE GENERATED. DO NOT EDIT */
     border-radius: var(
         --spectrum-colorarea-border-radius,
         var(--spectrum-alias-border-radius-regular)
+    );
+}
+:host:before {
+    /* .spectrum-ColorArea:before */
+    box-shadow: inset 0 0 0
+        var(
+            --spectrum-colorarea-border-size,
+            var(--spectrum-alias-border-size-thin)
+        )
+        var(--spectrum-colorarea-border-color);
+}
+:host([disabled]) {
+    /* .spectrum-ColorArea.is-disabled */
+    background: var(
+        --spectrum-colorarea-fill-color-disabled,
+        var(--spectrum-global-color-gray-300)
     );
 }
 :host([disabled]):before {
