@@ -520,6 +520,64 @@ export class ColorSlider extends Focusable {
         this.focused = false;
     }
 
+    private boundingClientRect!: DOMRect;
+
+    private handlePointerdown(event: PointerEvent): void {
+        this.boundingClientRect = this.getBoundingClientRect();
+        (event.target as HTMLElement).setPointerCapture(event.pointerId);
+    }
+
+    private handlePointermove(event: PointerEvent): void {
+        this.value = this.calculateHandlePosition(event);
+        this.color = `hsl(${360 * (this.value / 100)}, 100%, 50%)`;
+        this.dispatchEvent(
+            new Event('input', {
+                bubbles: true,
+                composed: true,
+            })
+        );
+    }
+
+    private handlePointerup(event: PointerEvent): void {
+        // Retain focus on input element after mouse up to enable keyboard interactions
+        (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+        this.dispatchEvent(
+            new Event('change', {
+                bubbles: true,
+                composed: true,
+            })
+        );
+    }
+
+    /**
+     * Returns the value under the cursor
+     * @param: PointerEvent on slider
+     * @return: Slider value that correlates to the position under the pointer
+     */
+    private calculateHandlePosition(event: PointerEvent): number {
+        /* c8 ignore next 3 */
+        if (!this.boundingClientRect) {
+            return this.value;
+        }
+        const rect = this.boundingClientRect;
+        const minOffset = this.vertical ? rect.top : rect.left;
+        const offset = this.vertical ? event.clientY : event.clientX;
+        const size = this.vertical ? rect.height : rect.width;
+
+        const percent = Math.max(0, Math.min(1, (offset - minOffset) / size));
+        // const value = this.min + (this.max - this.min) * percent;
+        const value = 100 * percent;
+
+        return this.isLTR ? value : 100 - value;
+    }
+
+    private handleGradientPointerdown(event: PointerEvent): void {
+        event.stopPropagation();
+        event.preventDefault();
+        this.handle.dispatchEvent(new PointerEvent('pointerdown', event));
+        this.handlePointermove(event);
+    }
+
     protected render(): TemplateResult {
         return html`
             <div
