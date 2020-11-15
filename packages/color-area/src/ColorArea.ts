@@ -18,7 +18,10 @@ import {
     property,
     PropertyValues,
     query,
+    streamingListener,
 } from '@spectrum-web-components/base';
+import { ColorHandle } from '@spectrum-web-components/color-handle';
+import '@spectrum-web-components/color-handle/sp-color-handle.js';
 
 import styles from './color-area.css.js';
 
@@ -36,8 +39,31 @@ export class ColorArea extends SpectrumElement {
     @property({ type: Boolean, reflect: true })
     public focused = false;
 
+    @query('.handle')
+    private handle!: ColorHandle;
+
+    @property({ type: Number })
+    public hue = 0;
+
     @property({ type: String })
-    public color = 'hsl(0, 0%, 100%)';
+    public get color(): string {
+        const lightness = (100 - this.x / 2) * (this.y / 100);
+        return `hsl(${this.hue}, ${this.x}%, ${100 - this.x / 2 - lightness}%)`;
+    }
+
+    public set color(color: string) {
+        const values = /hsla?\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/.exec(color);
+        if (values === null) {
+            console.warn(`Non-HSL value applied to color: ${color}`);
+            return;
+        }
+        const oldValue = this.color;
+        const [, h, s, l] = values;
+        this.hue = parseFloat(h);
+        this.x = parseFloat(s);
+        this.y = parseFloat(l);
+        this.requestUpdate('color', oldValue);
+    }
 
     @property({ type: Number })
     public x = 0;
@@ -111,6 +137,7 @@ export class ColorArea extends SpectrumElement {
                 case 'ArrowRight':
                     deltaX = this.step * (this.isLTR ? 1 : -1);
                     break;
+                /* c8 ignore next 2 */
                 default:
                     break;
             }
@@ -120,9 +147,10 @@ export class ColorArea extends SpectrumElement {
         } else if (deltaY) {
             this.inputY.focus();
         }
-        this.y = Math.min(1, Math.max(this.y + deltaY, 0));
-        this.x = Math.min(1, Math.max(this.x + deltaX, 0));
-        this.color = `hsl(0, ${this.x * 100}%, ${100 - this.y * 100}%)`;
+        const x = Math.min(1, Math.max(this.x / 100 + deltaX, 0));
+        const y = Math.min(1, Math.max(this.y / 100 + deltaY, 0));
+        this.x = x * 100;
+        this.y = y * 100;
     }
 
     private handleKeyup(event: KeyboardEvent): void {
@@ -141,11 +169,84 @@ export class ColorArea extends SpectrumElement {
         }
     }
 
+    private boundingClientRect!: DOMRect;
+
+    private handlePointerdown(event: PointerEvent): void {
+        this.boundingClientRect = this.getBoundingClientRect();
+        (event.target as HTMLElement).setPointerCapture(event.pointerId);
+    }
+
+    private handlePointermove(event: PointerEvent): void {
+        const [x, y] = this.calculateHandlePosition(event);
+        this.x = x * 100;
+        this.y = y * 100;
+        this.dispatchEvent(
+            new Event('input', {
+                bubbles: true,
+                composed: true,
+            })
+        );
+    }
+
+    private handlePointerup(event: PointerEvent): void {
+        (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+        this.dispatchEvent(
+            new Event('input', {
+                bubbles: true,
+                composed: true,
+            })
+        );
+    }
+
+    /**
+     * Returns the value under the cursor
+     * @param: PointerEvent on slider
+     * @return: Slider value that correlates to the position under the pointer
+     */
+    private calculateHandlePosition(event: PointerEvent): [number, number] {
+        /* c8 ignore next 3 */
+        if (!this.boundingClientRect) {
+            return [this.x, this.y];
+        }
+        const rect = this.boundingClientRect;
+        const minOffsetX = rect.left;
+        const minOffsetY = rect.top;
+        const offsetX = event.clientX;
+        const offsetY = event.clientY;
+        const width = rect.width;
+        const height = rect.height;
+
+        const percentX = Math.max(
+            0,
+            Math.min(1, (offsetX - minOffsetX) / width)
+        );
+        const percentY = Math.max(
+            0,
+            Math.min(1, (offsetY - minOffsetY) / height)
+        );
+
+        return [this.isLTR ? percentX : 1 - percentX, percentY];
+    }
+
+    private handleAreaPointerdown(event: PointerEvent): void {
+        event.stopPropagation();
+        event.preventDefault();
+        this.handle.dispatchEvent(new PointerEvent('pointerdown', event));
+        this.handlePointermove(event);
+    }
+
     protected render(): TemplateResult {
+        this.boundingClientRect = this.getBoundingClientRect();
+        const { width, height } = this.boundingClientRect;
         return html`
             <div
+                @pointerdown=${this.handleAreaPointerdown}
                 class="gradient"
-                style="background: linear-gradient(to top, black 0%, rgba(0, 0, 0, 0) 100%), linear-gradient(to right, white 0%, rgba(0, 0, 0, 0) 100%), rgb(255, 0, 0);"
+                style="background:
+                    linear-gradient(to top, black 0%, hsla(${this
+                    .hue}, 100%, 0%, 0) 100%),
+                    linear-gradient(to right, white 0%, hsla(${this
+                    .hue}, 100%, 0%, 0) 100%), hsl(${this.hue}, 100%, 50%);"
             >
                 <slot name="gradient"></slot>
             </div>
@@ -154,7 +255,18 @@ export class ColorArea extends SpectrumElement {
                 class="handle"
                 color=${this.color}
                 ?disabled=${this.disabled}
-                style="top: ${this.y * 100}%; left: ${this.x * 100}%;"
+                style="transform: translate(${(this.x / 100) * width}px, ${(this
+                    .y /
+                    100) *
+                height}px);"
+                @manage=${streamingListener(
+                    { type: 'pointerdown', fn: this.handlePointerdown },
+                    { type: 'pointermove', fn: this.handlePointermove },
+                    {
+                        type: ['pointerup', 'pointercancel'],
+                        fn: this.handlePointerup,
+                    }
+                )}
             ></sp-color-handle>
 
             <input
@@ -165,7 +277,7 @@ export class ColorArea extends SpectrumElement {
                 min="0"
                 max="1"
                 step=${this.step}
-                .value=${String(this.x)}
+                .value=${String(this.x / 100)}
                 @keyup=${(event: KeyboardEvent) => event.preventDefault()}
             />
             <input
@@ -176,7 +288,7 @@ export class ColorArea extends SpectrumElement {
                 min="0"
                 max="1"
                 step=${this.step}
-                .value=${String(this.x)}
+                .value=${String(this.y / 100)}
                 @keyup=${(event: KeyboardEvent) => event.preventDefault()}
             />
         `;

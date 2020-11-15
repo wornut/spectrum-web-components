@@ -27,4 +27,70 @@ describe('ColorHandle', () => {
 
         await expect(el).to.be.accessible();
     });
+    it('loads [open] color-handle accessibly', async () => {
+        const el = await fixture<ColorHandle>(
+            html`
+                <sp-color-handle open></sp-color-handle>
+            `
+        );
+
+        await elementUpdated(el);
+
+        await expect(el).to.be.accessible();
+    });
+    it('opens/closes on pointerdown/up/cancel', async () => {
+        const el = await fixture<ColorHandle>(
+            html`
+                <sp-color-handle></sp-color-handle>
+            `
+        );
+
+        await elementUpdated(el);
+        el.setPointerCapture = () => {
+            return;
+        };
+        el.releasePointerCapture = () => {
+            return;
+        };
+
+        el.dispatchEvent(
+            new PointerEvent('pointerdown', {
+                pointerId: 1,
+            })
+        );
+
+        await elementUpdated(el);
+
+        expect(el.open);
+
+        el.dispatchEvent(
+            new PointerEvent('pointerdown', {
+                pointerId: 1,
+            })
+        );
+
+        await elementUpdated(el);
+
+        expect(!el.open);
+
+        el.dispatchEvent(
+            new PointerEvent('pointerdown', {
+                pointerId: 1,
+            })
+        );
+
+        await elementUpdated(el);
+
+        expect(el.open);
+
+        el.dispatchEvent(
+            new PointerEvent('pointercancel', {
+                pointerId: 1,
+            })
+        );
+
+        await elementUpdated(el);
+
+        expect(!el.open);
+    });
 });

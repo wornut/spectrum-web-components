@@ -25,6 +25,12 @@ export const wheel = (): TemplateResult => {
     `;
 };
 
+export const sized = (): TemplateResult => {
+    return html`
+        <sp-color-wheel style="width: 300px; height: 300px;"></sp-color-wheel>
+    `;
+};
+
 export const wheelDisabled = (): TemplateResult => {
     return html`
         <sp-color-wheel disabled></sp-color-wheel>
