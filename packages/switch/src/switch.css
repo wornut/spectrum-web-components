@@ -28,13 +28,19 @@ governing permissions and limitations under the License.
 :host([dir='ltr'][checked]) #input + #switch:before {
     /* [dir=ltr] .spectrum-Switch-input:checked+.spectrum-Switch-switch:before */
     transform: translateX(
-        calc(100% - var(--spectrum-switch-handle-border-size) * 2)
+        calc(
+            var(--spectrum-switch-track-width) -
+                var(--spectrum-switch-handle-size)
+        )
     );
 }
 
 :host([dir='rtl'][checked]) #input + #switch:before {
     /* [dir=rtl] .spectrum-Switch-input:checked+.spectrum-Switch-switch:before */
     transform: translateX(
-        calc(-100% + var(--spectrum-switch-handle-border-size) * 2)
+        calc(
+            var(--spectrum-switch-handle-size) -
+                var(--spectrum-switch-track-width)
+        )
     );
 }
