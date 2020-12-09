@@ -53,7 +53,7 @@ export class ButtonBase extends LikeAnchor(
 
     protected get buttonContent(): TemplateResult[] {
         const icon = html`
-            <slot name="icon"></slot>
+            <slot name="icon" ?icon-only=${!this.hasLabel}></slot>
         `;
         const content = [
             html`

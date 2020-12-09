@@ -22,13 +22,11 @@ import {
 
 import { ButtonVariants } from '@spectrum-web-components/button';
 import { DropdownBase } from '@spectrum-web-components/dropdown';
-import {
-    ChevronDownMediumIcon,
-    MoreIcon,
-} from '@spectrum-web-components/icons-ui';
+import { Chevron100Icon } from '@spectrum-web-components/icons-ui';
+import { MoreIcon } from '@spectrum-web-components/icons-workflow';
 import buttonBaseStyles from '@spectrum-web-components/button/src/button-base.css.js';
 import buttonStyles from '@spectrum-web-components/button/src/button.css.js';
-import ChevronDownMediumStyle from '@spectrum-web-components/icon/src/spectrum-icon-chevron-down-medium.css.js';
+import chevronStyles from '@spectrum-web-components/icon/src/spectrum-icon-chevron.css.js';
 import styles from './split-button.css.js';
 
 /**
@@ -36,7 +34,7 @@ import styles from './split-button.css.js';
  */
 export class SplitButton extends DropdownBase {
     public static get styles(): CSSResultArray {
-        return [buttonBaseStyles, buttonStyles, styles, ChevronDownMediumStyle];
+        return [buttonBaseStyles, buttonStyles, styles, chevronStyles];
     }
 
     @property({ type: Boolean, reflect: true })
@@ -47,6 +45,9 @@ export class SplitButton extends DropdownBase {
      */
     @property({ reflect: true })
     public variant: ButtonVariants = 'cta';
+
+    @property({ type: String, reflect: true })
+    public size = 'm';
 
     public get target(): HTMLButtonElement | this {
         return this;
@@ -131,11 +132,11 @@ export class SplitButton extends DropdownBase {
                 >
                     <sp-icon
                         class="icon ${this.type === 'field'
-                            ? 'chevron-down-medium'
+                            ? 'spectrum-UIIcon-ChevronDown100'
                             : 'more-medium'}"
                     >
                         ${this.type === 'field'
-                            ? ChevronDownMediumIcon({ hidden: true })
+                            ? Chevron100Icon()
                             : MoreIcon({ hidden: true })}
                     </sp-icon>
                 </button>

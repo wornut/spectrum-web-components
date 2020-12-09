@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 :host {
-    min-width: 0;
+    display: inline-flex;
 }
 
 :host([quiet]) {
@@ -37,4 +37,5 @@ governing permissions and limitations under the License.
 #popover {
     width: auto;
     max-width: none;
+    display: none;
 }

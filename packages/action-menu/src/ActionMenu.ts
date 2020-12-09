@@ -20,6 +20,7 @@ import {
 import { DropdownBase } from '@spectrum-web-components/dropdown';
 import { ObserveSlotText } from '@spectrum-web-components/shared/src/observe-slot-text.js';
 import { MoreIcon } from '@spectrum-web-components/icons-workflow';
+import actionButtonStyles from '@spectrum-web-components/action-button/src/action-button.css.js';
 import actionMenuStyles from './action-menu.css.js';
 
 /**
@@ -27,11 +28,14 @@ import actionMenuStyles from './action-menu.css.js';
  */
 export class ActionMenu extends ObserveSlotText(DropdownBase, 'label') {
     public static get styles(): CSSResultArray {
-        return [...super.styles, actionMenuStyles];
+        return [actionButtonStyles, actionMenuStyles];
     }
 
     @property({ type: Boolean, reflect: true })
     public selected = false;
+
+    @property({ type: String, reflect: true })
+    public size = 'm';
 
     @property({ type: Boolean, reflect: true })
     public quiet = true;
@@ -45,7 +49,7 @@ export class ActionMenu extends ObserveSlotText(DropdownBase, 'label') {
     protected get buttonContent(): TemplateResult[] {
         return [
             html`
-                <slot name="icon">
+                <slot name="icon" ?icon-only=${!this.hasLabel}>
                     <sp-icon size="m" class="icon">
                         ${MoreIcon({ hidden: this.hasLabel })}
                     </sp-icon>

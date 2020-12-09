@@ -16,6 +16,7 @@ const config = {
             name: 'dropdown',
             host: {
                 selector: '.spectrum-Picker',
+                shadowSelector: '#button',
             },
             attributes: [
                 {
@@ -32,6 +33,11 @@ const config = {
                     selector: '.is-invalid',
                     name: 'invalid',
                 },
+                {
+                    type: 'boolean',
+                    selector: '.is-focused',
+                    name: 'focused',
+                },
             ],
             classes: [
                 {
@@ -39,7 +45,7 @@ const config = {
                     name: 'icon',
                 },
                 {
-                    selector: '.spectrum-Picker-icon',
+                    selector: '.spectrum-Picker-menuIcon',
                     name: 'dropdown',
                 },
                 {

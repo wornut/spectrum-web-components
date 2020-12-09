@@ -120,14 +120,15 @@ class SpectrumProcessor {
                     result.first.replaceWith(host);
 
                     let remainder = host.next();
+                    // Pseudo-elements go after the host selector `:host::before` or `:host([attr])::after`.
                     while (remainder && remainder.type !== 'combinator') {
                         const node = remainder;
                         remainder = remainder.next();
                         node.remove();
-                        // Pseudo-elements go after the host selector `:host::before` or `:host([attr])::after`.
                         if (
-                            node.value.match(/before$/) !== null ||
-                            node.value.match(/after$/) !== null
+                            node.value &&
+                            (node.value.match(/before$/) !== null ||
+                                node.value.match(/after$/) !== null)
                         ) {
                             result.insertAfter(host, node);
                         } else {
@@ -252,6 +253,7 @@ class SpectrumProcessor {
         astTransforms.push((selector, rule) => {
             const result = selector.clone();
             let attributeFound = false;
+            let forceOntoHost = false;
             result.walk((node) => {
                 const attribute = this.component.attributeForNode(node);
                 if (!attribute) return;
@@ -269,7 +271,7 @@ class SpectrumProcessor {
                 const next = node.next();
                 node.remove();
                 addNodeToHost(result, attribute.shadowNode);
-
+                forceOntoHost = attribute.forceOntoHost;
                 if (
                     !next &&
                     prev &&
@@ -299,7 +301,7 @@ class SpectrumProcessor {
                 attributeFound = true;
             });
             if (attributeFound) {
-                if (this.component.spectrumClassIsHost) {
+                if (this.component.spectrumClassIsHost || forceOntoHost) {
                     if (
                         result.length >= 3 &&
                         result.at(1).type === 'combinator'
@@ -313,7 +315,15 @@ class SpectrumProcessor {
                             lastNode.value !== '::slotted'
                         ) {
                             lastNode.remove();
-                            addNodeToHost(result, lastNode);
+                            if (
+                                lastNode.value !== ':before' &&
+                                lastNode.value !== ':after'
+                            ) {
+                                addNodeToHost(result, lastNode);
+                            } else {
+                                result.at(1).remove();
+                                result.append(lastNode.clone());
+                            }
                         }
                     }
                 } else {
@@ -860,6 +870,7 @@ class ComponentConfig {
                         name,
                         selector,
                         node: nodeFromSelector(selector),
+                        forceOntoHost: attribute.forceOntoHost,
                         shadowNode: nodeFromSelector(
                             `[${attribute.name}${operator}"${name}"]`
                         ),
@@ -909,6 +920,7 @@ class ComponentConfig {
                         name,
                         selector,
                         node: nodeFromSelector(selector),
+                        forceOntoHost: attribute.forceOntoHost,
                         shadowNode: nodeFromSelector(
                             `[${attribute.name}${operator}"${name}"]`
                         ),

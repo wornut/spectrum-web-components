@@ -99,6 +99,29 @@ const config = {
                         '.spectrum-Button--secondary',
                     ],
                 },
+                {
+                    type: 'enum',
+                    name: 'size',
+                    forceOntoHost: true,
+                    values: [
+                        {
+                            name: 's',
+                            selector: '.spectrum-Button--sizeS',
+                        },
+                        {
+                            name: 'm',
+                            selector: '.spectrum-Button--sizeM',
+                        },
+                        {
+                            name: 'l',
+                            selector: '.spectrum-Button--sizeL',
+                        },
+                        {
+                            name: 'xl',
+                            selector: '.spectrum-Button--sizeXL',
+                        },
+                    ],
+                },
             ],
             ids: ['.spectrum-Button-label'],
             slots: [
@@ -110,53 +133,6 @@ const config = {
             exclude: [
                 /\.is-disabled/,
                 /\.spectrum-ActionButton/,
-                /\.spectrum-ClearButton/,
-            ],
-            excludeSourceSelector: [/^(.*),(.*),(.*),(.*),(.*)$/],
-        },
-        {
-            name: 'action-button',
-            host: {
-                selector: '.spectrum-ActionButton',
-                shadowSelector: '.button',
-            },
-            focus: '.button',
-            attributes: [
-                {
-                    type: 'boolean',
-                    selector: '.spectrum-ActionButton--quiet',
-                },
-                {
-                    type: 'boolean',
-                    selector: ':disabled',
-                },
-                {
-                    type: 'boolean',
-                    name: 'selected',
-                    selector: '.is-selected',
-                },
-                {
-                    type: 'boolean',
-                    name: 'emphasized',
-                    selector: '.spectrum-ActionButton--emphasized',
-                },
-            ],
-            ids: [
-                '.spectrum-ActionButton-label',
-                {
-                    name: 'hold-affordance',
-                    selector: '.spectrum-ActionButton-hold',
-                },
-            ],
-            slots: [
-                {
-                    name: 'icon',
-                    selector: '.spectrum-Icon',
-                },
-            ],
-            exclude: [
-                /\.is-disabled/,
-                /\.spectrum-Button/,
                 /\.spectrum-ClearButton/,
             ],
             excludeSourceSelector: [/^(.*),(.*),(.*),(.*),(.*)$/],
