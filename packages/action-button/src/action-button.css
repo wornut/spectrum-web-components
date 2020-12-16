@@ -14,11 +14,9 @@ governing permissions and limitations under the License.
 
 :host {
     display: inline-flex;
-    align-items: stretch;
-    flex-direction: column;
 }
 
-:host(.spectrum-Dropdown-trigger) #button {
+:host(.spectrum-Dropdown-trigger) {
     text-align: left;
 }
 

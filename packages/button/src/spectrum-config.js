@@ -14,62 +14,6 @@ const config = {
     spectrum: 'button',
     components: [
         {
-            name: 'button-base',
-            host: {
-                selector: '.spectrum-Button',
-            },
-            slots: [
-                {
-                    name: 'icon',
-                    selector: '.spectrum-Icon',
-                },
-            ],
-            exclude: [/\.spectrum-ClearButton/],
-            excludeSourceSelector: [/^(?!(.*),(.*),(.*),(.*),(.*))/],
-        },
-        {
-            name: 'fieldbutton',
-            host: {
-                selector: '.spectrum-FieldButton',
-            },
-            attributes: [
-                {
-                    type: 'boolean',
-                    selector: '.is-invalid',
-                    name: 'invalid',
-                },
-                {
-                    type: 'boolean',
-                    selector: '.is-active',
-                    name: 'active',
-                },
-                {
-                    type: 'boolean',
-                    selector: '.spectrum-FieldButton--quiet',
-                    name: 'quiet',
-                },
-                {
-                    type: 'boolean',
-                    selector: '.is-focused',
-                    name: 'focused',
-                },
-            ],
-            classes: [
-                {
-                    selector: '.spectrum-Icon',
-                    name: 'icon',
-                },
-            ],
-            exclude: [
-                /\.spectrum-ActionButton/,
-                /\.spectrum-Button/,
-                /\.spectrum-ClearButton/,
-            ],
-            excludeSourceSelector: [
-                /^([^\s]*),([^\s]*),([^\s]*),([^\s]*),([^\s]*)$/,
-            ],
-        },
-        {
             name: 'button',
             host: {
                 selector: '.spectrum-Button',
@@ -140,8 +84,7 @@ const config = {
                     selector: '.spectrum-Icon',
                 },
             ],
-            exclude: [/\.spectrum-Button/, /\.spectrum-ClearButton/],
-            excludeSourceSelector: [/^(.*),(.*),(.*),(.*),(.*)$/],
+            exclude: [/\.spectrum-ClearButton/],
         },
         {
             name: 'clear-button',
@@ -187,7 +130,6 @@ const config = {
                 },
             ],
             exclude: [/\.spectrum-Button/],
-            excludeSourceSelector: [/^(.*),(.*),(.*),(.*),(.*)$/],
         },
     ],
 };

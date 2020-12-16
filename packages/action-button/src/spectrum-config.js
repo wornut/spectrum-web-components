@@ -17,9 +17,7 @@ const config = {
             name: 'action-button',
             host: {
                 selector: '.spectrum-ActionButton',
-                shadowSelector: '.button',
             },
-            focus: '.button',
             attributes: [
                 {
                     type: 'boolean',
@@ -27,12 +25,18 @@ const config = {
                 },
                 {
                     type: 'boolean',
-                    selector: ':disabled',
+                    selector: '.is-disabled',
+                    name: 'disabled',
                 },
                 {
                     type: 'boolean',
                     name: 'selected',
                     selector: '.is-selected',
+                },
+                {
+                    type: 'boolean',
+                    selector: ':active',
+                    name: 'active',
                 },
                 {
                     type: 'boolean',
@@ -76,7 +80,7 @@ const config = {
                     selector: '.spectrum-Icon',
                 },
             ],
-            exclude: [/\.is-disabled/],
+            exclude: [/\.spectrum-Button/, /\.spectrum-ClearButton/],
             complexSelectors: [
                 {
                     replacement:
@@ -87,12 +91,12 @@ const config = {
                 {
                     replacement:
                         ":host([dir=ltr]) slot:not([icon-only])::slotted([slot='icon']), :host([dir=ltr]) slot:not([icon-only]) sp-icon",
-                    selector: /\:host\(\[dir=ltr\]\) \.button \.spectrum-Icon$/,
+                    selector: /\:host\(\[dir=ltr\]\) \.spectrum-Icon$/,
                 },
                 {
                     replacement:
                         ":host([dir=rtl]) slot:not([icon-only])::slotted([slot='icon']), :host([dir=rtl]) slot:not([icon-only]) sp-icon",
-                    selector: /\:host\(\[dir=rtl\]\) \.button \.spectrum-Icon$/,
+                    selector: /\:host\(\[dir=rtl\]\) \.spectrum-Icon$/,
                 },
             ],
         },
