@@ -51,7 +51,7 @@ commands:
                   name: Build Golden Images Revision Cache
                   paths:
                       - test/visual/screenshots-baseline/ci
-                  key: v2-golden-images-{{ .Revision }}-<< parameters.regression_color >>-<< parameters.regression_scale >>-<< parameters.regression_dir >>-{{ epoch }}
+                  key: v2-golden-images-d910ba56eaab961ef5abf0b635267ee950146865-<< parameters.regression_color >>-<< parameters.regression_scale >>-<< parameters.regression_dir >>-{{ epoch }}
             - save_cache:
                   name: Build Golden Images Branch Cache
                   paths:
