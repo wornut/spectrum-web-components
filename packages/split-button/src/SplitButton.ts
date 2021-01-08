@@ -18,24 +18,31 @@ import {
     PropertyValues,
     query,
     ifDefined,
+    SizedMixin,
 } from '@spectrum-web-components/base';
 
 import '@spectrum-web-components/button/sp-button.js';
+import '@spectrum-web-components/icon/sp-icon.js';
 import { ButtonVariants } from '@spectrum-web-components/button';
 import { DropdownBase } from '@spectrum-web-components/dropdown';
-import {
-    ChevronDownMediumIcon,
-    MoreIcon,
-} from '@spectrum-web-components/icons-ui';
-import ChevronDownMediumStyle from '@spectrum-web-components/icon/src/spectrum-icon-chevron-down-medium.css.js';
+import { Chevron100Icon } from '@spectrum-web-components/icons-ui';
+import { MoreIcon } from '@spectrum-web-components/icons-workflow';
+import chevronStyles from '@spectrum-web-components/icon/src/spectrum-icon-chevron.css.js';
 import styles from './split-button.css.js';
+
+const chevronClass = {
+    s: 'spectrum-UIIcon-ChevronDown75',
+    m: 'spectrum-UIIcon-ChevronDown100',
+    l: 'spectrum-UIIcon-ChevronDown200',
+    xl: 'spectrum-UIIcon-ChevronDown300',
+};
 
 /**
  * @slot options - The menu with options that will display when the dropdown is open
  */
-export class SplitButton extends DropdownBase {
+export class SplitButton extends SizedMixin(DropdownBase) {
     public static get styles(): CSSResultArray {
-        return [styles, ChevronDownMediumStyle];
+        return [styles, chevronStyles];
     }
 
     @property({ type: Boolean, reflect: true })
@@ -116,6 +123,7 @@ export class SplitButton extends DropdownBase {
                     @click=${this.passClick}
                     ?disabled=${this.disabled}
                     variant=${this.variant}
+                    size=${this.size}
                 >
                     ${this.buttonContent}
                 </sp-button>
@@ -129,14 +137,16 @@ export class SplitButton extends DropdownBase {
                     ?disabled=${this.disabled}
                     aria-label="More"
                     variant=${this.variant}
+                    size=${this.size}
                 >
                     <sp-icon
+                        size=${this.size}
                         class="icon ${this.type === 'field'
-                            ? 'chevron-down-medium'
-                            : 'more-medium'}"
+                            ? chevronClass[this.size]
+                            : ''}"
                     >
                         ${this.type === 'field'
-                            ? ChevronDownMediumIcon({ hidden: true })
+                            ? Chevron100Icon()
                             : MoreIcon({ hidden: true })}
                     </sp-icon>
                 </sp-button>

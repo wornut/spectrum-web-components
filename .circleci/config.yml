@@ -8,7 +8,7 @@ executors:
 parameters:
     current_golden_images_hash:
         type: string
-        default: ec243d1d8b4aaba9eb836964903b36226829dd2a
+        default: f1194284032d65a72fb3214e80cc432745fcc0a3
 commands:
     setup:
         steps:
@@ -297,6 +297,7 @@ jobs:
                   name: Installing Dependencies
                   command: yarn
             - run: yarn docs:build
+            - run: echo '/*    /index.html   200' > documentation/dist/_redirects
             - run: yarn netlify deploy
 
 workflows:

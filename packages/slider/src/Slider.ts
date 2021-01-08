@@ -21,7 +21,6 @@ import {
     ifDefined,
 } from '@spectrum-web-components/base';
 
-import spectrumSliderStyles from './spectrum-slider.css.js';
 import sliderStyles from './slider.css.js';
 import { Focusable } from '@spectrum-web-components/shared/src/focusable.js';
 import { StyleInfo } from 'lit-html/directives/style-map';
@@ -30,7 +29,7 @@ export const variants = ['filled', 'ramp', 'range', 'tick'];
 
 export class Slider extends Focusable {
     public static get styles(): CSSResultArray {
-        return [sliderStyles, spectrumSliderStyles];
+        return [sliderStyles];
     }
 
     @property()
@@ -151,7 +150,7 @@ export class Slider extends Focusable {
     private renderLabel(): TemplateResult {
         return html`
             <div id="labelContainer">
-                <label id="label" for="input">${this.label}</label>
+                <label id="label" for="input"><slot>${this.label}</slot></label>
                 <div
                     id="value"
                     role="textbox"

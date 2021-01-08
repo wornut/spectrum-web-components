@@ -11,11 +11,17 @@ governing permissions and limitations under the License.
 */
 @import './spectrum-dropdown.css';
 
+:host {
+    display: inline-flex;
+    vertical-align: top;
+}
+
 sp-popover {
     display: none;
 }
 
-.dropdown {
+.dropdown,
+.validationIcon {
     flex-shrink: 0;
 }
 

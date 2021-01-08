@@ -14,8 +14,21 @@ import '@spectrum-web-components/bundle/elements.js';
 // work around while `top-nav` isn't "officially" in the bundle
 import '@spectrum-web-components/top-nav/sp-top-nav.js';
 import '@spectrum-web-components/top-nav/sp-top-nav-item.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-magnify.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-help.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-info.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-star.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-chevron-down.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-close.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-info.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-checkmark.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-checkmark-circle.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-alert.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-edit.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-more.js';
 import { RouteComponent } from './route-component.js';
-import componentStyles from './markdown.css';
+import markdownStyles from './markdown.css';
+import componentStyles from './component.css';
 import { AppRouter } from '../router.js';
 import '@spectrum-web-components/tabs/sp-tab.js';
 import '@spectrum-web-components/tabs/sp-tabs.js';
@@ -116,7 +129,7 @@ class ComponentElement extends RouteComponent {
     private docsLoaded = false;
 
     public static get styles(): CSSResultArray {
-        return [componentStyles];
+        return [markdownStyles, componentStyles];
     }
 
     public get componentName(): string {

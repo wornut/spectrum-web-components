@@ -19,21 +19,9 @@ export default {
     component: 'sp-bar-loader',
 };
 
-export const Default = (): TemplateResult => {
-    return html`
-        <sp-bar-loader progress="50"></sp-bar-loader>
-    `;
-};
-
 export const label = (): TemplateResult => {
     return html`
         <sp-bar-loader label="Loading" progress="50"></sp-bar-loader>
-    `;
-};
-
-export const labelSmall = (): TemplateResult => {
-    return html`
-        <sp-bar-loader label="Loading" progress="50" small></sp-bar-loader>
     `;
 };
 
