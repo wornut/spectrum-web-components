@@ -18,6 +18,48 @@ const config = {
             host: {
                 selector: '.spectrum-SplitView',
             },
+            attributes: [
+                {
+                    type: 'boolean',
+                    selector: '.is-draggable',
+                    name: 'resizable',
+                },
+                {
+                    type: 'boolean',
+                    selector: '.splitview-vertical',
+                    name: 'vertical',
+                },
+                {
+                    type: 'boolean',
+                    selector: '.is-collapsed-start',
+                    name: 'is-collapsed-start',
+                },
+                {
+                    type: 'boolean',
+                    selector: '.is-collapsed-end',
+                    name: 'is-collapsed-end',
+                },
+            ],
+            ids: [
+                {
+                    selector: '.spectrum-SplitView-pane',
+                    name: 'pane',
+                },
+                {
+                    selector: '.spectrum-SplitView-splitter',
+                    name: 'splitter',
+                },
+                {
+                    selector: '.spectrum-SplitView-gripper',
+                    name: 'gripper',
+                },
+            ],
+            classes: [
+                {
+                    selector: '.spectrum-SplitView--vertical',
+                    name: 'splitview-vertical',
+                },
+            ],
         },
     ],
 };
