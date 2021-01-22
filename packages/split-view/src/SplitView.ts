@@ -69,7 +69,7 @@ export class SplitView extends SpectrumElement {
     public vertical = false;
 
     @property({ type: Boolean, reflect: true })
-    public resizable = true;
+    public resizable = false;
 
     @property({ type: Boolean, reflect: true })
     public collapsible = false;
@@ -131,7 +131,7 @@ export class SplitView extends SpectrumElement {
     private currentMouseEvent?: MouseEvent;
     private offset = 0;
     private size = 0;
-    private lastPosition = 0;
+    // private lastPosition = 0;
 
     protected render(): TemplateResult {
         const dimension = this.vertical
@@ -269,7 +269,7 @@ export class SplitView extends SpectrumElement {
     }
 
     updatePosition(x: number): void {
-        this.lastPosition = this.dividerPosition;
+        // this.lastPosition = this.dividerPosition;
         let pos = Math.max(this.minPos, Math.min(this.maxPos, x));
         if (this.collapsible && x === 0) {
             pos = 0;
@@ -287,7 +287,7 @@ export class SplitView extends SpectrumElement {
         }
         this.isCollapsedStart = this.dividerPosition === 0;
         this.isCollapsedEnd = (this.totalMax &&
-            this.dividerPosition === this.totalMax - SPLITTERSIZE) as boolean;
+            this.dividerPosition >= this.totalMax - SPLITTERSIZE) as boolean;
     }
 
     private updateCursor(override = false): void {
@@ -313,20 +313,13 @@ export class SplitView extends SpectrumElement {
 
     protected firstUpdated(changed: PropertyValues): void {
         super.firstUpdated(changed);
-        this.resize();
-    }
-
-    protected updated(changedProperties: PropertyValues): void {
-        if (
-            changedProperties.has('dividerPosition') &&
-            this.totalMax &&
-            this.totalMax > 0
-        ) {
+        if (this.totalMax) {
             if (this.vertical) {
                 this.style.height = `${this.totalMax}px`;
             } else {
                 this.style.width = `${this.totalMax}px`;
             }
         }
+        this.resize();
     }
 }
