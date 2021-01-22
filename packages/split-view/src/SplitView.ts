@@ -53,7 +53,7 @@ export class SplitView extends SpectrumElement {
         return [
             styles,
             css`
-                #pane {
+                .pane {
                     overflow: hidden;
                 }
                 .secondaryPane {
@@ -140,7 +140,10 @@ export class SplitView extends SpectrumElement {
             : ORIENTATIONS.horizontal;
 
         return html`
-            <div id="pane" style=${`${dimension}: ${this.dividerPosition}px`}>
+            <div
+                class="pane"
+                style=${`${dimension}: ${this.dividerPosition}px`}
+            >
                 <slot name="primary"></slot>
             </div>
             <div id="splitter" role="separator">
@@ -160,7 +163,7 @@ export class SplitView extends SpectrumElement {
                       `
                     : html``}
             </div>
-            <div id="pane" class="secondaryPane">
+            <div class="pane secondaryPane">
                 <slot name="secondary"></slot>
             </div>
         `;

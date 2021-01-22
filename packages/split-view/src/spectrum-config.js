@@ -42,16 +42,18 @@ const config = {
             ],
             ids: [
                 {
-                    selector: '.spectrum-SplitView-pane',
-                    name: 'pane',
-                },
-                {
                     selector: '.spectrum-SplitView-splitter',
                     name: 'splitter',
                 },
                 {
                     selector: '.spectrum-SplitView-gripper',
                     name: 'gripper',
+                },
+            ],
+            classes: [
+                {
+                    selector: '.spectrum-SplitView-pane',
+                    name: 'pane',
                 },
             ],
         },
