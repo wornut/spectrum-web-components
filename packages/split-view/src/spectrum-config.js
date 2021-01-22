@@ -26,7 +26,7 @@ const config = {
                 },
                 {
                     type: 'boolean',
-                    selector: '.splitview-vertical',
+                    selector: '.spectrum-SplitView--vertical',
                     name: 'vertical',
                 },
                 {
@@ -52,12 +52,6 @@ const config = {
                 {
                     selector: '.spectrum-SplitView-gripper',
                     name: 'gripper',
-                },
-            ],
-            classes: [
-                {
-                    selector: '.spectrum-SplitView--vertical',
-                    name: 'splitview-vertical',
                 },
             ],
         },

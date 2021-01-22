@@ -24,6 +24,7 @@ import {
 import styles from './split-view.css.js';
 
 const COLLAPSE_THREASHOLD = 50;
+
 const ORIENTATIONS = {
     horizontal: 'width',
     vertical: 'height',
