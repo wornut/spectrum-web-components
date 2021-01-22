@@ -127,12 +127,10 @@ export class SplitView extends SpectrumElement {
     @query('#gripper')
     private gripper!: HTMLDivElement;
 
-    // private supportsPointerEvent = 'setPointerCapture' in this;
-
+    private supportsPointerEvent = 'setPointerCapture' in this;
+    private currentMouseEvent?: MouseEvent;
     private offset = 0;
-
     private size = 0;
-
     private lastPosition = 0;
 
     protected render(): TemplateResult {
@@ -155,6 +153,7 @@ export class SplitView extends SpectrumElement {
                               @pointercancel=${this.onPointerCancel}
                               @pointerenter=${this.onPointerEnter}
                               @onpointerout=${this.onPointerOut}
+                              @onMouseDown=${this.onMouseDown}
                               role="presentation"
                           ></div>
                       `
@@ -163,7 +162,6 @@ export class SplitView extends SpectrumElement {
             <div id="pane" class="secondaryPane">
                 <slot name="secondary"></slot>
             </div>
-            <!-- </div> -->
         `;
     }
 
@@ -177,54 +175,69 @@ export class SplitView extends SpectrumElement {
         this.gripper.setPointerCapture(event.pointerId);
     }
 
-    // private onMouseDown(event: MouseEvent): void {
-    //     if (this.supportsPointerEvent) {
-    //         return;
-    //     }
-    //     if (this.disabled) {
-    //         return;
-    //     }
-    //     this.boundingClientRect = this.getBoundingClientRect();
-    //     document.addEventListener('mousemove', this.onMouseMove);
-    //     document.addEventListener('mouseup', this.onMouseUp);
-    //     this.focus();
-    //     this.dragging = true;
-    //     this.currentMouseEvent = event;
-    //     this._trackMouseEvent();
-    // }
-
-    // private _trackMouseEvent(): void {
-    //     if (!this.currentMouseEvent || !this.dragging) {
-    //         return;
-    //     }
-    //     this.value = this.calculateHandlePosition(this.currentMouseEvent);
-    //     requestAnimationFrame(() => this._trackMouseEvent());
-    // }
-
-    private onPointerUp(event: PointerEvent): void {
-        this.dragging = false;
-        this.gripper.releasePointerCapture(event.pointerId);
+    private onMouseDown(event: MouseEvent): void {
+        if (this.supportsPointerEvent) {
+            return;
+        }
+        if (this.disabled) {
+            return;
+        }
+        document.addEventListener('mousemove', this.onMouseMove);
+        document.addEventListener('mouseup', this.onMouseUp);
+        // this.focus();
+        this.dragging = true;
+        this.currentMouseEvent = event;
+        this._trackMouseEvent();
     }
 
-    // private onMouseUp = (event: MouseEvent): void => {
-    //     // Retain focus on input element after mouse up to enable keyboard interactions
-    //     this.focus();
-    //     this.currentMouseEvent = event;
-    //     document.removeEventListener('mousemove', this.onMouseMove);
-    //     document.removeEventListener('mouseup', this.onMouseUp);
-    //     requestAnimationFrame(() => {
-    //         this.handleHighlight = false;
-    //         this.dragging = false;
-    //         this.dispatchChangeEvent();
-    //     });
-    // };
+    private _trackMouseEvent(): void {
+        if (!this.currentMouseEvent || !this.dragging) {
+            return;
+        }
+        const pos = this.getPosition(this.currentMouseEvent) - this.offset;
+        this.processPosition(pos);
+        requestAnimationFrame(() => this._trackMouseEvent());
+    }
+
+    private onPointerUp(): void {
+        this.dragging = false;
+    }
+
+    private onMouseUp = (event: MouseEvent): void => {
+        this.currentMouseEvent = event;
+        document.removeEventListener('mousemove', this.onMouseMove);
+        document.removeEventListener('mouseup', this.onMouseUp);
+        requestAnimationFrame(() => {
+            this.dragging = false;
+        });
+    };
 
     private onPointerMove(event: PointerEvent): void {
         if (!this.dragging) {
             return;
         }
         event.preventDefault();
-        let pos = this.getPosition(event) - this.offset;
+        const pos = this.getPosition(event) - this.offset;
+        this.processPosition(pos);
+    }
+
+    private onMouseMove = (event: MouseEvent): void => {
+        this.currentMouseEvent = event;
+    };
+
+    private onPointerCancel(): void {
+        this.dragging = false;
+    }
+
+    private onPointerEnter(): void {
+        this.updateCursor(true);
+    }
+
+    private onPointerOut(): void {
+        this.updateCursor();
+    }
+
+    private processPosition(pos: number): void {
         if (this.collapsible && pos < this.minPos - COLLAPSE_THREASHOLD) {
             pos = 0;
         }
@@ -239,29 +252,12 @@ export class SplitView extends SpectrumElement {
         this.updateCursor();
     }
 
-    // private onMouseMove = (event: MouseEvent): void => {
-    //     this.currentMouseEvent = event;
-    // };
-
-    private onPointerCancel(event: PointerEvent): void {
-        this.dragging = false;
-        this.gripper.releasePointerCapture(event.pointerId);
-    }
-
-    private onPointerEnter(): void {
-        this.updateCursor(true);
-    }
-
-    private onPointerOut(): void {
-        this.updateCursor();
-    }
-
     getOffset(): number {
         const rect = this.getBoundingClientRect();
         return this.vertical ? rect.top : rect.left;
     }
 
-    getPosition(event: PointerEvent): number {
+    getPosition(event: PointerEvent | MouseEvent): number {
         return this.vertical ? event.clientY : event.clientX;
     }
 
@@ -274,7 +270,6 @@ export class SplitView extends SpectrumElement {
 
     updatePosition(x: number): void {
         this.lastPosition = this.dividerPosition;
-        console.log('updatePosition: ' + this.lastPosition);
         let pos = Math.max(this.minPos, Math.min(this.maxPos, x));
         if (this.collapsible && x === 0) {
             pos = 0;
