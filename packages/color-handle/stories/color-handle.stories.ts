@@ -15,11 +15,11 @@ import { html, TemplateResult } from '@spectrum-web-components/base';
 import '../sp-color-handle.js';
 
 export default {
-    title: 'Color',
+    title: 'Color/Handle',
     component: 'sp-color-handle',
 };
 
-export const handle = (): TemplateResult => {
+export const Default = (): TemplateResult => {
     return html`
         <sp-color-handle
             style="left: 50%; top: 50%; transform: translate(-50%, -50%);"
@@ -27,7 +27,7 @@ export const handle = (): TemplateResult => {
     `;
 };
 
-export const handleDisabled = (): TemplateResult => {
+export const disabled = (): TemplateResult => {
     return html`
         <sp-color-handle
             disabled
@@ -36,7 +36,7 @@ export const handleDisabled = (): TemplateResult => {
     `;
 };
 
-export const handleOpen = (): TemplateResult => {
+export const open = (): TemplateResult => {
     return html`
         <sp-color-handle
             open

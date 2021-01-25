@@ -15,11 +15,11 @@ import { html, TemplateResult } from '@spectrum-web-components/base';
 import '../sp-color-loupe.js';
 
 export default {
-    title: 'Color',
+    title: 'Color/Loupe',
     component: 'sp-color-loupe',
 };
 
-export const loupe = (): TemplateResult => {
+export const open = (): TemplateResult => {
     return html`
         <sp-color-loupe open></sp-color-loupe>
     `;

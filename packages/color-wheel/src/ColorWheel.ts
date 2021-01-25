@@ -23,6 +23,7 @@ import '@spectrum-web-components/color-handle/sp-color-handle.js';
 import styles from './color-wheel.css.js';
 import { wheel } from './wheel-svg.js';
 import { ColorHandle } from '@spectrum-web-components/color-handle/src/ColorHandle';
+import { HSL, HSLA, HSV, HSVA, RGB, RGBA, TinyColor } from '@ctrl/tinycolor';
 
 /**
  * @element sp-color-wheel
@@ -38,9 +39,6 @@ export class ColorWheel extends Focusable {
     @property({ type: Boolean, reflect: true })
     public focused = false;
 
-    @property({ type: String })
-    public color = 'hsl(0, 100%, 50%)';
-
     @query('.handle')
     private handle!: ColorHandle;
 
@@ -52,12 +50,95 @@ export class ColorWheel extends Focusable {
         return this._value;
     }
 
-    public set value(value: number) {
+    public set value(hue: number) {
+        const value = Math.min(360, Math.max(0, hue));
+        if (value === this.value) {
+            return;
+        }
+        const oldValue = this.value;
+        const { s, v } = this._color.toHsv();
+        this._color = new TinyColor({ h: value, s, v });
         this._value = value;
-        this.color = `hsl(${this.value}, 100%, 50%)`;
+        this.requestUpdate('value', oldValue);
     }
 
     private _value = 0;
+
+    @property({ type: String })
+    public get color():
+        | string
+        | number
+        | TinyColor
+        | HSVA
+        | HSV
+        | RGB
+        | RGBA
+        | HSL
+        | HSLA {
+        switch (this._format[0]) {
+            case 'rgb':
+                return this._format[1]
+                    ? this._color.toRgbString()
+                    : this._color.toRgb();
+            case 'prgb':
+                return this._format[1]
+                    ? this._color.toPercentageRgbString()
+                    : this._color.toPercentageRgb();
+            case 'hex':
+            case 'hex3':
+            case 'hex4':
+            case 'hex6':
+                return this._format[1]
+                    ? this._color.toHexString()
+                    : this._color.toHex();
+            case 'hex8':
+                return this._format[1]
+                    ? this._color.toHex8String()
+                    : this._color.toHex8();
+            case 'name':
+                return this._color.toName() || this._color.toRgbString();
+            case 'hsl':
+                return this._format[1]
+                    ? this._color.toHslString()
+                    : this._color.toHsl();
+            case 'hsv':
+                return this._format[1]
+                    ? this._color.toHsvString()
+                    : this._color.toHsv();
+            default:
+                return 'No color format applied.';
+        }
+    }
+
+    public set color(
+        color:
+            | string
+            | number
+            | TinyColor
+            | HSVA
+            | HSV
+            | RGB
+            | RGBA
+            | HSL
+            | HSLA
+    ) {
+        if (color === this.color) {
+            return;
+        }
+        const oldValue = this._color;
+        this._color = new TinyColor(color);
+        this._format = [
+            this._color.format,
+            typeof color === 'string' || color instanceof String,
+        ];
+        const { h } = this._color.toHsv();
+        this.value = h;
+        this.requestUpdate('color', oldValue);
+    }
+
+    private _color = new TinyColor({ h: 0, s: 1, v: 1 });
+
+    private _format: [string, boolean] = ['', false];
 
     private get altered(): number {
         return this._altered;
@@ -180,6 +261,9 @@ export class ColorWheel extends Focusable {
         this.boundingClientRect = this.getBoundingClientRect();
         const { width } = this.boundingClientRect;
         const radius = width / 2;
+        const handleLocationStyles = `transform: translate(${
+            (radius - 12.5) * Math.cos((this.value * Math.PI) / 180)
+        }px, ${(radius - 12.5) * Math.sin((this.value * Math.PI) / 180)}px);`;
         return html`
             <slot
                 name="gradient"
@@ -190,11 +274,9 @@ export class ColorWheel extends Focusable {
 
             <sp-color-handle
                 class="handle"
-                color=${this.color}
+                color=${this._color.toHslString()}
                 ?disabled=${this.disabled}
-                style="transform: translate(${(radius - 12.5) *
-                Math.cos((this.value * Math.PI) / 180)}px, ${(radius - 12.5) *
-                Math.sin((this.value * Math.PI) / 180)}px);"
+                style=${handleLocationStyles}
                 @manage=${streamingListener(
                     { type: 'pointerdown', fn: this.handlePointerdown },
                     { type: 'pointermove', fn: this.handlePointermove },

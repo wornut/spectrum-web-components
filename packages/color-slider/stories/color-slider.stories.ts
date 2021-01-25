@@ -15,17 +15,17 @@ import { html, TemplateResult } from '@spectrum-web-components/base';
 import '../sp-color-slider.js';
 
 export default {
-    title: 'Color',
+    title: 'Color/Slider',
     component: 'sp-color-slider',
 };
 
-export const slider = (): TemplateResult => {
+export const Default = (): TemplateResult => {
     return html`
         <sp-color-slider></sp-color-slider>
     `;
 };
 
-export const sliderAlpha = (): TemplateResult => {
+export const alpha = (): TemplateResult => {
     return html`
         <sp-color-slider
             style="--sp-color-slider-gradient: rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%;"
@@ -34,19 +34,19 @@ export const sliderAlpha = (): TemplateResult => {
     `;
 };
 
-export const sliderDisabled = (): TemplateResult => {
+export const disabled = (): TemplateResult => {
     return html`
         <sp-color-slider disabled></sp-color-slider>
     `;
 };
 
-export const sliderVertical = (): TemplateResult => {
+export const vertical = (): TemplateResult => {
     return html`
         <sp-color-slider vertical></sp-color-slider>
     `;
 };
 
-export const sliderCanvas = (): TemplateResult => {
+export const canvas = (): TemplateResult => {
     requestAnimationFrame(() => {
         const canvas = document.querySelector(
             'canvas[slot="gradient"]'
@@ -78,7 +78,7 @@ export const sliderCanvas = (): TemplateResult => {
     `;
 };
 
-export const sliderImage = (): TemplateResult => {
+export const image = (): TemplateResult => {
     return html`
         <sp-color-slider color="#ff00de">
             <img
