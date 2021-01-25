@@ -22,6 +22,7 @@ import {
 } from '@spectrum-web-components/base';
 import { ColorHandle } from '@spectrum-web-components/color-handle';
 import '@spectrum-web-components/color-handle/sp-color-handle.js';
+import { HSL, HSLA, HSV, HSVA, RGB, RGBA, TinyColor } from '@ctrl/tinycolor';
 
 import styles from './color-area.css.js';
 
@@ -43,30 +44,103 @@ export class ColorArea extends SpectrumElement {
     private handle!: ColorHandle;
 
     @property({ type: Number })
-    public hue = 0;
-
-    @property({ type: String })
-    public get color(): string {
-        const lightness = (100 - this.x / 2) * (this.y / 100);
-        return `hsl(${this.hue}, ${this.x}%, ${100 - this.x / 2 - lightness}%)`;
+    public get hue(): number {
+        return this._hue;
     }
 
-    public set color(color: string) {
-        const values = /hsla?\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/.exec(color);
-        if (values === null) {
-            console.warn(`Non-HSL value applied to color: ${color}`);
+    public set hue(value: number) {
+        const hue = Math.min(360, Math.max(0, value));
+        if (hue === this.hue) {
             return;
         }
-        const oldValue = this.color;
-        const [, h, s, l] = values;
-        this.hue = parseFloat(h);
-        this.x = parseFloat(s);
-        this.y = parseFloat(l);
+        const oldValue = this.hue;
+        const { s, v } = this._color.toHsv();
+        this._color = new TinyColor({ h: hue, s, v });
+        this._hue = hue;
+        this.requestUpdate('hue', oldValue);
+    }
+
+    private _hue = 0;
+
+    @property({ type: String })
+    public get color():
+        | string
+        | number
+        | TinyColor
+        | HSVA
+        | HSV
+        | RGB
+        | RGBA
+        | HSL
+        | HSLA {
+        switch (this._format[0]) {
+            case 'rgb':
+                return this._format[1]
+                    ? this._color.toRgbString()
+                    : this._color.toRgb();
+            case 'prgb':
+                return this._format[1]
+                    ? this._color.toPercentageRgbString()
+                    : this._color.toPercentageRgb();
+            case 'hex8':
+                return this._format[1]
+                    ? this._color.toHex8String()
+                    : this._color.toHex8();
+            case 'name':
+                return this._color.toName() || this._color.toRgbString();
+            case 'hsl':
+                return this._format[1]
+                    ? this._color.toHslString()
+                    : this._color.toHsl();
+            case 'hsv':
+                return this._format[1]
+                    ? this._color.toHsvString()
+                    : this._color.toHsv();
+            case 'hex':
+            case 'hex3':
+            case 'hex4':
+            case 'hex6':
+            default:
+                return this._format[1]
+                    ? this._color.toHexString()
+                    : this._color.toHex();
+        }
+    }
+
+    public set color(
+        color:
+            | string
+            | number
+            | TinyColor
+            | HSVA
+            | HSV
+            | RGB
+            | RGBA
+            | HSL
+            | HSLA
+    ) {
+        if (color === this.color) {
+            return;
+        }
+        const oldValue = this._color;
+        this._color = new TinyColor(color);
+        this._format = [
+            this._color.format,
+            typeof color === 'string' || color instanceof String,
+        ];
+        const { h, s, v } = this._color.toHsv();
+        this.hue = h;
+        this.x = s;
+        this.y = 1 - v;
         this.requestUpdate('color', oldValue);
     }
 
+    private _color = new TinyColor({ h: 0, s: 1, v: 1 });
+
+    private _format: [string, boolean] = ['', false];
+
     @property({ type: Number })
-    public x = 0;
+    public x = 1;
 
     @property({ type: Number })
     public y = 0;
@@ -147,10 +221,9 @@ export class ColorArea extends SpectrumElement {
         } else if (deltaY) {
             this.inputY.focus();
         }
-        const x = Math.min(1, Math.max(this.x / 100 + deltaX, 0));
-        const y = Math.min(1, Math.max(this.y / 100 + deltaY, 0));
-        this.x = x * 100;
-        this.y = y * 100;
+        this.x = Math.min(1, Math.max(this.x + deltaX, 0));
+        this.y = Math.min(1, Math.max(this.y + deltaY, 0));
+        this._color = new TinyColor({ h: this.hue, s: this.x, v: this.y });
     }
 
     private handleKeyup(event: KeyboardEvent): void {
@@ -178,8 +251,9 @@ export class ColorArea extends SpectrumElement {
 
     private handlePointermove(event: PointerEvent): void {
         const [x, y] = this.calculateHandlePosition(event);
-        this.x = x * 100;
-        this.y = y * 100;
+        this._color = new TinyColor({ h: this.hue, s: x, v: 1 - y });
+        this.x = x;
+        this.y = y;
         this.dispatchEvent(
             new Event('input', {
                 bubbles: true,
@@ -253,11 +327,9 @@ export class ColorArea extends SpectrumElement {
 
             <sp-color-handle
                 class="handle"
-                color=${this.color}
+                color=${this._color.toHslString()}
                 ?disabled=${this.disabled}
-                style="transform: translate(${(this.x / 100) * width}px, ${(this
-                    .y /
-                    100) *
+                style="transform: translate(${this.x * width}px, ${this.y *
                 height}px);"
                 @manage=${streamingListener(
                     { type: 'pointerdown', fn: this.handlePointerdown },

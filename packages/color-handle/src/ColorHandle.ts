@@ -20,7 +20,19 @@ import {
 } from '@spectrum-web-components/base';
 
 import '@spectrum-web-components/color-loupe/sp-color-loupe.js';
+import { HSL, HSLA, HSV, HSVA, RGB, RGBA, TinyColor } from '@ctrl/tinycolor';
 import styles from './color-handle.css.js';
+
+export type ColorValue =
+    | string
+    | number
+    | TinyColor
+    | HSVA
+    | HSV
+    | RGB
+    | RGBA
+    | HSL
+    | HSLA;
 
 /**
  * @element sp-color-handle
