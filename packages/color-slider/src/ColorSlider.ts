@@ -23,6 +23,7 @@ import { Focusable } from '@spectrum-web-components/shared/src/focusable.js';
 import '@spectrum-web-components/color-handle/sp-color-handle.js';
 import styles from './color-slider.css.js';
 import { ColorHandle } from '@spectrum-web-components/color-handle/src/ColorHandle';
+import { HSL, HSLA, HSV, HSVA, RGB, RGBA, TinyColor } from '@ctrl/tinycolor';
 
 /**
  * @element sp-color-slider
@@ -45,10 +46,99 @@ export class ColorSlider extends Focusable {
     public vertical = false;
 
     @property({ type: Number })
-    public value = 0;
+    public get value(): number {
+        return this._value;
+    }
+
+    public set value(hue: number) {
+        const value = Math.min(360, Math.max(0, hue));
+        if (value === this.value) {
+            return;
+        }
+        const oldValue = this.value;
+        const { s, v } = this._color.toHsv();
+        this._color = new TinyColor({ h: value, s, v });
+        this._value = value;
+        this.requestUpdate('value', oldValue);
+    }
+
+    private _value = 0;
 
     @property({ type: String })
-    public color = 'rgb(255, 0, 0)';
+    public get color():
+        | string
+        | number
+        | TinyColor
+        | HSVA
+        | HSV
+        | RGB
+        | RGBA
+        | HSL
+        | HSLA {
+        switch (this._format[0]) {
+            case 'rgb':
+                return this._format[1]
+                    ? this._color.toRgbString()
+                    : this._color.toRgb();
+            case 'prgb':
+                return this._format[1]
+                    ? this._color.toPercentageRgbString()
+                    : this._color.toPercentageRgb();
+            case 'hex':
+            case 'hex3':
+            case 'hex4':
+            case 'hex6':
+                return this._format[1]
+                    ? this._color.toHexString()
+                    : this._color.toHex();
+            case 'hex8':
+                return this._format[1]
+                    ? this._color.toHex8String()
+                    : this._color.toHex8();
+            case 'name':
+                return this._color.toName() || this._color.toRgbString();
+            case 'hsl':
+                return this._format[1]
+                    ? this._color.toHslString()
+                    : this._color.toHsl();
+            case 'hsv':
+                return this._format[1]
+                    ? this._color.toHsvString()
+                    : this._color.toHsv();
+            default:
+                return 'No color format applied.';
+        }
+    }
+
+    public set color(
+        color:
+            | string
+            | number
+            | TinyColor
+            | HSVA
+            | HSV
+            | RGB
+            | RGBA
+            | HSL
+            | HSLA
+    ) {
+        if (color === this.color) {
+            return;
+        }
+        const oldValue = this._color;
+        this._color = new TinyColor(color);
+        this._format = [
+            this._color.format,
+            typeof color === 'string' || color instanceof String,
+        ];
+        const { h } = this._color.toHsv();
+        this.value = h;
+        this.requestUpdate('color', oldValue);
+    }
+
+    private _color = new TinyColor({ h: 0, s: 1, v: 1 });
+
+    private _format: [string, boolean] = ['', false];
 
     @property({ type: Number })
     public step = 1;
@@ -203,7 +293,7 @@ export class ColorSlider extends Focusable {
 
             <sp-color-handle
                 class="handle"
-                color=${this.color}
+                color=${this._color.toHslString()}
                 ?disabled=${this.disabled}
                 style="${this.vertical ? 'top' : 'left'}: ${this.value}%"
                 @manage=${streamingListener(

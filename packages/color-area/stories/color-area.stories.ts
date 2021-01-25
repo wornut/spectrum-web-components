@@ -18,51 +18,66 @@ import '../sp-color-area.js';
 import { ColorArea } from '../src/ColorArea.js';
 
 export default {
-    title: 'Color',
+    title: 'Color/Area',
     component: 'sp-color-area',
 };
 
-export const area = (): TemplateResult => {
+export const Default = (): TemplateResult => {
     return html`
-        <sp-color-area></sp-color-area>
+        <sp-color-area
+            @input=${({ target }: Event & { target: ColorArea }) => {
+                const next = target.nextElementSibling as HTMLElement;
+                next.textContent = target.color as string;
+                next.style.color = target.color as string;
+            }}
+        ></sp-color-area>
+        <div style="color: #ff0000">#ff0000</div>
     `;
 };
 
 export const joint = (): TemplateResult => {
     return html`
         <div>
-            <sp-color-area></sp-color-area>
+            <sp-color-area
+                color="#7f3e3e"
+                @input=${({ target }: Event & { target: ColorArea }) => {
+                    const display = (target.nextElementSibling as HTMLElement)
+                        .nextElementSibling as HTMLElement;
+                    display.textContent = target.color as string;
+                    display.style.color = target.color as string;
+                }}
+            ></sp-color-area>
             <sp-color-slider
                 style="--sp-color-slider-gradient: rgb(255, 0, 0) 0%, rgb(255, 255, 0) 17%, rgb(0, 255, 0) 33%, rgb(0, 255, 255) 50%, rgb(0, 0, 255) 67%, rgb(255, 0, 255) 83%, rgb(255, 0, 0) 100%;"
-                @input=${(
-                    event: Event & {
-                        target: ColorSlider & {
-                            value: number;
-                            previousElementSibling: ColorArea;
-                        };
-                    }
-                ): void => {
-                    const { value, previousElementSibling } = event.target;
+                @input=${({
+                    target: { value, previousElementSibling },
+                }: Event & {
+                    target: ColorSlider & {
+                        value: number;
+                        previousElementSibling: ColorArea;
+                    };
+                }): void => {
                     previousElementSibling.hue = (value / 100) * 360;
                 }}
             ></sp-color-slider>
+            <div style="color: #7f3e3e">#7f3e3e</div>
         </div>
     `;
 };
 
-export const areaDisabled = (): TemplateResult => {
+export const disabled = (): TemplateResult => {
     return html`
         <sp-color-area disabled></sp-color-area>
     `;
 };
 
-export const areaSize = (): TemplateResult => {
+export const sized = (): TemplateResult => {
     return html`
         <sp-color-area style="width: 72px; height: 72px"></sp-color-area>
     `;
 };
 
-export const areaCanvas = (): TemplateResult => {
+export const canvas = (): TemplateResult => {
     requestAnimationFrame(() => {
         const canvas = document.querySelector(
             'canvas[slot="gradient"]'
