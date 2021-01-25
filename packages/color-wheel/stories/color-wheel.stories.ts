@@ -15,11 +15,11 @@ import { html, TemplateResult } from '@spectrum-web-components/base';
 import '../sp-color-wheel.js';
 
 export default {
-    title: 'Color',
+    title: 'Color/Wheel',
     component: 'sp-color-wheel',
 };
 
-export const wheel = (): TemplateResult => {
+export const Default = (): TemplateResult => {
     return html`
         <sp-color-wheel></sp-color-wheel>
     `;
@@ -37,7 +37,7 @@ export const wheelDisabled = (): TemplateResult => {
     `;
 };
 
-export const wheelCanvas = (): TemplateResult => {
+export const canvas = (): TemplateResult => {
     requestAnimationFrame(() => {
         const canvas = document.querySelector(
             'canvas[slot="gradient"]'
