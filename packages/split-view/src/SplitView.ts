@@ -19,6 +19,7 @@ import {
     css,
     query,
     PropertyValues,
+    ifDefined,
 } from '@spectrum-web-components/base';
 
 import styles from './split-view.css.js';
@@ -128,8 +129,6 @@ export class SplitView extends SpectrumElement {
     @query('#gripper')
     private gripper!: HTMLDivElement;
 
-    private supportsPointerEvent = 'setPointerCapture' in this;
-    private currentMouseEvent?: MouseEvent;
     private offset = 0;
     private size = 0;
     // private lastPosition = 0;
@@ -146,20 +145,21 @@ export class SplitView extends SpectrumElement {
             >
                 <slot name="primary"></slot>
             </div>
-            <div id="splitter" role="separator">
+            <div
+                id="splitter"
+                role="separator"
+                aria-label="label attribute from outside"
+                tabindex=${ifDefined(this.resizable ? '0' : undefined)}
+                @pointermove=${this.onPointerMove}
+                @pointerdown=${this.onPointerDown}
+                @pointerup=${this.onPointerUp}
+                @pointercancel=${this.onPointerCancel}
+                @pointerenter=${this.onPointerEnter}
+                @onpointerout=${this.onPointerOut}
+            >
                 ${this.resizable
                     ? html`
-                          <div
-                              id="gripper"
-                              @pointermove=${this.onPointerMove}
-                              @pointerdown=${this.onPointerDown}
-                              @pointerup=${this.onPointerUp}
-                              @pointercancel=${this.onPointerCancel}
-                              @pointerenter=${this.onPointerEnter}
-                              @onpointerout=${this.onPointerOut}
-                              @onMouseDown=${this.onMouseDown}
-                              role="presentation"
-                          ></div>
+                          <div id="gripper"></div>
                       `
                     : html``}
             </div>
@@ -179,42 +179,9 @@ export class SplitView extends SpectrumElement {
         this.gripper.setPointerCapture(event.pointerId);
     }
 
-    private onMouseDown(event: MouseEvent): void {
-        if (this.supportsPointerEvent) {
-            return;
-        }
-        if (this.disabled) {
-            return;
-        }
-        document.addEventListener('mousemove', this.onMouseMove);
-        document.addEventListener('mouseup', this.onMouseUp);
-        // this.focus();
-        this.dragging = true;
-        this.currentMouseEvent = event;
-        this._trackMouseEvent();
-    }
-
-    private _trackMouseEvent(): void {
-        if (!this.currentMouseEvent || !this.dragging) {
-            return;
-        }
-        const pos = this.getPosition(this.currentMouseEvent) - this.offset;
-        this.processPosition(pos);
-        requestAnimationFrame(() => this._trackMouseEvent());
-    }
-
     private onPointerUp(): void {
         this.dragging = false;
     }
-
-    private onMouseUp = (event: MouseEvent): void => {
-        this.currentMouseEvent = event;
-        document.removeEventListener('mousemove', this.onMouseMove);
-        document.removeEventListener('mouseup', this.onMouseUp);
-        requestAnimationFrame(() => {
-            this.dragging = false;
-        });
-    };
 
     private onPointerMove(event: PointerEvent): void {
         if (!this.dragging) {
@@ -224,10 +191,6 @@ export class SplitView extends SpectrumElement {
         const pos = this.getPosition(event) - this.offset;
         this.processPosition(pos);
     }
-
-    private onMouseMove = (event: MouseEvent): void => {
-        this.currentMouseEvent = event;
-    };
 
     private onPointerCancel(): void {
         this.dragging = false;
