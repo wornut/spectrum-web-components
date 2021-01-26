@@ -26,6 +26,16 @@ const config = {
                 },
                 {
                     type: 'boolean',
+                    selector: '.is-active',
+                    name: 'dragging',
+                },
+                {
+                    type: 'boolean',
+                    selector: '.is-hovered',
+                    name: 'hovered',
+                },
+                {
+                    type: 'boolean',
                     selector: '.spectrum-SplitView--vertical',
                     name: 'vertical',
                 },
