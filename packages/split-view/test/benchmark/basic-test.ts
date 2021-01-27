@@ -15,5 +15,16 @@ import { html } from '@spectrum-web-components/base';
 import { measureFixtureCreation } from '../../../../test/benchmark/helpers.js';
 
 measureFixtureCreation(html`
-    <sp-split-view open></sp-split-view>
+    <sp-split-view
+        resizable
+        collapsible
+        primary-min="50"
+        primary-max="Infinity"
+        secondary-min="50"
+        secondary-max="Infinity"
+        style="height: 200px; width: 400px;"
+    >
+        <div slot="primary">First panel</div>
+        <div slot="secondary">Second panel</div>
+    </sp-split-view>
 `);

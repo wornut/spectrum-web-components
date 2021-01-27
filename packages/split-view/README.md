@@ -37,11 +37,10 @@ import { SplitView } from '@spectrum-web-components/split-view';
 ```html
 <sp-split-view
     resizable
-    primary-default="100"
-    primary-max="Infinity"
     primary-min="50"
-    secondary-max="Infinity"
+    primary-max="Infinity"
     secondary-min="50"
+    secondary-max="Infinity"
 >
     <div slot="primary">
         <h1>Left panel</h1>
@@ -60,49 +59,17 @@ import { SplitView } from '@spectrum-web-components/split-view';
 </sp-split-view>
 ```
 
-#### Horizontal Resizable & Collapsible (Start)
+#### Horizontal Resizable & Collapsible
 
 ```html
 <sp-split-view
     resizable
     collapsible
-    primary-default="100"
-    primary-max="Infinity"
     primary-min="50"
-    secondary-max="Infinity"
-    secondary-min="50"
-    style="height: 200px"
->
-    <div slot="primary">
-        <h1>Left panel</h1>
-        <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
-        </p>
-    </div>
-    <div slot="secondary">
-        <h2>Right panel</h2>
-        <p>
-            It is a long established fact that a reader will be distracted by
-            the readable content of a page when looking at its layout.
-        </p>
-    </div>
-</sp-split-view>
-```
-
-#### Horizontal Resizable & Collapsible (Start & End)
-
-```html
-<sp-split-view
-    resizable
-    collapsible
-    primary-default="100"
     primary-max="Infinity"
-    primary-min="50"
-    secondary-max="Infinity"
     secondary-min="50"
+    secondary-max="Infinity"
     style="height: 200px"
-    total-max="400"
 >
     <div slot="primary">
         <h1>Left panel</h1>
@@ -136,11 +103,10 @@ import { SplitView } from '@spectrum-web-components/split-view';
 <sp-split-view
     vertical
     resizable
-    primary-default="100"
-    primary-max="Infinity"
     primary-min="50"
-    secondary-max="Infinity"
+    primary-max="Infinity"
     secondary-min="50"
+    secondary-max="Infinity"
 >
     <div slot="primary">
         <h1>Top panel</h1>
@@ -159,51 +125,18 @@ import { SplitView } from '@spectrum-web-components/split-view';
 </sp-split-view>
 ```
 
-#### Vertical Resizable & Collapsible (Start)
+#### Vertical Resizable & Collapsible
 
 ```html
 <sp-split-view
     vertical
     resizable
     collapsible
-    primary-default="100"
-    primary-max="Infinity"
     primary-min="50"
-    secondary-max="Infinity"
-    secondary-min="50"
-    style="height: 200px"
->
-    <div slot="primary">
-        <h1>Top panel</h1>
-        <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
-        </p>
-    </div>
-    <div slot="secondary">
-        <h2>Bottom panel</h2>
-        <p>
-            It is a long established fact that a reader will be distracted by
-            the readable content of a page when looking at its layout.
-        </p>
-    </div>
-</sp-split-view>
-```
-
-#### Vertical Resizable & Collapsible (Start & End)
-
-```html
-<sp-split-view
-    vertical
-    resizable
-    collapsible
-    primary-default="100"
     primary-max="Infinity"
-    primary-min="50"
-    secondary-max="Infinity"
     secondary-min="50"
-    style="height: 200px"
-    total-max="400"
+    secondary-max="Infinity"
+    style="width: 200px"
 >
     <div slot="primary">
         <h1>Top panel</h1>

@@ -43,6 +43,8 @@ const CURSORS = {
     },
 };
 
+const SPLITTERSIZE = 2;
+
 /**
  * @element sp-split-view
  */
@@ -132,6 +134,7 @@ export class SplitView extends SpectrumElement {
         this.onPointerUp = this.onPointerUp.bind(this);
         this.resize = this.resize.bind(this);
         this.updatePosition = this.updatePosition.bind(this);
+        this.getSplitterSize = this.getSplitterSize.bind(this);
     }
 
     protected render(): TemplateResult {
@@ -213,8 +216,8 @@ export class SplitView extends SpectrumElement {
         }
         window.removeEventListener('pointermove', this.onPointerDragged, false);
         window.removeEventListener('pointerup', this.onPointerUp, false);
-        this.dragging = false;
         this.updateCursor(event);
+        this.dragging = false;
         if (!this.isOver) {
             this.style.cursor = 'default';
         }
@@ -347,7 +350,6 @@ export class SplitView extends SpectrumElement {
         let currentOver =
             this.dragging || this.dividerContainsPoint(this.getPosition(event));
         let wasOver = this.dragging ? false : this.hovered;
-
         if (!wasOver && currentOver) {
             const cursors = this.vertical
                 ? CURSORS.vertical
@@ -374,14 +376,16 @@ export class SplitView extends SpectrumElement {
         return x >= d1 && x <= d2;
     }
 
-    private getSplitterSize(): number {
+    public getSplitterSize(): number {
         const el = this.shadowRoot.querySelector('#splitter') as HTMLElement;
-        return Math.round(
-            parseFloat(
-                window
-                    .getComputedStyle(el)
-                    .getPropertyValue(this.vertical ? 'height' : 'width')
-            )
+        return (
+            Math.round(
+                parseFloat(
+                    window
+                        .getComputedStyle(el)
+                        .getPropertyValue(this.vertical ? 'height' : 'width')
+                )
+            ) || SPLITTERSIZE
         );
     }
 
