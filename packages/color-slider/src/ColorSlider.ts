@@ -366,6 +366,8 @@ export class ColorSlider extends Focusable {
 
     private handlePointermove(event: PointerEvent): void {
         this.value = this.calculateHandlePosition(event);
+        this.sliderHandlePosition = this.calculateHandlePosition(event);
+
         this.color = `hsl(${360 * (this.value / 100)}, 100%, 50%)`;
         this.dispatchEvent(
             new Event('input', {
@@ -394,7 +396,7 @@ export class ColorSlider extends Focusable {
     private calculateHandlePosition(event: PointerEvent): number {
         /* c8 ignore next 3 */
         if (!this.boundingClientRect) {
-            return this.value;
+            return this.sliderHandlePosition;
         }
         const rect = this.boundingClientRect;
         const minOffset = this.vertical ? rect.top : rect.left;
@@ -403,9 +405,10 @@ export class ColorSlider extends Focusable {
 
         const percent = Math.max(0, Math.min(1, (offset - minOffset) / size));
         // const value = this.min + (this.max - this.min) * percent;
-        const value = 100 * percent;
+        const sliderHandlePosition = 100 * percent;
+        console.log(sliderHandlePosition);
 
-        return this.isLTR ? value : 100 - value;
+        return this.isLTR ? sliderHandlePosition : 100 - sliderHandlePosition;
     }
 
     private handleGradientPointerdown(event: PointerEvent): void {
