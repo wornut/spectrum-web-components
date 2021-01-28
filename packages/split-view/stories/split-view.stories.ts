@@ -22,8 +22,8 @@ export default {
 export const Horizontal = (): TemplateResult => {
     return html`
         <sp-split-view style="height: 200px" primary-default="100">
-            <div slot="primary">First panel</div>
-            <div slot="secondary">Second panel</div>
+            <div>First panel</div>
+            <div>Second panel</div>
         </sp-split-view>
     `;
 };
@@ -37,14 +37,14 @@ export const HorizontalResizable = (): TemplateResult => {
             secondary-min="50"
             secondary-max="Infinity"
         >
-            <div slot="primary">
+            <div>
                 <h1>First panel</h1>
                 <p>
                     Lorem Ipsum is simply dummy text of the printing and
                     typesetting industry.
                 </p>
             </div>
-            <div slot="secondary">
+            <div>
                 <h2>Second panel</h2>
                 <p>
                     It is a long established fact that a reader will be
@@ -67,7 +67,7 @@ export const HorizontalResizableCollapsible = (): TemplateResult => {
             secondary-max="Infinity"
             style="height: 200px; width: 400px;"
         >
-            <div slot="primary">
+            <div>
                 <h1>First panel</h1>
                 <p>
                     Lorem Ipsum is simply dummy text of the printing and
@@ -82,7 +82,7 @@ export const HorizontalResizableCollapsible = (): TemplateResult => {
                     like Aldus PageMaker including versions of Lorem Ipsum.
                 </p>
             </div>
-            <div slot="secondary">
+            <div>
                 <h2>Second panel</h2>
                 <p>
                     It is a long established fact that a reader will be
@@ -105,8 +105,8 @@ export const HorizontalResizableCollapsible = (): TemplateResult => {
 export const Vertical = (): TemplateResult => {
     return html`
         <sp-split-view vertical>
-            <div slot="primary">First panel</div>
-            <div slot="secondary">Second panel</div>
+            <div>First panel</div>
+            <div>Second panel</div>
         </sp-split-view>
     `;
 };
@@ -121,7 +121,7 @@ export const VerticalResizable = (): TemplateResult => {
             secondary-min="50"
             secondary-max="Infinity"
         >
-            <div slot="primary">
+            <div>
                 <h1>First panel</h1>
                 <p>
                     Lorem Ipsum is simply dummy text of the printing and
@@ -136,7 +136,7 @@ export const VerticalResizable = (): TemplateResult => {
                     like Aldus PageMaker including versions of Lorem Ipsum.
                 </p>
             </div>
-            <div slot="secondary">
+            <div>
                 <h2>Second panel</h2>
                 <p>
                     It is a long established fact that a reader will be
@@ -169,7 +169,7 @@ export const VerticalResizableCollapsible = (): TemplateResult => {
             secondary-max="Infinity"
             style="height: 400px;"
         >
-            <div slot="primary">
+            <div>
                 <h1>First panel</h1>
                 <p>
                     Lorem Ipsum is simply dummy text of the printing and
@@ -184,7 +184,7 @@ export const VerticalResizableCollapsible = (): TemplateResult => {
                     like Aldus PageMaker including versions of Lorem Ipsum.
                 </p>
             </div>
-            <div slot="secondary">
+            <div>
                 <h2>Second panel</h2>
                 <p>
                     It is a long established fact that a reader will be

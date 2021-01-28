@@ -19,14 +19,10 @@ import {
     css,
     PropertyValues,
     ifDefined,
+    query,
 } from '@spectrum-web-components/base';
 
 import styles from './split-view.css.js';
-
-const ORIENTATIONS = {
-    horizontal: 'width',
-    vertical: 'height',
-};
 
 const CURSORS = {
     horizontal: {
@@ -53,13 +49,30 @@ export class SplitView extends SpectrumElement {
         return [
             styles,
             css`
-                .pane {
+                :host {
+                    --spectrum-split-view-first-pane-size: 50%;
+                }
+                ::slotted(*) {
                     overflow: hidden;
                 }
-                .secondaryPane {
+                ::slotted(:first-child) {
+                    order: 1;
+                }
+                :host(:not([vertical])) ::slotted(:first-child) {
+                    width: var(--spectrum-split-view-first-pane-size);
+                }
+                :host([vertical]) ::slotted(:first-child) {
+                    height: var(--spectrum-split-view-first-pane-size);
+                }
+                ::slotted(:nth-child(2)) {
+                    order: 3;
                     flex: 1;
                 }
+                ::slotted(:nth-child(n + 3)) {
+                    display: none;
+                }
                 #splitter {
+                    order: 2;
                     height: auto; /* for horizontal splitviews without proper outter height value */
                 }
             `,
@@ -123,6 +136,9 @@ export class SplitView extends SpectrumElement {
     @property()
     public label?: string;
 
+    @query('slot')
+    private paneSlot!: HTMLSlotElement;
+
     private offset = 0;
     private size = 0;
     private isOver = false;
@@ -148,17 +164,8 @@ export class SplitView extends SpectrumElement {
     }
 
     protected render(): TemplateResult {
-        const dimension = this.vertical
-            ? ORIENTATIONS.vertical
-            : ORIENTATIONS.horizontal;
-
         return html`
-            <div
-                class="pane"
-                style=${`${dimension}: ${this.dividerPosition}px`}
-            >
-                <slot name="primary"></slot>
-            </div>
+            <slot></slot>
             <div
                 id="splitter"
                 role="separator"
@@ -171,9 +178,6 @@ export class SplitView extends SpectrumElement {
                           <div id="gripper"></div>
                       `
                     : html``}
-            </div>
-            <div class="pane secondaryPane">
-                <slot name="secondary"></slot>
             </div>
         `;
     }
@@ -412,5 +416,16 @@ export class SplitView extends SpectrumElement {
                 ? this.primaryDefault
                 : this.primarySize;
         this.resize();
+    }
+
+    protected updated(changed: PropertyValues): void {
+        super.updated(changed);
+
+        if (changed.has('dividerPosition')) {
+            this.paneSlot.style.setProperty(
+                '--spectrum-split-view-first-pane-size',
+                `${this.dividerPosition}px`
+            );
+        }
     }
 }
