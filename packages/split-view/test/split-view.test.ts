@@ -40,6 +40,12 @@ describe('SplitView', () => {
 
         await elementUpdated(el);
         expect(el).to.be.accessible();
+        expect(el.primaryDefault).to.equal(100);
+
+        const gripper = el.shadowRoot
+            ? (el.shadowRoot.querySelector('#gripper') as HTMLDivElement)
+            : (el as SplitView);
+        expect(gripper).not.to.be.accessible();
     });
 
     it('loads horizontal [resizable] split-view accessibly', async () => {
@@ -60,6 +66,12 @@ describe('SplitView', () => {
 
         await elementUpdated(el);
         expect(el).to.be.accessible();
+        expect(el.primaryDefault).to.be.equal(304);
+
+        const gripper = el.shadowRoot
+            ? (el.shadowRoot.querySelector('#gripper') as HTMLDivElement)
+            : (el as SplitView);
+        expect(gripper).to.be.accessible();
     });
 
     it('loads horizontal [resizable] [collapsible] split-view accessibly', async () => {
@@ -72,7 +84,6 @@ describe('SplitView', () => {
                     primary-max="Infinity"
                     secondary-min="50"
                     secondary-max="Infinity"
-                    style="height: 200px; width: 400px;"
                 >
                     <div slot="primary">First panel</div>
                     <div slot="secondary">Second panel</div>
@@ -130,7 +141,6 @@ describe('SplitView', () => {
                     primary-max="Infinity"
                     secondary-min="50"
                     secondary-max="Infinity"
-                    style="width: 200px; height: 400px;"
                 >
                     <div slot="primary">First panel</div>
                     <div slot="secondary">Second panel</div>
@@ -142,7 +152,7 @@ describe('SplitView', () => {
         expect(el).to.be.accessible();
     });
 
-    it('set all pane values', async () => {
+    it('set all panel values', async () => {
         const el = await fixture<SplitView>(
             html`
                 <sp-split-view
@@ -180,7 +190,7 @@ describe('SplitView', () => {
         );
     });
 
-    it('Change cursor when pointer moves [horizontal] splitview', async () => {
+    it('changes cursor when pointer moves [horizontal] splitview', async () => {
         const el = await fixture<SplitView>(
             html`
                 <sp-split-view
@@ -222,7 +232,7 @@ describe('SplitView', () => {
         expect(el.style.cursor).to.equal('default');
     });
 
-    it('Change cursor when pointer  moves [vertical] splitview', async () => {
+    it('changes cursor when pointer moves [vertical] splitview', async () => {
         const el = await fixture<SplitView>(
             html`
                 <sp-split-view
@@ -264,7 +274,8 @@ describe('SplitView', () => {
         expect(el.style.cursor).to.equal('default');
     });
 
-    it('Resize when pointer moves and dragging is enabled', async () => {
+    it('resizes when pointer moves and dragging is enabled', async () => {
+        const splitTotalWidth = 400;
         const el = await fixture<SplitView>(
             html`
                 <sp-split-view
@@ -273,7 +284,7 @@ describe('SplitView', () => {
                     primary-max="Infinity"
                     secondary-min="50"
                     secondary-max="Infinity"
-                    style="height: 200px; width: 400px;"
+                    style=${`height: 200px; width: ${splitTotalWidth}px;`}
                 >
                     <div slot="primary">First panel</div>
                     <div slot="secondary">Second panel</div>
@@ -318,6 +329,24 @@ describe('SplitView', () => {
         await elementUpdated(el);
         expect(el.style.cursor).to.equal(cursor);
 
+        // don't collapse to start
+        window.dispatchEvent(
+            new PointerEvent('pointermove', {
+                clientX: 0,
+            })
+        );
+        await elementUpdated(el);
+        expect(el.dividerPosition).to.equal(el.primaryMin);
+
+        // don't collapse to end
+        window.dispatchEvent(
+            new PointerEvent('pointermove', {
+                clientX: el.getBoundingClientRect().left + splitTotalWidth,
+            })
+        );
+        await elementUpdated(el);
+        expect(el.dividerPosition).to.equal(splitTotalWidth - el.secondaryMin);
+
         // don't change anything when triggering mouseevent with right button click
         el.dispatchEvent(new MouseEvent('pointerdown', { button: 2 }));
         await elementUpdated(el);
@@ -328,7 +357,7 @@ describe('SplitView', () => {
         expect(el.dragging).to.be.false;
     });
 
-    it('Resize  and collapse to start pos when pointer moves in horizontal splitview', async () => {
+    it('resizes and collapses to start pos when pointer moves in horizontal splitview', async () => {
         const el = await fixture<SplitView>(
             html`
                 <sp-split-view
@@ -381,7 +410,7 @@ describe('SplitView', () => {
         expect(el.style.cursor).to.equal('e-resize');
     });
 
-    it('Resize and collapse to end pos when pointer moves in horizontal splitview', async () => {
+    it('resizes and collapses to end pos when pointer moves in horizontal splitview', async () => {
         const splitTotalWidth = 400;
         const el = await fixture<SplitView>(
             html`
@@ -447,7 +476,7 @@ describe('SplitView', () => {
         expect(el.style.cursor).to.equal('default');
     });
 
-    it('Resize and collapse to start pos when pointer moves in [vertical] splitview', async () => {
+    it('resizes and collapses to start pos when pointer moves in [vertical] splitview', async () => {
         const el = await fixture<SplitView>(
             html`
                 <sp-split-view
@@ -501,7 +530,7 @@ describe('SplitView', () => {
         expect(el.style.cursor).to.equal('s-resize');
     });
 
-    it('Resize and collapse to end pos when pointer moves in [vertical] splitview', async () => {
+    it('resizes and collapses to end pos when pointer moves in [vertical] splitview', async () => {
         const splitTotalHeight = 400;
         const el = await fixture<SplitView>(
             html`
@@ -568,7 +597,7 @@ describe('SplitView', () => {
         expect(el.style.cursor).to.equal('default');
     });
 
-    it('Handle focus and keyboard inputs and resize accordingly for horizontal splitviews', async () => {
+    it('handles focus and keyboard inputs and resizes accordingly for horizontal splitviews', async () => {
         const splitTotalWidth = 500;
         const el = await fixture<SplitView>(
             html`
@@ -597,7 +626,6 @@ describe('SplitView', () => {
             : (el as SplitView);
         splitter.dispatchEvent(new PointerEvent('pointerdown'));
         await elementUpdated(el);
-        // expect(document.activeElement as HTMLDivElement === splitter).to.be.true;
         //Send keyboard events to resize
         splitter.dispatchEvent(arrowLeftEvent);
         await elementUpdated(el);
@@ -643,7 +671,7 @@ describe('SplitView', () => {
         expect(typeof outsideFocused).not.to.equal(splitter);
     });
 
-    it('Handle keyboard inputs and resize accordingly for vertical splitviews', async () => {
+    it('handles keyboard inputs and resizes accordingly for [vertical] splitviews', async () => {
         const splitTotalHeight = 500;
         const el = await fixture<SplitView>(
             html`
@@ -718,7 +746,7 @@ describe('SplitView', () => {
         expect(typeof outsideFocused).not.to.equal(splitter);
     });
 
-    it("Don't resize when primary-size is set", async () => {
+    it('does not resize when primary-size is set', async () => {
         const el = await fixture<SplitView>(
             html`
                 <sp-split-view
@@ -750,5 +778,36 @@ describe('SplitView', () => {
         el.dispatchEvent(new PointerEvent('pointerdown'));
         await elementUpdated(el);
         expect(el.dragging).to.be.false;
+    });
+
+    it('does not resize when not resizable', async () => {
+        const el = await fixture<SplitView>(
+            html`
+                <sp-split-view
+                    primary-min="50"
+                    primary-max="Infinity"
+                    secondary-min="50"
+                    secondary-max="Infinity"
+                >
+                    <div slot="primary">First panel</div>
+                    <div slot="secondary">Second panel</div>
+                </sp-split-view>
+            `
+        );
+
+        await elementUpdated(el);
+        expect(el.dragging).to.be.false;
+        expect(el.resizable).to.be.false;
+
+        let pos = el.dividerPosition;
+        const splitter = el.shadowRoot
+            ? (el.shadowRoot.querySelector('#splitter') as HTMLDivElement)
+            : (el as SplitView);
+        splitter.dispatchEvent(new PointerEvent('pointerdown'));
+        await elementUpdated(el);
+        //Send keyboard events to resize
+        splitter.dispatchEvent(arrowLeftEvent);
+        await elementUpdated(el);
+        expect(el.dividerPosition).to.equal(pos);
     });
 });

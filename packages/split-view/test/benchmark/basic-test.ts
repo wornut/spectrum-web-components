@@ -22,7 +22,6 @@ measureFixtureCreation(html`
         primary-max="Infinity"
         secondary-min="50"
         secondary-max="Infinity"
-        style="height: 200px; width: 400px;"
     >
         <div slot="primary">First panel</div>
         <div slot="secondary">Second panel</div>

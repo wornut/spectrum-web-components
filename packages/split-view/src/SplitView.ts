@@ -23,8 +23,6 @@ import {
 
 import styles from './split-view.css.js';
 
-const COLLAPSE_THREASHOLD = 50;
-
 const ORIENTATIONS = {
     horizontal: 'width',
     vertical: 'height',
@@ -42,6 +40,8 @@ const CURSORS = {
         max: 'n-resize',
     },
 };
+
+const COLLAPSE_THREASHOLD = 50;
 
 const SPLITTERSIZE = 2;
 
@@ -137,6 +137,16 @@ export class SplitView extends SpectrumElement {
         this.getSplitterSize = this.getSplitterSize.bind(this);
     }
 
+    public connectedCallback(): void {
+        super.connectedCallback();
+        window.addEventListener('resize', this.resize);
+    }
+
+    public disconnectedCallback(): void {
+        window.removeEventListener('resize', this.resize);
+        super.disconnectedCallback();
+    }
+
     protected render(): TemplateResult {
         const dimension = this.vertical
             ? ORIENTATIONS.vertical
@@ -168,7 +178,7 @@ export class SplitView extends SpectrumElement {
         `;
     }
 
-    onPointerMove(event: PointerEvent): void {
+    private onPointerMove(event: PointerEvent): void {
         this.isOver = true;
         if (this.dragging) {
             return;
@@ -176,7 +186,7 @@ export class SplitView extends SpectrumElement {
         this.updateCursor(event);
     }
 
-    onPointerDown(event: PointerEvent): void {
+    private onPointerDown(event: PointerEvent): void {
         if (event.button && event.button !== 0) {
             return;
         }
@@ -195,7 +205,7 @@ export class SplitView extends SpectrumElement {
         }
     }
 
-    onPointerDragged(event: PointerEvent): void {
+    protected onPointerDragged(event: PointerEvent): void {
         if (!this.dragging) {
             return;
         }
@@ -210,7 +220,7 @@ export class SplitView extends SpectrumElement {
         this.updatePosition(pos);
     }
 
-    onPointerUp(event: PointerEvent): void {
+    protected onPointerUp(event: PointerEvent): void {
         if (!this.dragging) {
             return;
         }
@@ -223,7 +233,7 @@ export class SplitView extends SpectrumElement {
         }
     }
 
-    onPointerOut(): void {
+    private onPointerOut(): void {
         this.isOver = false;
         this.hovered = false;
         if (!this.dragging) {
@@ -250,7 +260,7 @@ export class SplitView extends SpectrumElement {
         this.updatePosition(this.dividerPosition - offset);
     }
 
-    onKeyDown(event: KeyboardEvent): void {
+    private onKeyDown(event: KeyboardEvent): void {
         if (!this.resizable || this.primarySize !== undefined) {
             return;
         }
@@ -325,7 +335,7 @@ export class SplitView extends SpectrumElement {
         this.updatePosition(this.dividerPosition);
     }
 
-    updatePosition(x: number): void {
+    private updatePosition(x: number): void {
         this.lastPosition = this.dividerPosition;
         let pos = Math.max(this.minPos, Math.min(this.maxPos, x));
         if (this.collapsible && x <= 0) {
@@ -346,7 +356,7 @@ export class SplitView extends SpectrumElement {
             this.dividerPosition >= this.size - this.getSplitterSize();
     }
 
-    updateCursor(event: PointerEvent) {
+    private updateCursor(event: PointerEvent) {
         let currentOver =
             this.dragging || this.dividerContainsPoint(this.getPosition(event));
         let wasOver = this.dragging ? false : this.hovered;
@@ -402,15 +412,5 @@ export class SplitView extends SpectrumElement {
                 ? this.primaryDefault
                 : this.primarySize;
         this.resize();
-    }
-
-    public connectedCallback(): void {
-        super.connectedCallback();
-        window.addEventListener('resize', this.resize);
-    }
-
-    public disconnectedCallback(): void {
-        window.removeEventListener('resize', this.resize);
-        super.disconnectedCallback();
     }
 }
