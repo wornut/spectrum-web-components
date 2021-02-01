@@ -1,5 +1,7 @@
 ## Description
 
+An `<sp-color-loupe>` shows the output color that would otherwise be covered by a cursor, stylus, or finger during color selection.
+
 ### Usage
 
 [![See it on NPM!](https://img.shields.io/npm/v/@spectrum-web-components/color-loupe?style=for-the-badge)](https://www.npmjs.com/package/@spectrum-web-components/color-loupe)
@@ -24,5 +26,5 @@ import { ColorLoupe } from '@spectrum-web-components/color-loupe';
 ## Example
 
 ```html
-<sp-color-loupe></sp-color-loupe>
+<sp-color-loupe open style="position: relative"></sp-color-loupe>
 ```

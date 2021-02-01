@@ -33,11 +33,15 @@ import { ColorArea } from '@spectrum-web-components/color-area';
 
 ### Disabled
 
+An `<sp-color-area>` in a disabled state shows that an input exists, but is not available in that circumstance. This can be used to maintain layout continuity and communicate that the area may become available later.
+
 ```html
 <sp-color-area disabled></sp-color-area>
 ```
 
 ### Sized
+
+An `<sp-color-area>`’s height and width can be customized appropriately for its context.
 
 ```html
 <sp-color-area
