@@ -43,7 +43,7 @@ export class TopNav extends SpectrumElement {
     }
 
     @property()
-    public selectionIndicatorStyle = '';
+    public selectionIndicatorStyle = 'transition: none;';
 
     public constructor() {
         super();
@@ -89,6 +89,7 @@ export class TopNav extends SpectrumElement {
     }
 
     protected render(): TemplateResult {
+        console.log(this.selectionIndicatorStyle);
         return html`
             <slot @slotchange=${this.onSlotChange}></slot>
             <div
@@ -146,14 +147,15 @@ export class TopNav extends SpectrumElement {
         });
     }
 
-    private updateSelectionIndicator = async (): Promise<void> => {
+    private updateSelectionIndicator = async (event?: Event): Promise<void> => {
         const selectedItem = this.items.find(
             (item) =>
                 item.value === this.selected ||
                 item.value === window.location.href
         );
         if (!selectedItem) {
-            this.selectionIndicatorStyle = `transform: translateX(0px) scaleX(0) scaleY(0);`;
+            this.selectionIndicatorStyle =
+                'transform: translateX(0px) scaleX(0) scaleY(0); transition: none;';
             return;
         }
         await Promise.all([
@@ -167,7 +169,11 @@ export class TopNav extends SpectrumElement {
         const offset =
             itemBoundingClientRect.left - parentBoundingClientRect.left;
 
-        this.selectionIndicatorStyle = `transform: translateX(${offset}px) scaleX(${width});`;
+        let selectionIndicatorStyle = `transform: translateX(${offset}px) scaleX(${width});`;
+        if (typeof event !== 'undefined') {
+            selectionIndicatorStyle += ' transition: none;';
+        }
+        this.selectionIndicatorStyle = selectionIndicatorStyle;
     };
 
     public connectedCallback(): void {
