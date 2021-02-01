@@ -57,7 +57,8 @@ export const joint = (): TemplateResult => {
                         previousElementSibling: ColorArea;
                     };
                 }): void => {
-                    previousElementSibling.hue = (value / 100) * 360;
+                    console.log('value: ', value);
+                    previousElementSibling.hue = value;
                 }}
             ></sp-color-slider>
             <div style="color: #7f3e3e">#7f3e3e</div>
