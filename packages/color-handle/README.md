@@ -1,5 +1,7 @@
 ## Description
 
+The `<sp-color-handle>` is used to select a colour on an `<sp-color-area>`, `<sp-color-slider>`, or `<sp-color-wheel>`. It functions similarly to the handle on an `<sp-slider>`.
+
 ### Usage
 
 [![See it on NPM!](https://img.shields.io/npm/v/@spectrum-web-components/color-handle?style=for-the-badge)](https://www.npmjs.com/package/@spectrum-web-components/color-handle)
@@ -21,8 +23,23 @@ When looking to leverage the `ColorHandle` base class as a type and/or for exten
 import { ColorHandle } from '@spectrum-web-components/color-handle';
 ```
 
-## Example
+## Standard
 
 ```html
 <sp-color-handle></sp-color-handle>
+```
+
+## Disabled
+
+```html
+<sp-color-handle disabled></sp-color-handle>
+```
+
+## Open
+
+When the `<sp-color-handle>` uses the `open` property, the `<sp-color-loupe>` component can be used above the handle to show the selected color that would otherwise be covered by a mouse, stylus, or finger on the down/touch state. This can be customized to appear only on finger-input, or always appear regardless of input type.
+
+```html
+<div style="height: var(--spectrum-global-dimension-size-900)"></div>
+<sp-color-handle open></sp-color-handle>
 ```

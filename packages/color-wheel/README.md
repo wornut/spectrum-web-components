@@ -1,5 +1,7 @@
 ## Description
 
+An `<sp-color-wheel>` lets users visually change an individual channel of a color on a circular track.
+
 ### Usage
 
 [![See it on NPM!](https://img.shields.io/npm/v/@spectrum-web-components/color-wheel?style=for-the-badge)](https://www.npmjs.com/package/@spectrum-web-components/color-wheel)
@@ -25,4 +27,22 @@ import { ColorWheel } from '@spectrum-web-components/color-wheel';
 
 ```html
 <sp-color-wheel></sp-color-wheel>
+```
+
+### Disabled
+
+A color wheel in a disabled state shows that an input exists, but is not available in that circumstance. This can be used to maintain layout continuity and communicate that the wheel may become available later.
+
+```html
+<sp-color-wheel disabled></sp-color-wheel>
+```
+
+## Variants
+
+### Sized
+
+An `<sp-color-wheel>`’s size can be customized appropriately for its context. By default, the size is size-2400 (192 px on desktop, 240 px on mobile).
+
+```html
+<sp-color-wheel style="width: 300px; height: 300px;"></sp-color-wheel>
 ```
