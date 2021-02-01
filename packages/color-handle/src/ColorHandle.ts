@@ -52,7 +52,10 @@ export class ColorHandle extends SpectrumElement {
     public color = 'rgba(255, 0, 0, 0.5)';
 
     private handlePointerdown(event: PointerEvent): void {
-        this.open = true;
+        // Commenting this out for now until I have a proper way to test it
+        if (event.pointerType === 'touch') {
+            this.open = true;
+        }
         this.setPointerCapture(event.pointerId);
     }
 
