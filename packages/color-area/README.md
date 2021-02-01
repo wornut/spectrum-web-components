@@ -1,5 +1,7 @@
 ## Description
 
+An `<sp-color-area>` allows users to visually select two properties of a color simultaneously. It's commonly used together with a color slider or color wheel.
+
 ### Usage
 
 [![See it on NPM!](https://img.shields.io/npm/v/@spectrum-web-components/color-area?style=for-the-badge)](https://www.npmjs.com/package/@spectrum-web-components/color-area)
@@ -21,8 +23,26 @@ When looking to leverage the `ColorArea` base class as a type and/or for extensi
 import { ColorArea } from '@spectrum-web-components/color-area';
 ```
 
-## Example
+## Standard
 
 ```html
 <sp-color-area></sp-color-area>
+```
+
+## Variants
+
+### Disabled
+
+```html
+<sp-color-area disabled></sp-color-area>
+```
+
+### Sized
+
+```html
+<sp-color-area
+    style="
+        width: var(--spectrum-global-dimension-size-900); 
+        height: var(--spectrum-global-dimension-size-900)"
+></sp-color-area>
 ```
