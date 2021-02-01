@@ -270,7 +270,6 @@ export class ColorSlider extends Focusable {
         const percent = Math.max(0, Math.min(1, (offset - minOffset) / size));
         // const value = this.min + (this.max - this.min) * percent;
         const sliderHandlePosition = 100 * percent;
-        console.log(sliderHandlePosition);
 
         return this.isLTR ? sliderHandlePosition : 100 - sliderHandlePosition;
     }
