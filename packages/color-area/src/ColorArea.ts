@@ -247,6 +247,9 @@ export class ColorArea extends SpectrumElement {
     private handlePointerdown(event: PointerEvent): void {
         this.boundingClientRect = this.getBoundingClientRect();
         (event.target as HTMLElement).setPointerCapture(event.pointerId);
+        if (event.pointerType === 'mouse') {
+            this.handleFocusin();
+        }
     }
 
     private handlePointermove(event: PointerEvent): void {
@@ -264,6 +267,9 @@ export class ColorArea extends SpectrumElement {
 
     private handlePointerup(event: PointerEvent): void {
         (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+        if (event.pointerType === 'mouse') {
+            this.handleFocusout();
+        }
         this.dispatchEvent(
             new Event('input', {
                 bubbles: true,

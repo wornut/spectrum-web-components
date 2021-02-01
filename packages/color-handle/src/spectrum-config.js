@@ -29,6 +29,11 @@ const config = {
                     type: 'boolean',
                     selector: '.is-focused',
                 },
+                {
+                    name: 'focused',
+                    type: 'boolean',
+                    selector: '.is-focused',
+                },
             ],
             classes: [
                 {
