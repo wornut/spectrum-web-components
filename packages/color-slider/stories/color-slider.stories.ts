@@ -86,11 +86,7 @@ export const canvas = (): TemplateResult => {
 export const image = (): TemplateResult => {
     return html`
         <sp-color-slider color="rgb(255, 0, 0)">
-            <img
-                slot="gradient"
-                role="presentation"
-                src="./packages/color-slider/src/gradientimg.png"
-            />
+            <img slot="gradient" role="presentation" src="./gradientimg.png" />
         </sp-color-slider>
     `;
 };
