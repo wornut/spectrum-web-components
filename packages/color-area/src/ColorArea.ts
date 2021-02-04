@@ -160,7 +160,7 @@ export class ColorArea extends SpectrumElement {
 
     private set altered(altered: number) {
         this._altered = altered;
-        this.step = Math.max(0.01, this.altered * 10 * 0.01);
+        this.step = Math.max(0.01, this.altered * 5 * 0.01);
     }
 
     private _altered = 0;
@@ -200,16 +200,20 @@ export class ColorArea extends SpectrumElement {
         this.activeKeys.forEach((code) => {
             switch (code) {
                 case 'ArrowUp':
+                case 'Up':
                     deltaY = -this.step;
                     break;
                 case 'ArrowDown':
+                case 'Down':
                     deltaY = this.step;
                     break;
                 case 'ArrowLeft':
-                    deltaX = this.step * (this.isLTR ? -1 : 1);
+                case 'Left':
+                    deltaX = this.step * -1;
                     break;
                 case 'ArrowRight':
-                    deltaX = this.step * (this.isLTR ? 1 : -1);
+                case 'Right':
+                    deltaX = this.step * 1;
                     break;
                 /* c8 ignore next 2 */
                 default:
@@ -223,7 +227,7 @@ export class ColorArea extends SpectrumElement {
         }
         this.x = Math.min(1, Math.max(this.x + deltaX, 0));
         this.y = Math.min(1, Math.max(this.y + deltaY, 0));
-        this._color = new TinyColor({ h: this.hue, s: this.x, v: this.y });
+        this._color = new TinyColor({ h: this.hue, s: this.x, v: 1 - this.y });
     }
 
     private handleKeyup(event: KeyboardEvent): void {
@@ -305,7 +309,7 @@ export class ColorArea extends SpectrumElement {
             Math.min(1, (offsetY - minOffsetY) / height)
         );
 
-        return [this.isLTR ? percentX : 1 - percentX, percentY];
+        return [percentX, percentY];
     }
 
     private handleAreaPointerdown(event: PointerEvent): void {

@@ -46,7 +46,7 @@ module.exports = {
     },
     browsers: [
         playwrightLauncher({ product: 'chromium' }),
-        playwrightLauncher({ product: 'webkit' }),
+        /*playwrightLauncher({ product: 'webkit' }),
         playwrightLauncher({
             product: 'firefox',
             launchOptions: {
@@ -63,6 +63,6 @@ module.exports = {
                     'extensions.enabledScopes': 15,
                 },
             },
-        }),
+        }), */
     ],
 };

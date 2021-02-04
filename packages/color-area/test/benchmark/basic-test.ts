@@ -15,5 +15,5 @@ import { html } from '@spectrum-web-components/base';
 import { measureFixtureCreation } from '../../../../test/benchmark/helpers.js';
 
 measureFixtureCreation(html`
-    <sp-color-area open></sp-color-area>
+    <sp-color-area></sp-color-area>
 `);
