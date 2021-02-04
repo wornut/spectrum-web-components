@@ -268,6 +268,6 @@ describe('ColorWheel', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(96.34019174590992);
+        expect(el.value).to.equal(96.34019174590989);
     });
 });
