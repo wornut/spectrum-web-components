@@ -42,30 +42,30 @@ describe('ColorArea', () => {
     it('accepts "color" values as hsl', async () => {
         const el = await fixture<ColorArea>(
             html`
-                <sp-color-area color="hsl(100, 50%, 100%)"></sp-color-area>
+                <sp-color-area color="hsl(100, 50%, 50%)"></sp-color-area>
             `
         );
 
         await elementUpdated(el);
 
-        expect(el.hue).to.equal(100);
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(100);
+        expect(el.hue, 'hue').to.equal(100.00000000000003);
+        expect(el.x, 'x').to.equal(0.6666666666666666);
+        expect(el.y, 'y').to.equal(0.25);
     });
     it('accepts "color" values as hsls', async () => {
         const el = await fixture<ColorArea>(
             html`
-                <sp-color-area color="hsla(100, 50%, 100%)"></sp-color-area>
+                <sp-color-area color="hsla(100, 50%, 50%, 1)"></sp-color-area>
             `
         );
 
         await elementUpdated(el);
 
-        expect(el.hue).to.equal(100);
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(100);
+        expect(el.hue, 'hugh').to.equal(100.00000000000003);
+        expect(el.x, 'ex').to.equal(0.6666666666666666);
+        expect(el.y, 'why').to.equal(0.25);
     });
-    it('rejects "color" values that are not hsl', async () => {
+    it('accepts "color" values as rgb', async () => {
         const el = await fixture<ColorArea>(
             html`
                 <sp-color-area color="rgb(0,255,0)"></sp-color-area>
@@ -74,22 +74,35 @@ describe('ColorArea', () => {
 
         await elementUpdated(el);
 
-        expect(el.hue).to.equal(0);
-        expect(el.x).to.equal(0);
+        expect(el.hue).to.equal(120);
+        expect(el.x).to.equal(1);
+        expect(el.y).to.equal(0);
+    });
+    it('accepts "color" values as hex', async () => {
+        const el = await fixture<ColorArea>(
+            html`
+                <sp-color-area color="#00ff00"></sp-color-area>
+            `
+        );
+
+        await elementUpdated(el);
+
+        expect(el.hue).to.equal(120);
+        expect(el.x).to.equal(1);
         expect(el.y).to.equal(0);
     });
     it('accepts "Arrow*" keypresses', async () => {
         const el = await fixture<ColorArea>(
             html`
-                <sp-color-area color="hsla(100, 50%, 100%)"></sp-color-area>
+                <sp-color-area color="hsla(100, 50%, 50%, 1)"></sp-color-area>
             `
         );
 
         await elementUpdated(el);
 
-        expect(el.hue).to.equal(100);
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(100);
+        expect(el.hue, 'hue').to.equal(100.00000000000003);
+        expect(el.x, 'x').to.equal(0.6666666666666666);
+        expect(el.y, 'y').to.equal(0.25);
 
         el.dispatchEvent(arrowUpEvent);
         el.dispatchEvent(arrowUpKeyupEvent);
@@ -98,8 +111,8 @@ describe('ColorArea', () => {
 
         await elementUpdated(el);
 
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(98);
+        expect(el.x).to.equal(0.6666666666666666);
+        expect(el.y).to.equal(0.22999999999999998);
 
         el.dispatchEvent(arrowRightEvent);
         el.dispatchEvent(arrowRightKeyupEvent);
@@ -108,8 +121,8 @@ describe('ColorArea', () => {
 
         await elementUpdated(el);
 
-        expect(el.x).to.equal(52);
-        expect(el.y).to.equal(98);
+        expect(el.x).to.equal(0.6866666666666666);
+        expect(el.y).to.equal(0.22999999999999998);
 
         el.dispatchEvent(arrowDownEvent);
         el.dispatchEvent(arrowDownKeyupEvent);
@@ -118,8 +131,8 @@ describe('ColorArea', () => {
 
         await elementUpdated(el);
 
-        expect(el.x).to.equal(52);
-        expect(el.y).to.equal(100);
+        expect(el.x).to.equal(0.6866666666666666);
+        expect(el.y).to.equal(0.25);
 
         el.dispatchEvent(arrowLeftEvent);
         el.dispatchEvent(arrowLeftKeyupEvent);
@@ -128,77 +141,21 @@ describe('ColorArea', () => {
 
         await elementUpdated(el);
 
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(100);
-    });
-    it('accepts "Arrow*" keypresses in dir="rtl"', async () => {
-        const el = await fixture<ColorArea>(
-            html`
-                <sp-color-area
-                    color="hsla(100, 50%, 100%)"
-                    dir="rtl"
-                ></sp-color-area>
-            `
-        );
-
-        await elementUpdated(el);
-
-        expect(el.hue).to.equal(100);
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(100);
-
-        el.dispatchEvent(arrowUpEvent);
-        el.dispatchEvent(arrowUpKeyupEvent);
-        el.dispatchEvent(arrowUpEvent);
-        el.dispatchEvent(arrowUpKeyupEvent);
-
-        await elementUpdated(el);
-
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(98);
-
-        el.dispatchEvent(arrowRightEvent);
-        el.dispatchEvent(arrowRightKeyupEvent);
-        el.dispatchEvent(arrowRightEvent);
-        el.dispatchEvent(arrowRightKeyupEvent);
-
-        await elementUpdated(el);
-
-        expect(el.x).to.equal(48);
-        expect(el.y).to.equal(98);
-
-        el.dispatchEvent(arrowDownEvent);
-        el.dispatchEvent(arrowDownKeyupEvent);
-        el.dispatchEvent(arrowDownEvent);
-        el.dispatchEvent(arrowDownKeyupEvent);
-
-        await elementUpdated(el);
-
-        expect(el.x).to.equal(48);
-        expect(el.y).to.equal(100);
-
-        el.dispatchEvent(arrowLeftEvent);
-        el.dispatchEvent(arrowLeftKeyupEvent);
-        el.dispatchEvent(arrowLeftEvent);
-        el.dispatchEvent(arrowLeftKeyupEvent);
-
-        await elementUpdated(el);
-
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(100);
+        expect(el.x).to.equal(0.6666666666666666);
+        expect(el.y).to.equal(0.25);
     });
     it('accepts "Arrow*" keypresses with alteration', async () => {
         const el = await fixture<ColorArea>(
             html`
-                <sp-color-area color="hsla(100, 50%, 100%)"></sp-color-area>
+                <sp-color-area color="hsla(100, 50%, 50%, 1)"></sp-color-area>
             `
         );
 
         await elementUpdated(el);
 
-        expect(el.hue).to.equal(100);
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(100);
+        expect(el.hue, 'hue').to.equal(100.00000000000003);
+        expect(el.x, 'x').to.equal(0.6666666666666666);
+        expect(el.y, 'y').to.equal(0.25);
 
         el.dispatchEvent(shiftEvent);
         el.dispatchEvent(arrowUpEvent);
@@ -208,8 +165,8 @@ describe('ColorArea', () => {
 
         await elementUpdated(el);
 
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(80);
+        expect(el.x).to.equal(0.6666666666666666);
+        expect(el.y).to.equal(0.15000000000000002);
 
         el.dispatchEvent(arrowRightEvent);
         el.dispatchEvent(arrowRightKeyupEvent);
@@ -218,8 +175,8 @@ describe('ColorArea', () => {
 
         await elementUpdated(el);
 
-        expect(el.x).to.equal(70);
-        expect(el.y).to.equal(80);
+        expect(el.x).to.equal(0.7666666666666667);
+        expect(el.y).to.equal(0.15000000000000002);
 
         el.dispatchEvent(arrowDownEvent);
         el.dispatchEvent(arrowDownKeyupEvent);
@@ -228,8 +185,8 @@ describe('ColorArea', () => {
 
         await elementUpdated(el);
 
-        expect(el.x).to.equal(70);
-        expect(el.y).to.equal(100);
+        expect(el.x).to.equal(0.7666666666666667);
+        expect(el.y).to.equal(0.25);
 
         el.dispatchEvent(arrowLeftEvent);
         el.dispatchEvent(arrowLeftKeyupEvent);
@@ -239,8 +196,8 @@ describe('ColorArea', () => {
 
         await elementUpdated(el);
 
-        expect(el.x).to.equal(50);
-        expect(el.y).to.equal(100);
+        expect(el.x).to.equal(0.6666666666666666);
+        expect(el.y).to.equal(0.25);
     });
     it('accepts pointer events', async () => {
         const el = await fixture<ColorArea>(
@@ -263,7 +220,7 @@ describe('ColorArea', () => {
         };
 
         expect(el.hue).to.equal(0);
-        expect(el.x).to.equal(0);
+        expect(el.x).to.equal(1);
         expect(el.y).to.equal(0);
 
         const root = el.shadowRoot ? el.shadowRoot : el;
@@ -282,8 +239,8 @@ describe('ColorArea', () => {
         await elementUpdated(el);
 
         expect(el.hue).to.equal(0);
-        expect(el.x).to.equal(47.91666666666667);
-        expect(el.y).to.equal(47.91666666666667);
+        expect(el.x).to.equal(0.4791666666666667);
+        expect(el.y).to.equal(0.4791666666666667);
 
         handle.dispatchEvent(
             new PointerEvent('pointermove', {
@@ -309,79 +266,7 @@ describe('ColorArea', () => {
         await elementUpdated(el);
 
         expect(el.hue).to.equal(0);
-        expect(el.x).to.equal(53.125);
-        expect(el.y).to.equal(53.125);
-    });
-    it('accepts pointer events in dir=rtl', async () => {
-        const el = await fixture<ColorArea>(
-            html`
-                <sp-color-area
-                    dir="rtl"
-                    style="--spectrum-colorarea-default-width: 192px; --spectrum-colorarea-default-height: 192px;"
-                ></sp-color-area>
-            `
-        );
-        document.documentElement.dir = 'rtl';
-        await elementUpdated(el);
-
-        const { handle } = (el as unknown) as { handle: HTMLElement };
-        const clientWidth = document.body.offsetWidth;
-
-        handle.setPointerCapture = () => {
-            return;
-        };
-        handle.releasePointerCapture = () => {
-            return;
-        };
-
-        expect(el.hue).to.equal(0);
-        expect(el.x).to.equal(0);
-        expect(el.y).to.equal(0);
-
-        const root = el.shadowRoot ? el.shadowRoot : el;
-        const gradient = root.querySelector('.gradient') as HTMLElement;
-        gradient.dispatchEvent(
-            new PointerEvent('pointerdown', {
-                pointerId: 1,
-                clientX: clientWidth - 100,
-                clientY: 100,
-                bubbles: true,
-                composed: true,
-                cancelable: true,
-            })
-        );
-
-        await elementUpdated(el);
-
-        expect(el.hue).to.equal(0);
-        expect(el.x).to.equal(56.25);
-        expect(el.y).to.equal(47.91666666666667);
-
-        handle.dispatchEvent(
-            new PointerEvent('pointermove', {
-                pointerId: 1,
-                clientX: clientWidth - 110,
-                clientY: 110,
-                bubbles: true,
-                composed: true,
-                cancelable: true,
-            })
-        );
-        handle.dispatchEvent(
-            new PointerEvent('pointerup', {
-                pointerId: 1,
-                clientX: clientWidth - 110,
-                clientY: 110,
-                bubbles: true,
-                composed: true,
-                cancelable: true,
-            })
-        );
-
-        await elementUpdated(el);
-
-        expect(el.hue).to.equal(0);
-        expect(el.x).to.equal(61.45833333333333);
-        expect(el.y).to.equal(53.125);
+        expect(el.x).to.equal(0.53125);
+        expect(el.y).to.equal(0.53125);
     });
 });
