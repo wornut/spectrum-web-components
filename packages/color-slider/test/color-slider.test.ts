@@ -67,7 +67,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
 
         const input = el.focusElement;
 
@@ -78,7 +78,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(2);
+        expect(el.sliderHandlePosition).to.equal(2);
 
         input.dispatchEvent(arrowRightEvent);
         input.dispatchEvent(arrowRightKeyupEvent);
@@ -87,7 +87,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(4);
+        expect(el.sliderHandlePosition).to.equal(4);
 
         input.dispatchEvent(arrowDownEvent);
         input.dispatchEvent(arrowDownKeyupEvent);
@@ -96,7 +96,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(2);
+        expect(el.sliderHandlePosition).to.equal(2);
 
         input.dispatchEvent(arrowLeftEvent);
         input.dispatchEvent(arrowLeftKeyupEvent);
@@ -105,7 +105,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
     });
     it('accepts "Arrow*" keypresses in dir="rtl"', async () => {
         const el = await fixture<ColorSlider>(
@@ -116,7 +116,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
 
         const input = el.focusElement;
 
@@ -127,7 +127,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(2);
+        expect(el.sliderHandlePosition).to.equal(2);
 
         input.dispatchEvent(arrowRightEvent);
         input.dispatchEvent(arrowRightKeyupEvent);
@@ -136,7 +136,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
 
         input.dispatchEvent(arrowLeftEvent);
         input.dispatchEvent(arrowLeftKeyupEvent);
@@ -145,7 +145,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(2);
+        expect(el.sliderHandlePosition).to.equal(2);
 
         input.dispatchEvent(arrowDownEvent);
         input.dispatchEvent(arrowDownKeyupEvent);
@@ -154,7 +154,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
     });
     it('accepts "Arrow*" keypresses with alteration', async () => {
         const el = await fixture<ColorSlider>(
@@ -165,7 +165,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
 
         const input = el.focusElement;
 
@@ -177,7 +177,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(20);
+        expect(el.sliderHandlePosition).to.equal(20);
 
         input.dispatchEvent(arrowRightEvent);
         input.dispatchEvent(arrowRightKeyupEvent);
@@ -186,7 +186,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(40);
+        expect(el.sliderHandlePosition).to.equal(40);
 
         input.dispatchEvent(arrowDownEvent);
         input.dispatchEvent(arrowDownKeyupEvent);
@@ -195,7 +195,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(20);
+        expect(el.sliderHandlePosition).to.equal(20);
 
         input.dispatchEvent(arrowLeftEvent);
         input.dispatchEvent(arrowLeftKeyupEvent);
@@ -205,7 +205,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
     });
     it('accepts pointer events', async () => {
         const el = await fixture<ColorSlider>(
@@ -227,7 +227,7 @@ describe('ColorSlider', () => {
             return;
         };
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
 
         const root = el.shadowRoot ? el.shadowRoot : el;
         const gradient = root.querySelector('.gradient') as HTMLElement;
@@ -244,7 +244,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(47.91666666666667);
+        expect(el.sliderHandlePosition).to.equal(47.91666666666667);
 
         handle.dispatchEvent(
             new PointerEvent('pointermove', {
@@ -269,7 +269,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(53.125);
+        expect(el.sliderHandlePosition).to.equal(53.125);
     });
     it('accepts pointer events while [vertical]', async () => {
         const el = await fixture<ColorSlider>(
@@ -292,7 +292,7 @@ describe('ColorSlider', () => {
             return;
         };
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
 
         const root = el.shadowRoot ? el.shadowRoot : el;
         const gradient = root.querySelector('.gradient') as HTMLElement;
@@ -309,7 +309,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(47.91666666666667);
+        expect(el.sliderHandlePosition).to.equal(47.91666666666667);
 
         handle.dispatchEvent(
             new PointerEvent('pointermove', {
@@ -334,7 +334,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(53.125);
+        expect(el.sliderHandlePosition).to.equal(53.125);
     });
     it('accepts pointer events in dir="rtl"', async () => {
         const el = await fixture<ColorSlider>(
@@ -358,7 +358,7 @@ describe('ColorSlider', () => {
             return;
         };
 
-        expect(el.value).to.equal(0);
+        expect(el.sliderHandlePosition).to.equal(0);
 
         const root = el.shadowRoot ? el.shadowRoot : el;
         const gradient = root.querySelector('.gradient') as HTMLElement;
@@ -375,7 +375,7 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(56.25);
+        expect(el.sliderHandlePosition).to.equal(56.25);
 
         handle.dispatchEvent(
             new PointerEvent('pointermove', {
@@ -400,6 +400,6 @@ describe('ColorSlider', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(61.45833333333333);
+        expect(el.sliderHandlePosition).to.equal(61.45833333333333);
     });
 });
