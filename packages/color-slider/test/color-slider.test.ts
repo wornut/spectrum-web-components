@@ -437,7 +437,6 @@ describe('ColorSlider', () => {
         { name: 'HSV String', color: 'hsv(300, 75%, 100%)' },
         { name: 'HSV', color: { h: 300, s: 0.75, v: 1, a: 1 } },
     ];
-
     colorFormats.map((format) => {
         it(`maintains \`color\` format as ${format.name}`, async () => {
             const el = await fixture<ColorSlider>(

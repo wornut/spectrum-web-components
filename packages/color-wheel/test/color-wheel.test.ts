@@ -329,4 +329,66 @@ describe('ColorWheel', () => {
         el.color = color;
         expect(color.equals(el.color));
     });
+    const colorFormats: {
+        name: string;
+        color:
+            | string
+            | number
+            | TinyColor
+            | HSVA
+            | HSV
+            | RGB
+            | RGBA
+            | HSL
+            | HSLA;
+    }[] = [
+        //rgb
+        { name: 'RGB String', color: 'rgb(204, 51, 204)' },
+        { name: 'RGB', color: { r: 204, g: 51, b: 204, a: 1 } },
+        //prgb
+        { name: 'PRGB String', color: 'rgb(80%, 20%, 80%)' },
+        { name: 'PRGB', color: { r: '80%', g: '20%', b: '80%', a: 1 } },
+        // hex
+        { name: 'Hex', color: 'cc33cc' },
+        { name: 'Hex String', color: '#cc33cc' },
+        // hex3
+        { name: 'Hex3', color: 'C3C' },
+        { name: 'Hex3 String', color: '#C3C' },
+        // hex4
+        { name: 'Hex4', color: 'C3CC' },
+        { name: 'Hex4 String', color: '#C3CC' },
+        // hex8
+        { name: 'Hex8', color: 'cc33ccff' },
+        { name: 'Hex8 String', color: '#cc33ccff' },
+        // name
+        { name: 'string', color: 'red' },
+        // hsl
+        { name: 'HSL String', color: 'hsl(300, 60%, 50%)' },
+        { name: 'HSL', color: { h: 300, s: 0.6000000000000001, l: 0.5, a: 1 } },
+        // hsv
+        { name: 'HSV String', color: 'hsv(300, 75%, 100%)' },
+        { name: 'HSV', color: { h: 300, s: 0.75, v: 1, a: 1 } },
+    ];
+    colorFormats.map((format) => {
+        it(`maintains \`color\` format as ${format.name}`, async () => {
+            const el = await fixture<ColorWheel>(
+                html`
+                    <sp-color-wheel></sp-color-wheel>
+                `
+            );
+
+            el.color = format.color;
+            expect(el.color).to.deep.equal(format.color);
+        });
+    });
+    it(`maintains \`color\` format as TinyColor`, async () => {
+        const el = await fixture<ColorWheel>(
+            html`
+                <sp-color-wheel></sp-color-wheel>
+            `
+        );
+        const color = new TinyColor('rgb(204, 51, 204)');
+        el.color = color;
+        expect(color.equals(el.color));
+    });
 });
