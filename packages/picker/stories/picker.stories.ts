@@ -18,6 +18,7 @@ import { Picker } from '../';
 import '@spectrum-web-components/menu/sp-menu.js';
 import '@spectrum-web-components/menu/sp-menu-item.js';
 import { states } from './states.js';
+import '@spectrum-web-components/field-label/sp-field-label.js';
 
 export default {
     title: 'Picker',
@@ -26,7 +27,9 @@ export default {
 
 export const Default = (): TemplateResult => {
     return html`
+        <sp-field-label for="picker-1">Where do you live?</sp-field-label>
         <sp-picker
+            id="picker-1"
             @change="${(event: Event): void => {
                 const picker = event.target as Picker;
                 action(`Change: ${picker.value}`)();
@@ -160,12 +163,16 @@ export const initialValue = (): TemplateResult => {
 
 export const custom = (): TemplateResult => {
     return html`
+        <sp-field-label for="picker-state">
+            What state do you live in?
+        </sp-field-label>
         <sp-picker
             style="width: 400px;"
             @change="${(event: Event): void => {
                 const picker = event.target as Picker;
                 action(`Change: ${picker.value}`)();
             }}"
+            id="picker-state"
             label="Pick a state"
         >
             <sp-menu style="max-height: 400px;">

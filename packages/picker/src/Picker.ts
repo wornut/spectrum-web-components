@@ -57,10 +57,14 @@ type PickerSize = Exclude<ElementSize, 'xxl'>;
  * @slot label - The placeholder content for the picker
  * @slot {"sp-menu"} - The menu of options that will display when the picker is open
  *
- * @fires sp-open - Announces that the overlay has been opened
- * @fires sp-close - Announces that the overlay has been closed
+ * @fires change - Announces that the `value` of the element has changed
+ * @fires sp-opened - Announces that the overlay has been opened
+ * @fires sp-closed - Announces that the overlay has been closed
  */
 export class PickerBase extends SizedMixin(Focusable) {
+    /**
+     * @private
+     */
     public static openOverlay = async (
         target: HTMLElement,
         interaction: TriggerInteractions,
@@ -115,6 +119,9 @@ export class PickerBase extends SizedMixin(Focusable) {
 
     @query('sp-popover')
     private popover?: HTMLElement;
+
+    @query('#label-text')
+    private labelText!: HTMLSpanElement;
 
     protected listRole = 'listbox';
     protected itemRole = 'option';
@@ -184,7 +191,7 @@ export class PickerBase extends SizedMixin(Focusable) {
         }
     }
 
-    public onKeydown = (event: KeyboardEvent): void => {
+    protected onKeydown = (event: KeyboardEvent): void => {
         if (event.code !== 'ArrowDown' && event.code !== 'ArrowUp') {
             return;
         }
@@ -297,6 +304,7 @@ export class PickerBase extends SizedMixin(Focusable) {
     protected get buttonContent(): TemplateResult[] {
         return [
             html`
+                <span id="label-text" class="visually-hidden"></span>
                 <span
                     id="label"
                     class=${ifDefined(this.value ? undefined : 'placeholder')}
@@ -323,9 +331,8 @@ export class PickerBase extends SizedMixin(Focusable) {
         return html`
             <button
                 aria-haspopup="true"
-                aria-controls="popover"
                 aria-expanded=${this.open ? 'true' : 'false'}
-                aria-label=${ifDefined(this.label || undefined)}
+                aria-labelledby="label-text label"
                 id="button"
                 class="button"
                 @blur=${this.onButtonBlur}
@@ -352,6 +359,29 @@ export class PickerBase extends SizedMixin(Focusable) {
 
     protected firstUpdated(changedProperties: PropertyValues): void {
         super.firstUpdated(changedProperties);
+
+        const labelMO = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'attributes') {
+                    const label = (mutation.target as HTMLElement).getAttribute(
+                        'aria-label'
+                    );
+                    this.labelText.textContent = label;
+                }
+            }
+        });
+
+        labelMO.observe(this.button, {
+            attributes: true,
+            attributeFilter: ['aria-label'],
+        });
+
+        if (this.button.hasAttribute('arial-label')) {
+            debugger;
+            this.labelText.textContent = this.button.getAttribute(
+                'arial-label'
+            );
+        }
 
         this.optionsMenu = this.querySelector('sp-menu') as Menu;
     }
@@ -433,7 +463,7 @@ export class Picker extends PickerBase {
         return [pickerStyles, chevronStyles];
     }
 
-    public onKeydown = (event: KeyboardEvent): void => {
+    protected onKeydown = (event: KeyboardEvent): void => {
         const { code } = event;
         if (!code.startsWith('Arrow')) {
             return;

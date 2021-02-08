@@ -59,3 +59,18 @@ export const pageUpEvent = keyboardEvent('PageUp');
 export const pageDownEvent = keyboardEvent('PageDown');
 export const tabEvent = keyboardEvent('Tab');
 export const tEvent = keyboardEvent('t');
+
+export const findAccessibilityNode = <TNode>(
+    node: TNode & { children: TNode[] },
+    test: (node: TNode) => boolean
+): TNode | null => {
+    if (test(node)) return node;
+    for (const child of node.children || []) {
+        const foundNode = findAccessibilityNode<TNode>(
+            child as TNode & { children: TNode[] },
+            test
+        );
+        return foundNode;
+    }
+    return null;
+};
