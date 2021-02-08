@@ -26,6 +26,7 @@ import {
 
 import '../sp-color-slider.js';
 import { ColorSlider } from '..';
+import { HSL, HSLA, HSV, HSVA, RGB, RGBA, TinyColor } from '@ctrl/tinycolor';
 
 describe('ColorSlider', () => {
     it('loads default color-slider accessibly', async () => {
@@ -401,5 +402,127 @@ describe('ColorSlider', () => {
         await elementUpdated(el);
 
         expect(el.sliderHandlePosition).to.equal(61.45833333333333);
+    });
+    const colorFormats: {
+        name: string;
+        color:
+            | string
+            | number
+            | TinyColor
+            | HSVA
+            | HSV
+            | RGB
+            | RGBA
+            | HSL
+            | HSLA;
+    }[] = [
+        //rgb
+        { name: 'RGB String', color: 'rgb(204, 51, 204)' },
+        { name: 'RGB', color: { r: 204, g: 51, b: 204, a: 1 } },
+        //prgb
+        { name: 'PRGB String', color: 'rgb(80%, 20%, 80%)' },
+        { name: 'PRGB', color: { r: '80%', g: '20%', b: '80%', a: 1 } },
+        // hex
+        { name: 'Hex', color: 'cc33cc' },
+        { name: 'Hex String', color: '#cc33cc' },
+        // // hex3
+        // {name: "Hex3", color: "C3C"},
+        // {name: "Hex3 String", color: "#C3C"},
+        // // hex4
+        // {name: "Hex4", color: "C3CC"},
+        // {name: "Hex4 String", color: "#C3CC"},
+        // hex8
+        { name: 'Hex8', color: 'cc33ccff' },
+        { name: 'Hex8 String', color: '#cc33ccff' },
+        // name
+        { name: 'string', color: 'red' },
+        // hsl
+        { name: 'HSL String', color: 'hsl(300, 60%, 50%)' },
+        { name: 'HSL', color: { h: 300, s: 0.6000000000000001, l: 0.5, a: 1 } },
+        // hsv
+        { name: 'HSV String', color: 'hsv(300, 75%, 100%)' },
+        { name: 'HSV', color: { h: 300, s: 0.75, v: 1, a: 1 } },
+    ];
+    // iterate the array
+    // set the color and test to see if it comes out the same
+    // as it came in
+    // iterating outside the it allows for the successful ones to pass
+    colorFormats.map((format) => {
+        it(`maintains \`color\` format as ${format.name}`, async () => {
+            const el = await fixture<ColorSlider>(
+                html`
+                    <sp-color-slider></sp-color-slider>
+                `
+            );
+
+            el.color = format.color;
+            if (format.name.startsWith('Hex')) {
+                expect(el.color).to.equal(format.color);
+            } else expect(el.color).to.deep.equal(format.color);
+        });
+    });
+    it(`maintains \`color\` format as TinyColor`, async () => {
+        const el = await fixture<ColorSlider>(
+            html`
+                <sp-color-slider></sp-color-slider>
+            `
+        );
+        const color = new TinyColor('rgb(204, 51, 204)');
+        el.color = color;
+        expect(color.equals(el.color));
+    });
+    it(`resolves Hex3 format to Hex6 format`, async () => {
+        const el = await fixture<ColorSlider>(
+            html`
+                <sp-color-slider></sp-color-slider>
+            `
+        );
+        el.color = '0f0';
+        expect(el.color).to.equal('00ff00');
+
+        el.color = '#1e0';
+        expect(el.color).to.equal('#11ee00');
+    });
+    it(`resolves Hex4 format to Hex8 format`, async () => {
+        const el = await fixture<ColorSlider>(
+            html`
+                <sp-color-slider></sp-color-slider>
+            `
+        );
+        el.color = 'f3af';
+        expect(el.color).to.equal('ff33aaff');
+
+        el.color = '#f3af';
+        expect(el.color).to.equal('#ff33aaff');
+    });
+    it(`maintains hue value`, async () => {
+        const el = await fixture<ColorSlider>(
+            html`
+                <sp-color-slider></sp-color-slider>
+            `
+        );
+        el.color = 'hsl(300, 60%, 100%)';
+        expect(el.value).to.equal(300);
+
+        el.color = 'hsla(300, 60%, 100%, 1)';
+        expect(el.value).to.equal(300);
+
+        el.color = 'hsv(300, 60%, 100%)';
+        expect(el.value).to.equal(300);
+
+        el.color = 'hsva(300, 60%, 100%, 1)';
+        expect(el.value).to.equal(300);
+
+        el.color = new TinyColor({ h: 300, s: 60, v: 100 });
+        expect(el.value).to.equal(300);
+
+        el.color = new TinyColor({ h: 300, s: 60, v: 100, a: 1 });
+        expect(el.value).to.equal(300);
+
+        el.color = new TinyColor({ h: 300, s: 60, l: 100 });
+        expect(el.value).to.equal(300);
+
+        el.color = new TinyColor({ h: 300, s: 60, l: 100, a: 1 });
+        expect(el.value).to.equal(300);
     });
 });
