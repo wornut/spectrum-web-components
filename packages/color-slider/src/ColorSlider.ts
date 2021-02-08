@@ -78,34 +78,34 @@ export class ColorSlider extends Focusable {
         | RGBA
         | HSL
         | HSLA {
-        switch (this._format[0]) {
+        switch (this._format.format) {
             case 'rgb':
-                return this._format[1]
+                return this._format.isString
                     ? this._color.toRgbString()
                     : this._color.toRgb();
             case 'prgb':
-                return this._format[1]
+                return this._format.isString
                     ? this._color.toPercentageRgbString()
                     : this._color.toPercentageRgb();
             case 'hex':
             case 'hex3':
             case 'hex4':
             case 'hex6':
-                return this._format[1]
+                return this._format.isString
                     ? this._color.toHexString()
                     : this._color.toHex();
             case 'hex8':
-                return this._format[1]
+                return this._format.isString
                     ? this._color.toHex8String()
                     : this._color.toHex8();
             case 'name':
                 return this._color.toName() || this._color.toRgbString();
             case 'hsl':
-                return this._format[1]
+                return this._format.isString
                     ? this._color.toHslString()
                     : this._color.toHsl();
             case 'hsv':
-                return this._format[1]
+                return this._format.isString
                     ? this._color.toHsvString()
                     : this._color.toHsv();
             default:
@@ -130,18 +130,43 @@ export class ColorSlider extends Focusable {
         }
         const oldValue = this._color;
         this._color = new TinyColor(color);
-        this._format = [
-            this._color.format,
-            typeof color === 'string' || color instanceof String,
-        ];
-        const { h } = this._color.toHsv();
-        this.value = h;
+        const format = this._color.format;
+        let isString = typeof color === 'string' || color instanceof String;
+
+        if (format.startsWith('hex')) {
+            isString = (color as string).startsWith('#');
+        }
+
+        this._format = {
+            format,
+            isString,
+        };
+
+        if (isString && format.startsWith('hs')) {
+            const hueExp = /^hs[v|va|l|la]\((\d{1,3})/;
+            const values = hueExp.exec(color as string);
+
+            if (values !== null) {
+                const [, h] = values;
+                this.value = Number(h);
+            }
+        } else if (!isString && format.startsWith('hs')) {
+            const colorInput = this._color.originalInput;
+            const colorValues = Object.values(colorInput);
+            this.value = colorValues[0];
+        } else {
+            const { h } = this._color.toHsv();
+            this.value = h;
+        }
         this.requestUpdate('color', oldValue);
     }
 
     private _color = new TinyColor({ h: 0, s: 1, v: 1 });
 
-    private _format: [string, boolean] = ['', false];
+    private _format: { format: string; isString: boolean } = {
+        format: '',
+        isString: false,
+    };
 
     @property({ type: Number })
     public step = 1;
@@ -270,7 +295,6 @@ export class ColorSlider extends Focusable {
         const percent = Math.max(0, Math.min(1, (offset - minOffset) / size));
         // const value = this.min + (this.max - this.min) * percent;
         const sliderHandlePosition = 100 * percent;
-        console.log(sliderHandlePosition);
 
         return this.isLTR ? sliderHandlePosition : 100 - sliderHandlePosition;
     }
