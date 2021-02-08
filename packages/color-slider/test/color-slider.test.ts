@@ -437,10 +437,7 @@ describe('ColorSlider', () => {
         { name: 'HSV String', color: 'hsv(300, 75%, 100%)' },
         { name: 'HSV', color: { h: 300, s: 0.75, v: 1, a: 1 } },
     ];
-    // iterate the array
-    // set the color and test to see if it comes out the same
-    // as it came in
-    // iterating outside the it allows for the successful ones to pass
+
     colorFormats.map((format) => {
         it(`maintains \`color\` format as ${format.name}`, async () => {
             const el = await fixture<ColorSlider>(
