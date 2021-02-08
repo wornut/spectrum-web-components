@@ -244,7 +244,7 @@ describe('ColorWheel', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(263.74596725608353);
+        expect(el.value).to.equal(263);
 
         handle.dispatchEvent(
             new PointerEvent('pointermove', {
@@ -269,7 +269,7 @@ describe('ColorWheel', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(96.34019174590989);
+        expect(el.value).to.equal(96);
     });
     const colorFormats: {
         name: string;
@@ -293,12 +293,6 @@ describe('ColorWheel', () => {
         // hex
         { name: 'Hex', color: 'cc33cc' },
         { name: 'Hex String', color: '#cc33cc' },
-        // hex3
-        { name: 'Hex3', color: 'C3C' },
-        { name: 'Hex3 String', color: '#C3C' },
-        // hex4
-        { name: 'Hex4', color: 'C3CC' },
-        { name: 'Hex4 String', color: '#C3CC' },
         // hex8
         { name: 'Hex8', color: 'cc33ccff' },
         { name: 'Hex8 String', color: '#cc33ccff' },
@@ -320,7 +314,9 @@ describe('ColorWheel', () => {
             );
 
             el.color = format.color;
-            expect(el.color).to.deep.equal(format.color);
+            if (format.name.startsWith('Hex')) {
+                expect(el.color).to.equal(format.color);
+            } else expect(el.color).to.deep.equal(format.color);
         });
     });
     it(`maintains \`color\` format as TinyColor`, async () => {
