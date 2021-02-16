@@ -64,7 +64,7 @@ export class ColorSlider extends Focusable {
 
     private _value = 0;
 
-    @property({ type: Number })
+    @property({ type: Number, reflect: true })
     public sliderHandlePosition = 0;
 
     @property({ type: String })
@@ -151,9 +151,7 @@ export class ColorSlider extends Focusable {
                 this.value = Number(h);
             }
         } else if (!isString && format.startsWith('hs')) {
-            const colorInput = this._color.originalInput;
-            const colorValues = Object.values(colorInput);
-            this.value = colorValues[0];
+            this.value = parseFloat((color as HSV).h.toString());
         } else {
             const { h } = this._color.toHsv();
             this.value = h;
@@ -162,6 +160,8 @@ export class ColorSlider extends Focusable {
     }
 
     private _color = new TinyColor({ h: 0, s: 1, v: 1 });
+
+    private _previousColor = new TinyColor({ h: 0, s: 1, v: 1 });
 
     private _format: { format: string; isString: boolean } = {
         format: '',
@@ -194,12 +194,7 @@ export class ColorSlider extends Focusable {
     private handleKeydown(event: KeyboardEvent): void {
         event.preventDefault();
         const { key } = event;
-        if (
-            key === 'Shift' ||
-            key === 'Meta' ||
-            key === 'Control' ||
-            key === 'Alt'
-        ) {
+        if (['Shift', 'Meta', 'Control', 'Alt'].includes(key)) {
             this.altKeys.add(key);
             this.altered = this.altKeys.size;
         }
@@ -227,12 +222,7 @@ export class ColorSlider extends Focusable {
     private handleKeyup(event: KeyboardEvent): void {
         event.preventDefault();
         const { key } = event;
-        if (
-            key === 'Shift' ||
-            key === 'Meta' ||
-            key === 'Control' ||
-            key === 'Alt'
-        ) {
+        if (['Shift', 'Meta', 'Control', 'Alt'].includes(key)) {
             this.altKeys.delete(key);
             this.altered = this.altKeys.size;
         }
@@ -249,19 +239,23 @@ export class ColorSlider extends Focusable {
     private boundingClientRect!: DOMRect;
 
     private handlePointerdown(event: PointerEvent): void {
+        this._previousColor = this._color.clone();
         this.boundingClientRect = this.getBoundingClientRect();
         (event.target as HTMLElement).setPointerCapture(event.pointerId);
     }
 
     private handlePointermove(event: PointerEvent): void {
-        this.value = this.calculateHandlePosition(event);
         this.sliderHandlePosition = this.calculateHandlePosition(event);
+        this.value = 360 * (this.sliderHandlePosition / 100);
 
-        this.color = `hsl(${360 * (this.value / 100)}, 100%, 50%)`;
+        //this.color = `hsl(${this.value}, 100%, 50%)`;
+        this._color = new TinyColor({ h: this.value, s: '100%', l: '50%' });
+
         this.dispatchEvent(
             new Event('input', {
                 bubbles: true,
                 composed: true,
+                cancelable: true,
             })
         );
     }
@@ -269,12 +263,17 @@ export class ColorSlider extends Focusable {
     private handlePointerup(event: PointerEvent): void {
         // Retain focus on input element after mouse up to enable keyboard interactions
         (event.target as HTMLElement).releasePointerCapture(event.pointerId);
-        this.dispatchEvent(
+
+        const applyDefault = this.dispatchEvent(
             new Event('change', {
                 bubbles: true,
                 composed: true,
+                cancelable: true,
             })
         );
+        if (!applyDefault) {
+            this._color = this._previousColor;
+        }
     }
 
     /**
@@ -293,7 +292,6 @@ export class ColorSlider extends Focusable {
         const size = this.vertical ? rect.height : rect.width;
 
         const percent = Math.max(0, Math.min(1, (offset - minOffset) / size));
-        // const value = this.min + (this.max - this.min) * percent;
         const sliderHandlePosition = 100 * percent;
 
         return this.isLTR ? sliderHandlePosition : 100 - sliderHandlePosition;

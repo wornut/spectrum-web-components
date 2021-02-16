@@ -160,6 +160,8 @@ export class ColorWheel extends Focusable {
 
     private _color = new TinyColor({ h: 0, s: 1, v: 1 });
 
+    private _previousColor = new TinyColor({ h: 0, s: 1, v: 1 });
+
     private _format: { format: string; isString: boolean } = {
         format: '',
         isString: false,
@@ -185,14 +187,8 @@ export class ColorWheel extends Focusable {
     }
 
     private handleKeydown(event: KeyboardEvent): void {
-        event.preventDefault();
         const { key } = event;
-        if (
-            key === 'Shift' ||
-            key === 'Meta' ||
-            key === 'Control' ||
-            key === 'Alt'
-        ) {
+        if (['Shift', 'Meta', 'Control', 'Alt'].includes(key)) {
             this.altKeys.add(key);
             this.altered = this.altKeys.size;
         }
@@ -217,12 +213,7 @@ export class ColorWheel extends Focusable {
     private handleKeyup(event: KeyboardEvent): void {
         event.preventDefault();
         const { key } = event;
-        if (
-            key === 'Shift' ||
-            key === 'Meta' ||
-            key === 'Control' ||
-            key === 'Alt'
-        ) {
+        if (['Shift', 'Meta', 'Control', 'Alt'].includes(key)) {
             this.altKeys.delete(key);
             this.altered = this.altKeys.size;
         }
@@ -239,18 +230,38 @@ export class ColorWheel extends Focusable {
     private boundingClientRect!: DOMRect;
 
     private handlePointerdown(event: PointerEvent): void {
+        this._previousColor = this._color.clone();
         this.boundingClientRect = this.getBoundingClientRect();
         (event.target as HTMLElement).setPointerCapture(event.pointerId);
     }
 
     private handlePointermove(event: PointerEvent): void {
         this.value = this.calculateHandlePosition(event);
-        this.color = `hsl(${this.value}, 100%, 50%)`;
+        this._color = new TinyColor({ h: this.value, s: '100%', l: '50%' });
+
+        this.dispatchEvent(
+            new Event('input', {
+                bubbles: true,
+                composed: true,
+                cancelable: true,
+            })
+        );
     }
 
     private handlePointerup(event: PointerEvent): void {
         // Retain focus on input element after mouse up to enable keyboard interactions
         (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+
+        const applyDefault = this.dispatchEvent(
+            new Event('change', {
+                bubbles: true,
+                composed: true,
+                cancelable: true,
+            })
+        );
+        if (!applyDefault) {
+            this._color = this._previousColor;
+        }
     }
 
     /**

@@ -137,6 +137,8 @@ export class ColorArea extends SpectrumElement {
 
     private _color = new TinyColor({ h: 0, s: 1, v: 1 });
 
+    private _previousColor = new TinyColor({ h: 0, s: 1, v: 1 });
+
     private _format: [string, boolean] = ['', false];
 
     @property({ type: Number })
@@ -179,12 +181,7 @@ export class ColorArea extends SpectrumElement {
 
     private handleKeydown(event: KeyboardEvent): void {
         const { key, code } = event;
-        if (
-            key === 'Shift' ||
-            key === 'Meta' ||
-            key === 'Control' ||
-            key === 'Alt'
-        ) {
+        if (['Shift', 'Meta', 'Control', 'Alt'].includes(key)) {
             this.altKeys.add(key);
             this.altered = this.altKeys.size;
         }
@@ -232,12 +229,7 @@ export class ColorArea extends SpectrumElement {
 
     private handleKeyup(event: KeyboardEvent): void {
         const { key, code } = event;
-        if (
-            key === 'Shift' ||
-            key === 'Meta' ||
-            key === 'Control' ||
-            key === 'Alt'
-        ) {
+        if (['Shift', 'Meta', 'Control', 'Alt'].includes(key)) {
             this.altKeys.delete(key);
             this.altered = this.altKeys.size;
         }
@@ -249,7 +241,9 @@ export class ColorArea extends SpectrumElement {
     private boundingClientRect!: DOMRect;
 
     private handlePointerdown(event: PointerEvent): void {
+        this._previousColor = this._color.clone();
         this.boundingClientRect = this.getBoundingClientRect();
+
         (event.target as HTMLElement).setPointerCapture(event.pointerId);
         if (event.pointerType === 'mouse') {
             this.handleFocusin();
@@ -265,21 +259,27 @@ export class ColorArea extends SpectrumElement {
             new Event('input', {
                 bubbles: true,
                 composed: true,
+                cancelable: true,
             })
         );
     }
 
     private handlePointerup(event: PointerEvent): void {
+        event.preventDefault();
         (event.target as HTMLElement).releasePointerCapture(event.pointerId);
         if (event.pointerType === 'mouse') {
             this.handleFocusout();
         }
-        this.dispatchEvent(
-            new Event('input', {
+        const applyDefault = this.dispatchEvent(
+            new Event('change', {
                 bubbles: true,
                 composed: true,
+                cancelable: true,
             })
         );
+        if (!applyDefault) {
+            this._color = this._previousColor;
+        }
     }
 
     /**
