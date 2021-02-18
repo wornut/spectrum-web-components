@@ -59,6 +59,11 @@ export class ColorSlider extends Focusable {
         const { s, v } = this._color.toHsv();
         this._color = new TinyColor({ h: value, s, v });
         this._value = value;
+
+        if (value !== this.sliderHandlePosition) {
+            this.sliderHandlePosition = 100 * (value / 360);
+        }
+
         this.requestUpdate('value', oldValue);
     }
 
@@ -156,6 +161,7 @@ export class ColorSlider extends Focusable {
             const { h } = this._color.toHsv();
             this.value = h;
         }
+        this._previousColor = oldValue;
         this.requestUpdate('color', oldValue);
     }
 
