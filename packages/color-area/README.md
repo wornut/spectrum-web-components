@@ -23,7 +23,7 @@ When looking to leverage the `ColorArea` base class as a type and/or for extensi
 import { ColorArea } from '@spectrum-web-components/color-area';
 ```
 
-## Usage
+## Color Formatting
 
 When using the color elements, use `el.color` to access the `color` property, which should manage itself in the colour format supplied. If you supply a color in `rgb()` format, `el.color` should return the color in `rgb()` format, as well.
 
