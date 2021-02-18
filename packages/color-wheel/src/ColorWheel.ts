@@ -22,8 +22,11 @@ import { Focusable } from '@spectrum-web-components/shared/src/focusable.js';
 import '@spectrum-web-components/color-handle/sp-color-handle.js';
 import styles from './color-wheel.css.js';
 import { wheel } from './wheel-svg.js';
-import { ColorHandle } from '@spectrum-web-components/color-handle/src/ColorHandle';
-import { HSL, HSLA, HSV, HSVA, RGB, RGBA, TinyColor } from '@ctrl/tinycolor';
+import {
+    ColorHandle,
+    ColorValue,
+} from '@spectrum-web-components/color-handle/src/ColorHandle';
+import { TinyColor } from '@ctrl/tinycolor';
 
 /**
  * @element sp-color-wheel
@@ -65,16 +68,7 @@ export class ColorWheel extends Focusable {
     private _value = 0;
 
     @property({ type: String })
-    public get color():
-        | string
-        | number
-        | TinyColor
-        | HSVA
-        | HSV
-        | RGB
-        | RGBA
-        | HSL
-        | HSLA {
+    public get color(): ColorValue {
         switch (this._format.format) {
             case 'rgb':
                 return this._format.isString
@@ -110,18 +104,7 @@ export class ColorWheel extends Focusable {
         }
     }
 
-    public set color(
-        color:
-            | string
-            | number
-            | TinyColor
-            | HSVA
-            | HSV
-            | RGB
-            | RGBA
-            | HSL
-            | HSLA
-    ) {
+    public set color(color: ColorValue) {
         if (color === this.color) {
             return;
         }

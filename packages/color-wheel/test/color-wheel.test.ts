@@ -244,7 +244,7 @@ describe('ColorWheel', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(263);
+        expect(el.value).to.equal(263.74596725608353);
 
         handle.dispatchEvent(
             new PointerEvent('pointermove', {
@@ -269,7 +269,7 @@ describe('ColorWheel', () => {
 
         await elementUpdated(el);
 
-        expect(el.value).to.equal(96);
+        expect(el.value).to.equal(96.34019174590992);
     });
     const colorFormats: {
         name: string;
