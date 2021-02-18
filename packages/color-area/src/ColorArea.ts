@@ -20,9 +20,9 @@ import {
     query,
     streamingListener,
 } from '@spectrum-web-components/base';
-import { ColorHandle } from '@spectrum-web-components/color-handle';
+import { ColorHandle, ColorValue } from '@spectrum-web-components/color-handle';
 import '@spectrum-web-components/color-handle/sp-color-handle.js';
-import { HSL, HSLA, HSV, HSVA, RGB, RGBA, TinyColor } from '@ctrl/tinycolor';
+import { TinyColor } from '@ctrl/tinycolor';
 
 import styles from './color-area.css.js';
 
@@ -63,16 +63,7 @@ export class ColorArea extends SpectrumElement {
     private _hue = 0;
 
     @property({ type: String })
-    public get color():
-        | string
-        | number
-        | TinyColor
-        | HSVA
-        | HSV
-        | RGB
-        | RGBA
-        | HSL
-        | HSLA {
+    public get color(): ColorValue {
         switch (this._format[0]) {
             case 'rgb':
                 return this._format[1]
@@ -107,18 +98,7 @@ export class ColorArea extends SpectrumElement {
         }
     }
 
-    public set color(
-        color:
-            | string
-            | number
-            | TinyColor
-            | HSVA
-            | HSV
-            | RGB
-            | RGBA
-            | HSL
-            | HSLA
-    ) {
+    public set color(color: ColorValue) {
         if (color === this.color) {
             return;
         }
