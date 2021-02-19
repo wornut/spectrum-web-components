@@ -63,6 +63,13 @@ export class ColorArea extends SpectrumElement {
     private _hue = 0;
 
     @property({ type: String })
+    public get value(): ColorValue {
+        return this._value.toHex();
+    }
+
+    private _value = new TinyColor({ h: 0, s: 1, v: 1 });
+
+    @property({ type: String })
     public get color(): ColorValue {
         switch (this._format[0]) {
             case 'rgb':
@@ -204,7 +211,21 @@ export class ColorArea extends SpectrumElement {
         }
         this.x = Math.min(1, Math.max(this.x + deltaX, 0));
         this.y = Math.min(1, Math.max(this.y + deltaY, 0));
+
+        this._previousColor = this._color.clone();
         this._color = new TinyColor({ h: this.hue, s: this.x, v: 1 - this.y });
+        this._value = this._color;
+
+        const applyDefault = this.dispatchEvent(
+            new Event('change', {
+                bubbles: true,
+                composed: true,
+                cancelable: true,
+            })
+        );
+        if (!applyDefault) {
+            this._color = this._previousColor;
+        }
     }
 
     private handleKeyup(event: KeyboardEvent): void {
@@ -233,6 +254,8 @@ export class ColorArea extends SpectrumElement {
     private handlePointermove(event: PointerEvent): void {
         const [x, y] = this.calculateHandlePosition(event);
         this._color = new TinyColor({ h: this.hue, s: x, v: 1 - y });
+        this._value = this._color;
+
         this.x = x;
         this.y = y;
         this.dispatchEvent(
