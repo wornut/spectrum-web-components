@@ -196,7 +196,7 @@ module.exports = {
                 }
                 for (let i = 0; i < concurrency; i += 1) {
                     (async () => {
-                        await releasePage();
+                        releasePage(await acquirePage());
                     })();
                 }
                 results = await Promise.all(tests);
@@ -236,19 +236,15 @@ module.exports = {
                     );
                 }
             }
+            // prevent hover based inaccuracies in screenshots by
+            // moving the mouse off of the screen before loading tests
+            await page.mouse.move(-5, -5);
             return page;
         }
 
-        async function releasePage(oldPage) {
-            if (oldPage) {
-                oldPage.close();
-            }
+        async function releasePage(page) {
             if (testQueue[0]) {
                 const test = testQueue.shift();
-                const page = await acquirePage();
-                // prevent hover based inaccuracies in screenshots by
-                // moving the mouse off of the screen before loading tests
-                await page.mouse.move(-5, -5);
                 test(page);
             }
         }
