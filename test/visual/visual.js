@@ -24,7 +24,7 @@ const baselineDir = `${process.cwd()}/test/visual/screenshots-baseline`;
 
 const PixelDiffThreshold = 0;
 const RetryDiffThreshold = 20;
-const Timeout = 30000;
+const Timeout = 60000;
 
 module.exports = {
     checkScreenshots(
