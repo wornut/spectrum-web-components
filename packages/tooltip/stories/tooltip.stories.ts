@@ -19,7 +19,6 @@ import {
 } from '@spectrum-web-components/icons-workflow';
 import '@spectrum-web-components/button/sp-button.js';
 import '@spectrum-web-components/icons/sp-icons-medium.js';
-import { OverlayTrigger } from '@spectrum-web-components/overlay';
 import { Placement } from '@spectrum-web-components/overlay/src/popper';
 import '../sp-tooltip.js';
 
@@ -136,17 +135,7 @@ const overlayStyles = html`
     </style>
 `;
 
-const overlaid = (placement: Placement): TemplateResult => {
-    requestAnimationFrame(async () => {
-        const overlay = document.querySelector(
-            `overlay-trigger[placement="${placement}"]`
-        ) as OverlayTrigger;
-        await overlay.updateComplete;
-        const trigger = (overlay.shadowRoot as ShadowRoot).querySelector(
-            '#trigger'
-        ) as HTMLDivElement;
-        trigger.dispatchEvent(new MouseEvent('mouseenter'));
-    });
+const overlaid = (openPlacement: Placement): TemplateResult => {
     return html`
         ${overlayStyles}
         ${([
@@ -156,7 +145,12 @@ const overlaid = (placement: Placement): TemplateResult => {
             ['top', 'info'],
         ] as [Placement, string][]).map(([placement, variant]) => {
             return html`
-                <overlay-trigger placement=${placement}>
+                <overlay-trigger
+                    placement=${placement}
+                    open=${ifDefined(
+                        openPlacement === placement ? 'hover' : undefined
+                    )}
+                >
                     <sp-button label="${placement} test" slot="trigger">
                         Hover for ${variant ? variant : 'tooltip'} on the
                         ${placement}

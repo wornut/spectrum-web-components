@@ -9,9 +9,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { html, number, select, radios } from '@open-wc/demoing-storybook';
-import { TemplateResult } from '@spectrum-web-components/base';
+import { ifDefined, TemplateResult } from '@spectrum-web-components/base';
 
-import { Placement } from '../';
+import { Placement, OverlayContentTypes } from '../';
 import '@spectrum-web-components/action-button/sp-action-button.js';
 import '@spectrum-web-components/button/sp-button.js';
 import '@spectrum-web-components/dialog/sp-dialog-wrapper.js';
@@ -80,7 +80,7 @@ export default {
     title: 'Overlay',
 };
 
-export const Default = (): TemplateResult => {
+const template = (open?: OverlayContentTypes): TemplateResult => {
     const placement = select(
         'Placement',
         [
@@ -105,13 +105,12 @@ export const Default = (): TemplateResult => {
     ) as Placement;
 
     const offset = number('Offset', 0);
-
     return html`
-        ${storyStyles}
         <overlay-trigger
             id="trigger"
             placement="${placement}"
             offset="${offset}"
+            open=${ifDefined(open)}
         >
             <sp-button variant="primary" slot="trigger">Show Popover</sp-button>
             <sp-popover
@@ -157,10 +156,28 @@ export const Default = (): TemplateResult => {
                     </overlay-trigger>
                 </div>
             </sp-popover>
-            <sp-tooltip open slot="hover-content" delayed tip="bottom">
+            <sp-tooltip slot="hover-content" delayed tip="bottom">
                 Click to open a popover.
             </sp-tooltip>
         </overlay-trigger>
+    `;
+};
+
+export const Default = (): TemplateResult => {
+    return html`
+        ${storyStyles} ${template()}
+    `;
+};
+
+export const openHoverContent = (): TemplateResult => {
+    return html`
+        ${storyStyles} ${template('hover')}
+    `;
+};
+
+export const openClickContent = (): TemplateResult => {
+    return html`
+        ${storyStyles} ${template('click')}
     `;
 };
 
@@ -169,7 +186,7 @@ export const inline = (): TemplateResult => {
     return html`
         <overlay-trigger type="inline">
             <sp-button slot="trigger">Open</sp-button>
-            <sp-overlay open slot="click-content">
+            <sp-overlay slot="click-content">
                 <sp-button
                     @click=${(event: Event & { target: HTMLElement }): void => {
                         event.target.dispatchEvent(closeEvent);
@@ -194,7 +211,7 @@ export const replace = (): TemplateResult => {
     return html`
         <overlay-trigger type="replace">
             <sp-button slot="trigger">Open</sp-button>
-            <sp-overlay open slot="click-content">
+            <sp-overlay slot="click-content">
                 <sp-button
                     @click=${(event: Event & { target: HTMLElement }): void => {
                         event.target.dispatchEvent(closeEvent);
