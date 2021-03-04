@@ -73,7 +73,7 @@
         "test:visual:ci": "yarn test:start --group",
         "test:visual:clean": "yarn test:visual:clean:baseline && yarn test:visual:clean:current",
         "test:visual:clean:baseline": "rm -rf test/visual/screenshots-baseline",
-        "test:visual:clean:current": "rm -rf test/visual/screenshots-current",
+        "test:visual:clean:current": "rm -rf test/visual/screenshots-actual",
         "new-package": "cd projects/templates && plop"
     },
     "husky": {

@@ -27,12 +27,8 @@ export const Default = (): TemplateResult => {
             <sp-accordion-item label="Heading 1">
                 <div>Item 1</div>
             </sp-accordion-item>
-            <sp-accordion-item label="Heading 2">
-                Item 2
-            </sp-accordion-item>
-            <sp-accordion-item label="Heading 3">
-                Item 3
-            </sp-accordion-item>
+            <sp-accordion-item label="Heading 2">Item 2</sp-accordion-item>
+            <sp-accordion-item label="Heading 3">Item 3</sp-accordion-item>
         </sp-accordion>
     `;
 };
@@ -43,12 +39,8 @@ export const Open = (): TemplateResult => {
             <sp-accordion-item label="Heading 1">
                 <div>Item 1</div>
             </sp-accordion-item>
-            <sp-accordion-item label="Heading 2" open>
-                Item 2
-            </sp-accordion-item>
-            <sp-accordion-item label="Heading 3">
-                Item 3
-            </sp-accordion-item>
+            <sp-accordion-item label="Heading 2" open>Item 2</sp-accordion-item>
+            <sp-accordion-item label="Heading 3">Item 3</sp-accordion-item>
         </sp-accordion>
     `;
 };
@@ -56,15 +48,9 @@ export const Open = (): TemplateResult => {
 export const AllowMultiple = (): TemplateResult => {
     return html`
         <sp-accordion allow-multiple>
-            <sp-accordion-item label="Heading 1">
-                Item 1
-            </sp-accordion-item>
-            <sp-accordion-item label="Heading 2">
-                Item 2
-            </sp-accordion-item>
-            <sp-accordion-item label="Heading 3">
-                Item 3
-            </sp-accordion-item>
+            <sp-accordion-item label="Heading 1">Item 1</sp-accordion-item>
+            <sp-accordion-item label="Heading 2">Item 2</sp-accordion-item>
+            <sp-accordion-item label="Heading 3">Item 3</sp-accordion-item>
         </sp-accordion>
     `;
 };
@@ -75,12 +61,8 @@ export const Disabled = (): TemplateResult => {
             <sp-accordion-item disabled label="Heading 1">
                 <div>Item 1</div>
             </sp-accordion-item>
-            <sp-accordion-item label="Heading 2">
-                Item 2
-            </sp-accordion-item>
-            <sp-accordion-item label="Heading 3">
-                Item 3
-            </sp-accordion-item>
+            <sp-accordion-item label="Heading 2">Item 2</sp-accordion-item>
+            <sp-accordion-item label="Heading 3">Item 3</sp-accordion-item>
         </sp-accordion>
     `;
 };
